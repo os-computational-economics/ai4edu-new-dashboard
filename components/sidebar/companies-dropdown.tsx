@@ -7,8 +7,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import React, { useState } from "react";
-import { AcmeIcon } from "../icons/acme-icon";
-import { AcmeLogo } from "../icons/acmelogo";
+import { Image } from "@nextui-org/react";
 import { BottomIcon } from "../icons/sidebar/bottom-icon";
 
 interface Company {
@@ -21,22 +20,22 @@ const companies = [
   {
     name: "ECON 380",
     location: "Computational Economics",
-    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+    logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
   },
   {
     name: "ACCT 101",
     location: "Accounting Principles",
-    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+    logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
   },
   {
     name: "CSDS 101",
     location: "Introduction to Computer Science",
-    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+    logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
   },
   {
     name: "ABCD 101",
     location: "Introduction to ABCD",
-    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+    logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
   },
 ];
 
