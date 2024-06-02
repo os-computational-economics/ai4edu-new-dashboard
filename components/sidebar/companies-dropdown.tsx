@@ -17,12 +17,31 @@ interface Company {
   logo: React.ReactNode;
 }
 
+const companies = [
+  {
+    name: "ECON 380",
+    location: "Computational Economics",
+    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+  },
+  {
+    name: "ACCT 101",
+    location: "Accounting Principles",
+    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+  },
+  {
+    name: "CSDS 101",
+    location: "Introduction to Computer Science",
+    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+  },
+  {
+    name: "ABCD 101",
+    location: "Introduction to ABCD",
+    logo: <img src="/favicon.ico" className="w-9 h-9 rounded-md" alt="logo" />,
+  },
+];
+
 export const CompaniesDropdown = () => {
-  const [company, setCompany] = useState<Company>({
-    name: "Acme Co.",
-    location: "Palo Alto, CA",
-    logo: <AcmeIcon />,
-  });
+  const [company, setCompany] = useState<Company>(companies[0]);
   return (
     <Dropdown
       classNames={{
@@ -45,82 +64,29 @@ export const CompaniesDropdown = () => {
       </DropdownTrigger>
       <DropdownMenu
         onAction={(e) => {
-          if (e === "1") {
-            setCompany({
-              name: "Facebook",
-              location: "San Fransico, CA",
-              logo: <AcmeIcon />,
-            });
-          }
-          if (e === "2") {
-            setCompany({
-              name: "Instagram",
-              location: "Austin, Tx",
-              logo: <AcmeLogo />,
-            });
-          }
-          if (e === "3") {
-            setCompany({
-              name: "Twitter",
-              location: "Brooklyn, NY",
-              logo: <AcmeIcon />,
-            });
-          }
-          if (e === "4") {
-            setCompany({
-              name: "Acme Co.",
-              location: "Palo Alto, CA",
-              logo: <AcmeIcon />,
-            });
+          const selectedCompany = companies.find(
+            (_, index) => index.toString() === e
+          );
+          if (selectedCompany) {
+            setCompany(selectedCompany);
           }
         }}
         aria-label="Avatar Actions"
       >
-        <DropdownSection title="Companies">
-          <DropdownItem
-            key="1"
-            startContent={<AcmeIcon />}
-            description="San Fransico, CA"
-            classNames={{
-              base: "py-4",
-              title: "text-base font-semibold",
-            }}
-          >
-            Facebook
-          </DropdownItem>
-          <DropdownItem
-            key="2"
-            startContent={<AcmeLogo />}
-            description="Austin, Tx"
-            classNames={{
-              base: "py-4",
-              title: "text-base font-semibold",
-            }}
-          >
-            Instagram
-          </DropdownItem>
-          <DropdownItem
-            key="3"
-            startContent={<AcmeIcon />}
-            description="Brooklyn, NY"
-            classNames={{
-              base: "py-4",
-              title: "text-base font-semibold",
-            }}
-          >
-            Twitter
-          </DropdownItem>
-          <DropdownItem
-            key="4"
-            startContent={<AcmeIcon />}
-            description="Palo Alto, CA"
-            classNames={{
-              base: "py-4",
-              title: "text-base font-semibold",
-            }}
-          >
-            Acme Co.
-          </DropdownItem>
+        <DropdownSection title="Courses">
+          {companies.map((company, index) => (
+            <DropdownItem
+              key={index.toString()}
+              startContent={company.logo}
+              description={company.location}
+              classNames={{
+                base: "py-4",
+                title: "text-base font-semibold",
+              }}
+            >
+              {company.name}
+            </DropdownItem>
+          ))}
         </DropdownSection>
       </DropdownMenu>
     </Dropdown>

@@ -19,7 +19,7 @@ export const UserDropdown = () => {
             as="button"
             color="secondary"
             size="md"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            src="https://source.boringavatars.com/beam/120/Mari?colors=ADEADA,BDEADB,CDEADC,DDEADD,B9E1F0"
           />
         </DropdownTrigger>
       </NavbarItem>
@@ -32,18 +32,21 @@ export const UserDropdown = () => {
           className="flex flex-col justify-start w-full items-start"
         >
           <p>Signed in as</p>
-          <p>zoey@example.com</p>
+          <p>rxy216@case.edu</p>
         </DropdownItem>
         <DropdownItem key="settings">My Settings</DropdownItem>
-        <DropdownItem key="team_settings">Team Settings</DropdownItem>
-        <DropdownItem key="analytics">Analytics</DropdownItem>
-        <DropdownItem key="system">System</DropdownItem>
-        <DropdownItem key="configurations">Configurations</DropdownItem>
         <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-        <DropdownItem key="logout" color="danger" className="text-danger ">
+        <DropdownItem key="logout" color="danger" className="text-danger" showDivider>
           Log Out
         </DropdownItem>
-        <DropdownItem key="switch">
+        <DropdownItem
+          key="switch"
+          style={{
+            transition: "background-color 0.2s ease",
+            backgroundColor: "transparent",
+            cursor: "default",
+          }}
+        >
           <DarkModeSwitch />
         </DropdownItem>
       </DropdownMenu>
