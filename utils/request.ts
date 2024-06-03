@@ -76,7 +76,7 @@ instance.interceptors.request.use(
       } catch (error) {
         Cookies.remove('access_token')
         Cookies.remove('refresh_token')
-        window.location.href = '/auth/sign-in'
+        window.location.href = '/auth/signin'
       }
     }
     return config as any
