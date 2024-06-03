@@ -210,7 +210,7 @@ const Tables = () => {
   }
 
   return (
-    <div>
+    <div className='m-6'>
       <ToastContainer />
       <ConfirmDeleteModal
         isOpen={isDeleteModalOpen}

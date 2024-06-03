@@ -70,7 +70,7 @@ export default function App() {
   const totalPages = Math.ceil(total / pageSize)
 
   return (
-    <div className="flex h-[calc(100vh-90px-96px)] w-full gap-4">
+    <div className="flex h-[calc(100vh-90px-96px)] w-full gap-4 m-6">
       <ToastContainer />
       <div className="flex w-2/5 flex-col bg-white">
         <div className="flex-grow overflow-auto">
