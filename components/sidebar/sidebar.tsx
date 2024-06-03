@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Sidebar } from './sidebar.styles'
 import { Avatar, Tooltip } from '@nextui-org/react'
 import { CompaniesDropdown } from './companies-dropdown'
@@ -15,58 +15,110 @@ import { FilterIcon } from '../icons/sidebar/filter-icon'
 import { useSidebarContext } from '../layout/layout-context'
 import { ChangeLogIcon } from '../icons/sidebar/changelog-icon'
 import { usePathname } from 'next/navigation'
+import { Image } from '@nextui-org/react'
+
+// Mock API call to fetch courses
+const fetchCourses = async () => {
+  return [
+    {
+      name: 'ECON 380',
+      location: 'Computational Economics - Student',
+      logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
+      role: 'student'
+    },
+    {
+      name: 'ACCT 101',
+      location: 'Accounting Principles - Student',
+      logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
+      role: 'student'
+    },
+    {
+      name: 'CSDS 101',
+      location: 'Introduction to Computer Science - Teacher',
+      logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
+      role: 'teacher'
+    },
+    {
+      name: 'ABCD 101',
+      location: 'Introduction to ABCD - Admin',
+      logo: <Image src="/favicon.ico" alt="logo" className="w-11 rounded-md" />,
+      role: 'admin'
+    }
+  ]
+}
 
 export const SidebarWrapper = () => {
+  const [courses, setCourses] = useState([])
+  const [selectedCourse, setSelectedCourse] = useState(null)
   const pathname = usePathname()
   const { collapsed, setCollapsed } = useSidebarContext()
+
+  useEffect(() => {
+    const getCourses = async () => {
+      const courses = await fetchCourses()
+      setCourses(courses)
+    }
+    getCourses()
+  }, [])
+
+  const renderSidebarItems = (role) => {
+    const commonItems = [
+      <SidebarItem
+        key="accounts"
+        title="Accounts"
+        icon={<AccountsIcon />}
+        isActive={pathname === '/accounts'}
+        href="accounts"
+      />
+    ]
+
+    if (role === 'teacher' || role === 'admin') {
+      commonItems.push(
+        <SidebarItem
+          key="manage-agents"
+          isActive={pathname === '/manage-agents'}
+          title="Manage Agents"
+          icon={<AgentsIcon />}
+          href="manage-agents"
+        />,
+        <SidebarItem
+          key="chat-history"
+          isActive={pathname === '/chat-history'}
+          title="Chat History"
+          icon={<ChatsIcon />}
+          href="chat-history"
+        />
+      )
+    }
+
+    if (role === 'admin') {
+      commonItems.push(
+        <SidebarItem
+          key="access-control"
+          isActive={pathname === '/access-control'}
+          title="Access Control"
+          icon={<AgentsIcon />}
+          href="access-control"
+        />
+      )
+    }
+
+    return commonItems
+  }
 
   return (
     <aside className="h-screen z-[20] sticky top-0">
       {collapsed ? <div className={Sidebar.Overlay()} onClick={setCollapsed} /> : null}
-      <div
-        className={Sidebar({
-          collapsed: collapsed
-        })}
-      >
+      <div className={Sidebar({ collapsed: collapsed })}>
         <div className={Sidebar.Header()}>
-          <CompaniesDropdown />
+          <CompaniesDropdown courses={courses} setSelectedCourse={setSelectedCourse} />
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
             <SidebarItem title="Home" icon={<HomeIcon />} isActive={pathname === '/'} href="/" />
-            <SidebarMenu title="ECON 380">
-              <SidebarItem
-                isActive={pathname === '/accounts'}
-                title="Accounts"
-                icon={<AgentsIcon />}
-                href="accounts"
-              />
-              <SidebarItem
-                isActive={pathname === '/manage-agents'}
-                title="Manage Agents"
-                icon={<AgentsIcon />}
-                href="manage-agents"
-              />
-              <SidebarItem
-                isActive={pathname === '/access-control'}
-                title="Access Control"
-                icon={<AgentsIcon />}
-                href="access-control"
-              />
-              <SidebarItem
-                isActive={pathname === '/chat-history'}
-                title="Chat History"
-                icon={<AgentsIcon />}
-                href="chat-history"
-              />
-              <SidebarItem isActive={pathname === '/chats'} title="Chats" icon={<ChatsIcon />} />
-              <CollapseItems
-                icon={<BalanceIcon />}
-                items={['Banks Accounts', 'Credit Cards', 'Loans']}
-                title="Balances"
-              />
-              <SidebarItem isActive={pathname === '/customers'} title="Customers" icon={<CustomersIcon />} />
-            </SidebarMenu>
+            {selectedCourse && (
+              <SidebarMenu title={selectedCourse.name}>{renderSidebarItems(selectedCourse.role)}</SidebarMenu>
+            )}
           </div>
         </div>
       </div>

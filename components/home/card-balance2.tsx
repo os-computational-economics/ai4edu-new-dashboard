@@ -1,52 +1,22 @@
-import { Card, CardBody } from "@nextui-org/react";
-import React from "react";
-import { Community } from "../icons/community";
+import React from 'react'
+import { Card, CardHeader, CardBody, Image } from '@nextui-org/react'
 
 export const CardBalance2 = () => {
   return (
-    <Card className="xl:max-w-sm bg-default-50 rounded-xl shadow-md px-3 w-full">
-      <CardBody className="py-5">
-        <div className="flex gap-2.5">
-          <Community />
-          <div className="flex flex-col">
-            <span className="text-default-900">Health Insurance</span>
-            <span className="text-default-900 text-xs">+2400 People</span>
-          </div>
-        </div>
-        <div className="flex gap-2.5 py-2 items-center">
-          <span className="text-default-900 text-xl font-semibold">
-            $12,138
-          </span>
-          <span className="text-danger text-xs">- 4.5%</span>
-        </div>
-        <div className="flex items-center gap-6">
-          <div>
-            <div>
-              <span className="font-semibold text-success-600 text-xs">
-                {"↓"}
-              </span>
-              <span className="text-xs">11,930</span>
-            </div>
-            <span className="text-default-900 text-xs">USD</span>
-          </div>
-
-          <div>
-            <div>
-              <span className="font-semibold text-danger text-xs">{"↑"}</span>
-              <span className="text-xs">54,120</span>
-            </div>
-            <span className="text-default-900 text-xs">USD</span>
-          </div>
-
-          <div>
-            <div>
-              <span className="font-semibold text-danger text-xs">{"⭐"}</span>
-              <span className="text-xs">150</span>
-            </div>
-            <span className="text-default-900 text-xs">VIP</span>
-          </div>
-        </div>
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <p className="text-tiny uppercase font-bold">Daily Mix</p>
+        <small className="text-default-500">12 Tracks</small>
+        <h4 className="font-bold text-large">Frontend Radio</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="https://nextui.org/images/hero-card-complete.jpeg"
+          width={270}
+        />
       </CardBody>
     </Card>
-  );
-};
+  )
+}
