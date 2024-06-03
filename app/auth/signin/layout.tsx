@@ -5,8 +5,8 @@ import { fontSans } from '@/config/fonts';
 import clsx from "clsx";
 
 export const metadata: Metadata = {
-  title: 'AI4EDU - Dashboard',
-  description: 'AI4EDU - Dashboard',
+  title: 'AI4EDU - Sign In',
+  description: 'AI4EDU - Sign In',
 }
 
 export default function RootLayout({
