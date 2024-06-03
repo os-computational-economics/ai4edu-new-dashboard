@@ -37,7 +37,6 @@ const SigninPage: React.FC = () => {
     const currentUrl = window.location.href
     const ssoVerifyUrl = 'https://ai4edu-api.jerryang.org/v1/prod/user/sso'
     window.location.href = `https://login.case.edu/cas/login?service=${ssoVerifyUrl}?came_from=${currentUrl}`
-    console.log('SSO login initiated')
   }
 
   return (
