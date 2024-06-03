@@ -5,7 +5,6 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { Layout } from "../../components/layout/layout";
 import { useEffect } from "react";
-import jwt from "jsonwebtoken";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
@@ -17,14 +16,8 @@ export interface ProvidersProps {
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = Cookies.get("access_token");
-    if (accessToken) {
-      const decodedToken = jwt.decode(accessToken);
-      if (decodedToken && typeof decodedToken !== "string") {
-        console.log(decodedToken);
-      }
-    } else {
-      // Redirect to login page
+    const refreshToken = Cookies.get("refresh_token");
+    if (!refreshToken) {
       router.push("/auth/signin");
     }
   }, []);
