@@ -1,5 +1,5 @@
 import { Modal, ModalHeader, ModalBody, ModalFooter, ModalContent, Button } from '@nextui-org/react'
-import { deleteAgent } from '@/app/route/agent/agent'
+import { deleteAgent } from '@/api/agent/agent'
 
 const AgentModal = ({ isOpen, onClose, agent }) => {
   const handleCloseModal = (reload) => {

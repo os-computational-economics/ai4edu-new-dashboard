@@ -36,25 +36,25 @@ export const SidebarWrapper = () => {
             <SidebarItem title="Home" icon={<HomeIcon />} isActive={pathname === '/'} href="/" />
             <SidebarMenu title="ECON 380">
               <SidebarItem
-                isActive={pathname === '/pages/accounts'}
+                isActive={pathname === '/accounts'}
                 title="Accounts"
                 icon={<AgentsIcon />}
                 href="accounts"
               />
               <SidebarItem
-                isActive={pathname === '/pages/manage-agents'}
+                isActive={pathname === '/manage-agents'}
                 title="Manage Agents"
                 icon={<AgentsIcon />}
                 href="manage-agents"
               />
               <SidebarItem
-                isActive={pathname === '/pages/access-control'}
+                isActive={pathname === '/access-control'}
                 title="Access Control"
                 icon={<AgentsIcon />}
                 href="access-control"
               />
               <SidebarItem
-                isActive={pathname === '/pages/chat-history'}
+                isActive={pathname === '/chat-history'}
                 title="Chat History"
                 icon={<AgentsIcon />}
                 href="chat-history"

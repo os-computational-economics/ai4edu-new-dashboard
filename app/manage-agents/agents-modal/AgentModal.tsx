@@ -12,7 +12,7 @@ import {
   Textarea
 } from '@nextui-org/react'
 import { useForm, Controller } from 'react-hook-form'
-import { addAgent, updateAgent } from '@/app/route/agent/agent'
+import { addAgent, updateAgent } from '@/api/agent/agent'
 
 const selectEnableVoice = [
   { value: 'true', label: 'Enable' },

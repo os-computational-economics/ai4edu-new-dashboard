@@ -13,14 +13,14 @@ import {
   CheckboxGroup,
   Checkbox
 } from '@nextui-org/react'
-import { getUserList, grantAccess } from '@/app/route/auth/auth'
+import { getUserList, grantAccess, User } from '@/api/auth/auth'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 const Tables = () => {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<User[]>([])
   const [total, setTotal] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -32,7 +32,7 @@ const Tables = () => {
     fetchUserList(currentPage, pageSize)
   })
 
-  const fetchUserList = (page, pageSize) => {
+  const fetchUserList = (page: number, pageSize: number) => {
     const params = {
       page,
       page_size: pageSize
@@ -113,7 +113,10 @@ const Tables = () => {
   }, [isLoading])
 
   return (
-    <div>
+    <div className='m-6'>
+      <div>
+        <h1 className='text-2xl font-bold'>Access Control</h1>
+      </div>
       <ToastContainer />
       <Table
         topContent={topContent}

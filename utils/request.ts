@@ -86,6 +86,7 @@ instance.interceptors.request.use(
         window.location.href = '/auth/sign-in';
       }
     }
+    return config as any;
   },
   (error) => {
     return Promise.reject(error);

@@ -1,18 +1,20 @@
 import request from '@/utils/request';
 
+export interface User {
+    user_id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    student_id: string;
+    role: Array<{
+        student: boolean
+        teacher: boolean
+        admin: boolean
+    }>
+  }
+
 export interface UserList {
-    user_list: Array<{
-        user_id: string;
-        email: string;
-        first_name: string;
-        last_name: string;
-        student_id: string;
-        role: Array<{
-            student: boolean
-            teacher: boolean
-            admin: boolean
-        }>
-    }>;
+    user_list: Array<User>;
     total: number;
   }
 

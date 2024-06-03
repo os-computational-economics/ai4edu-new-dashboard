@@ -1,18 +1,20 @@
 import request from '@/utils/request';
 
+export interface Agent {
+  agent_id: string;
+  creator: string;
+  allow_model_choice: boolean;
+  model: string;
+  created_at: string;
+  course_id: string;
+  agent_name: string;
+  updated_at: string;
+  voice: boolean;
+  status: number;
+}
+
 export interface AgentsResponse {
-  agents: Array<{
-    agent_id: string;
-    creator: string;
-    allow_model_choice: boolean;
-    model: string;
-    created_at: string;
-    course_id: string;
-    agent_name: string;
-    updated_at: string;
-    voice: boolean;
-    status: number;
-  }>;
+  agents: Array<Agent>;
   total: number;
 }
 

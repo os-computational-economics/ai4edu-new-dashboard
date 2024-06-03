@@ -13,7 +13,7 @@ import {
   Pagination,
   Tooltip
 } from '@nextui-org/react'
-import { getAgents } from '@/app/route/agent/agent'
+import { getAgents } from '@/api/agent/agent'
 import { MdCached, MdAdd, MdModeEditOutline, MdDeleteOutline, MdShare } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import AgentModal from './agents-modal/AgentModal'

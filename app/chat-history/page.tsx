@@ -5,7 +5,7 @@ import HistoryPanel from './components/HistoryPanel'
 import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 
-import { getThreadsList, getThreadbyID } from '@/app/route/thread/thread'
+import { getThreadsList, getThreadbyID } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
 
 export default function App() {
