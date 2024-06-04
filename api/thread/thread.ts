@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request from "@/utils/request";
 
 export interface ListThreadsResponse {
   threads: Array<{
@@ -33,18 +33,20 @@ export interface GetThread {
 }
 
 // API paths
-const path = 'threads';
+const path = "threads";
 
 const api = {
-  listThreads: path + '/get_thread_list',
-  getThread: path + '/get_thread',
+  listThreads: path + "/get_thread_list",
+  getThread: path + "/get_thread",
 };
 
 // list threads (GET)
-export function getThreadsList(data: ListThreads): Promise<ListThreadsResponse> {
+export function getThreadsList(
+  data: ListThreads
+): Promise<ListThreadsResponse> {
   return request({
     url: api.listThreads,
-    method: 'GET',
+    method: "GET",
     params: data,
   });
 }
@@ -52,7 +54,7 @@ export function getThreadsList(data: ListThreads): Promise<ListThreadsResponse> 
 // get thread (GET)
 export function getThreadbyID(data: GetThread): Promise<SingleThreadResponse> {
   return request({
-    url: api.getThread + '/' + data.thread_id,
-    method: 'GET',
+    url: api.getThread + "/" + data.thread_id,
+    method: "GET",
   });
 }

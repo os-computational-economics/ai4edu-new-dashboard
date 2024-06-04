@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react'
+"use client";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -11,116 +11,122 @@ import {
   Chip,
   Spinner,
   Pagination,
-  Tooltip
-} from '@nextui-org/react'
-import { getAgents } from '@/api/agent/agent'
-import { MdCached, MdAdd, MdModeEditOutline, MdDeleteOutline, MdShare } from 'react-icons/md'
-import useMount from '@/components/hooks/useMount'
-import AgentModal from './agents-modal/AgentModal'
-import ConfirmDeleteModal from './agents-modal/ConfirmDeleteModal'
+  Tooltip,
+} from "@nextui-org/react";
+import { getAgents } from "@/api/agent/agent";
+import {
+  MdCached,
+  MdAdd,
+  MdModeEditOutline,
+  MdDeleteOutline,
+  MdShare,
+} from "react-icons/md";
+import useMount from "@/components/hooks/useMount";
+import AgentModal from "./agents-modal/AgentModal";
+import ConfirmDeleteModal from "./agents-modal/ConfirmDeleteModal";
 
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const statusColorMap = {
-  true: 'success',
-  false: 'danger',
-  1: 'success', // Active
-  2: 'danger' // Inactive
-}
+  true: "success",
+  false: "danger",
+  1: "success", // Active
+  2: "danger", // Inactive
+};
 
 const modelList = [
-  { value: 'openai', label: 'OpenAI - ChatGPT' },
-  { value: 'anthropic', label: 'Anthropic - Claude AI' }
-]
+  { value: "openai", label: "OpenAI - ChatGPT" },
+  { value: "anthropic", label: "Anthropic - Claude AI" },
+];
 
 const Tables = () => {
-  const [agents, setAgents] = useState([])
-  const [total, setTotal] = useState(0)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [creatorId, setCreatorId] = useState('')
-  const [isLoading, setisLoading] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [agents, setAgents] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [creatorId, setCreatorId] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const [status, setStatus] = useState(1) // 1 - new Agent, 2 - Edit Agent
-  const [currentAgent, setCurrentAgent] = useState(null)
+  const [status, setStatus] = useState(1); // 1 - new Agent, 2 - Edit Agent
+  const [currentAgent, setCurrentAgent] = useState(null);
 
-  const totalPage = Math.ceil(total / pageSize)
+  const totalPage = Math.ceil(total / pageSize);
 
   useMount(() => {
-    fetchAgents(currentPage, pageSize)
-  })
+    fetchAgents(currentPage, pageSize);
+  });
 
   const generateShareUrl = (agent) => {
-    const baseUrl = 'https://chat.ai4edu.io'
-    const url = `${baseUrl}/agent/${agent.agent_id}`
-    return url
-  }
+    const baseUrl = "https://chat.ai4edu.io";
+    const url = `${baseUrl}/agent/${agent.agent_id}`;
+    return url;
+  };
 
   const CopyToClipboard = (agent) => {
-    navigator.clipboard.writeText(generateShareUrl(agent))
-    toast.success('Copied to clipboard!', {
+    navigator.clipboard.writeText(generateShareUrl(agent));
+    toast.success("Copied to clipboard!", {
       hideProgressBar: true,
-      autoClose: 2000
-    })
-  }
+      autoClose: 2000,
+    });
+  };
 
   const fetchAgents = (page, pageSize) => {
     const params = {
       page,
       page_size: pageSize,
-      creator: creatorId || localStorage.getItem('user_id') || 'test001'
-    }
+      creator: creatorId || localStorage.getItem("user_id") || "test001",
+    };
 
     getAgents(params)
       .then((res) => {
-        console.log(res)
-        setisLoading(false)
-        setAgents(res.agents)
-        setTotal(res.total)
+        console.log(res);
+        setisLoading(false);
+        setAgents(res.agents);
+        setTotal(res.total);
       })
       .catch((error) => {
-        setisLoading(false)
-        console.error('Error fetching agents:', error)
-      })
-  }
+        setisLoading(false);
+        console.error("Error fetching agents:", error);
+      });
+  };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-    setisLoading(true)
-    fetchAgents(page, pageSize)
-  }
+    setCurrentPage(page);
+    setisLoading(true);
+    fetchAgents(page, pageSize);
+  };
 
   const handleSearch = (reload) => {
     if (reload) {
-      setisLoading(true)
-      setCurrentPage(1) // Reset to first page for new search
+      setisLoading(true);
+      setCurrentPage(1); // Reset to first page for new search
 
-      fetchAgents(1, pageSize)
+      fetchAgents(1, pageSize);
     }
-  }
+  };
 
-  const openModal = () => setIsModalOpen(true)
+  const openModal = () => setIsModalOpen(true);
 
   const closeModal = (reload) => {
-    console.log('close modal', reload)
-    handleSearch(reload)
-    setIsModalOpen(false)
-  }
+    console.log("close modal", reload);
+    handleSearch(reload);
+    setIsModalOpen(false);
+  };
 
   const closeDeleteModal = (reload) => {
-    handleSearch(reload)
-    setIsDeleteModalOpen(false)
-  }
+    handleSearch(reload);
+    setIsDeleteModalOpen(false);
+  };
 
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           {/* TODO: we don't need search by case id, this is just mocking the searching function */}
-          <div className={'w-full  sm:max-w-[44%]'}></div>
+          <div className={"w-full  sm:max-w-[44%]"}></div>
           {/* <Input
             isClearable
             classNames={{
@@ -151,8 +157,8 @@ const Tables = () => {
             </Button>
             <Button
               onClick={() => {
-                setStatus(1)
-                openModal()
+                setStatus(1);
+                openModal();
               }}
               className="bg-foreground text-background"
               endContent={<MdAdd />}
@@ -163,8 +169,8 @@ const Tables = () => {
           </div>
         </div>
       </div>
-    )
-  }, [creatorId, isLoading])
+    );
+  }, [creatorId, isLoading]);
 
   const renderActions = (agent) => {
     return (
@@ -173,7 +179,13 @@ const Tables = () => {
           <MdReadMore></MdReadMore>
         </Button> */}
         <Tooltip content="Share">
-          <Button isIconOnly size="md" variant="flat" color="primary" onClick={() => CopyToClipboard(agent)}>
+          <Button
+            isIconOnly
+            size="md"
+            variant="flat"
+            color="primary"
+            onClick={() => CopyToClipboard(agent)}
+          >
             <MdShare />
           </Button>
         </Tooltip>
@@ -183,9 +195,9 @@ const Tables = () => {
             size="md"
             variant="flat"
             onClick={() => {
-              setStatus(2) // Set status to edit
-              setCurrentAgent(agent) // Set the current agent being edited
-              openModal()
+              setStatus(2); // Set status to edit
+              setCurrentAgent(agent); // Set the current agent being edited
+              openModal();
             }}
           >
             <MdModeEditOutline></MdModeEditOutline>
@@ -198,26 +210,31 @@ const Tables = () => {
             variant="flat"
             color="danger"
             onClick={() => {
-              setCurrentAgent(agent)
-              setIsDeleteModalOpen(true)
+              setCurrentAgent(agent);
+              setIsDeleteModalOpen(true);
             }}
           >
             <MdDeleteOutline color="red"></MdDeleteOutline>
           </Button>
         </Tooltip>
       </div>
-    )
-  }
+    );
+  };
 
   return (
-    <div className='m-6'>
+    <div className="m-6">
       <ToastContainer />
       <ConfirmDeleteModal
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
         agent={currentAgent}
       ></ConfirmDeleteModal>
-      <AgentModal isOpen={isModalOpen} onClose={closeModal} status={status} agent={currentAgent} />
+      <AgentModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        status={status}
+        agent={currentAgent}
+      />
       <Table
         topContent={topContent}
         topContentPlacement="outside"
@@ -226,8 +243,16 @@ const Tables = () => {
           totalPage > 0 && (
             <div>
               <div className="flex h-full w-full items-center justify-center">
-                <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
-                <div className="ml-8 text-small text-default-600"> Total {total} agents</div>
+                <Pagination
+                  isDisabled={isLoading}
+                  page={currentPage}
+                  total={totalPage}
+                  onChange={handlePageChange}
+                />
+                <div className="ml-8 text-small text-default-600">
+                  {" "}
+                  Total {total} agents
+                </div>
               </div>
             </div>
           )
@@ -263,39 +288,55 @@ const Tables = () => {
               <TableCell>
                 <div className="flex flex-col">
                   <span className="text-bold text-sm">{agent.agent_name}</span>
-                  <span className="text-bold text-sm capitalize text-default-400">{agent.course_id}</span>
+                  <span className="text-bold text-sm capitalize text-default-400">
+                    {agent.course_id}
+                  </span>
                 </div>
               </TableCell>
               <TableCell>
-                <Chip color={statusColorMap[agent.voice.toString()]} size="sm" variant="flat">
-                  {agent.voice ? 'Active' : 'Disabled'}
+                <Chip
+                  color={statusColorMap[agent.voice.toString()]}
+                  size="sm"
+                  variant="flat"
+                >
+                  {agent.voice ? "Active" : "Disabled"}
                 </Chip>
               </TableCell>
               <TableCell>
-                <Chip color={statusColorMap[agent.allow_model_choice.toString()]} size="sm" variant="flat">
-                  {agent.allow_model_choice ? 'Active' : 'Disabled'}
+                <Chip
+                  color={statusColorMap[agent.allow_model_choice.toString()]}
+                  size="sm"
+                  variant="flat"
+                >
+                  {agent.allow_model_choice ? "Active" : "Disabled"}
                 </Chip>
               </TableCell>
               <TableCell>
                 {modelList.map((model) => {
                   if (model.value === agent.model) {
-                    return model.label
+                    return model.label;
                   }
                 })}
               </TableCell>
               <TableCell>
-                <Chip color={statusColorMap[agent.status]} size="sm" variant="flat">
-                  {agent.status ? 'Active' : 'Disabled'}
+                <Chip
+                  color={statusColorMap[agent.status]}
+                  size="sm"
+                  variant="flat"
+                >
+                  {agent.status ? "Active" : "Disabled"}
                 </Chip>
               </TableCell>
-              <TableCell>{new Date(`${agent.updated_at}Z`).toLocaleString()}</TableCell>
+              <TableCell>
+                {new Date(`${agent.updated_at}Z`).toLocaleString()}
+              </TableCell>
               <TableCell>{renderActions(agent)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
-  )
-}
+  );
+};
 
-export default Tables
+export default Tables;

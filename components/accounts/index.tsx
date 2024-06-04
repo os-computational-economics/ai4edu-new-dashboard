@@ -1,23 +1,23 @@
-'use client'
-import { Button, Input } from '@nextui-org/react'
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { DotsIcon } from '@/components/icons/accounts/dots-icon'
-import { ExportIcon } from '@/components/icons/accounts/export-icon'
-import { InfoIcon } from '@/components/icons/accounts/info-icon'
-import { TrashIcon } from '@/components/icons/accounts/trash-icon'
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon'
-import { UsersIcon } from '@/components/icons/breadcrumb/users-icon'
-import { SettingsIcon } from '@/components/icons/sidebar/settings-icon'
-import { TableWrapper } from '@/components/table/table'
-import { AddUser } from './add-user'
+"use client";
+import { Button, Input } from "@nextui-org/react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { DotsIcon } from "@/components/icons/accounts/dots-icon";
+import { ExportIcon } from "@/components/icons/accounts/export-icon";
+import { InfoIcon } from "@/components/icons/accounts/info-icon";
+import { TrashIcon } from "@/components/icons/accounts/trash-icon";
+import { HouseIcon } from "@/components/icons/breadcrumb/house-icon";
+import { UsersIcon } from "@/components/icons/breadcrumb/users-icon";
+import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
+import { TableWrapper } from "@/components/table/table";
+import { AddUser } from "./add-user";
 
 export const Accounts = () => {
-  const [currentCourse, setCurrentCourse] = useState(null)
+  const [currentCourse, setCurrentCourse] = useState(null);
   useEffect(() => {
-    const currentCourse = JSON.parse(localStorage.getItem('selectedCourse'))
-    setCurrentCourse(currentCourse)
-  }, [])
+    const currentCourse = JSON.parse(localStorage.getItem("selectedCourse"));
+    setCurrentCourse(currentCourse);
+  }, []);
 
   return (
     <div className="my-12 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -28,8 +28,8 @@ export const Accounts = () => {
         <div className="flex items-center gap-2 flex-wrap md:flex-nowrap">
           <Input
             classNames={{
-              input: 'w-full',
-              mainWrapper: 'w-full'
+              input: "w-full",
+              mainWrapper: "w-full",
             }}
             placeholder="Search agents"
           />
@@ -45,5 +45,5 @@ export const Accounts = () => {
         <TableWrapper />
       </div>
     </div>
-  )
-}
+  );
+};

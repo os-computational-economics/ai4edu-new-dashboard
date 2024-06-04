@@ -1,14 +1,14 @@
-import React from 'react';
-import { MdPerson, MdAndroid } from 'react-icons/md'; // Importing icons from 'react-icons'
-import { Button } from '@nextui-org/react';
-import { CSVLink } from 'react-csv';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import rehypeHighlight from 'rehype-highlight';
-import 'katex/dist/katex.min.css'; // CSS for LaTeX rendering
-import 'highlight.js/styles/atom-one-dark.min.css'; // CSS for code highlighting
-import { preprocessLaTeX } from './CustomMessageRender';
+import React from "react";
+import { MdPerson, MdAndroid } from "react-icons/md"; // Importing icons from 'react-icons'
+import { Button } from "@nextui-org/react";
+import { CSVLink } from "react-csv";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import rehypeHighlight from "rehype-highlight";
+import "katex/dist/katex.min.css"; // CSS for LaTeX rendering
+import "highlight.js/styles/atom-one-dark.min.css"; // CSS for code highlighting
+import { preprocessLaTeX } from "./CustomMessageRender";
 
 // Define a type for individual messages
 type Message = {
@@ -36,7 +36,7 @@ type HistoryPanelProps = {
 };
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({ threadDetails }) => {
-  console.log('Received thread details in HistoryPanel:', threadDetails);
+  console.log("Received thread details in HistoryPanel:", threadDetails);
 
   // Group messages by user_id
   const groupedMessages = threadDetails.messages.reduce<GroupedMessages>(
@@ -50,7 +50,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ threadDetails }) => {
       acc[message.user_id].messages.push(message);
       return acc;
     },
-    {},
+    {}
   );
 
   return (
@@ -78,7 +78,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ threadDetails }) => {
                     UserID: user_id,
                     Role: role,
                     Content: content,
-                  }),
+                  })
                 )}
                 filename={`${group.messages[0].thread_id.slice(0, 8)}-${
                   group.userId
@@ -95,17 +95,17 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ threadDetails }) => {
             <div
               key={idx}
               className={`m-2 p-2 ${
-                message.role === 'human' ? 'text-right' : 'text-left'
+                message.role === "human" ? "text-right" : "text-left"
               }`}
             >
               <div
                 className={`inline-block max-w-[70%] rounded-lg p-2 ${
-                  message.role === 'human' ? 'bg-green-50' : 'bg-amber-50'
+                  message.role === "human" ? "bg-green-50" : "bg-amber-50"
                 }`}
-                style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+                style={{ boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
               >
                 {/* Icon rendering based on role */}
-                {message.role === 'human' ? (
+                {message.role === "human" ? (
                   <MdPerson className="mr-2 inline-block text-lg text-green-700" />
                 ) : (
                   <MdAndroid className="mr-2 inline-block text-lg text-amber-700" />

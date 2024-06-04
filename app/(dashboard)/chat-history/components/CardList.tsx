@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Card, CardHeader, CardFooter } from '@nextui-org/react';
+import React from "react";
+import { Card, CardHeader, CardFooter } from "@nextui-org/react";
 
 const ThreadCard = ({ thread, onSelect }) => (
   <Card isPressable onPress={() => onSelect(thread.thread_id)}>

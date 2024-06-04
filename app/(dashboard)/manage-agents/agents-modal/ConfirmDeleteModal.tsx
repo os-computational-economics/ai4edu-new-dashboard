@@ -1,22 +1,29 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter, ModalContent, Button } from '@nextui-org/react'
-import { deleteAgent } from '@/api/agent/agent'
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalContent,
+  Button,
+} from "@nextui-org/react";
+import { deleteAgent } from "@/api/agent/agent";
 
 const AgentModal = ({ isOpen, onClose, agent }) => {
   const handleCloseModal = (reload) => {
-    onClose(reload)
-  }
+    onClose(reload);
+  };
 
   const onSubmit = () => {
-    const data = { agent_id: agent?.agent_id }
+    const data = { agent_id: agent?.agent_id };
     deleteAgent(data)
       .then((res) => {
-        console.log('Agent deleted successfully:', res)
-        handleCloseModal(true)
+        console.log("Agent deleted successfully:", res);
+        handleCloseModal(true);
       })
       .catch((err) => {
-        console.error('Error deleting agent:', err)
-      })
-  }
+        console.error("Error deleting agent:", err);
+      });
+  };
 
   return (
     <div>
@@ -25,12 +32,16 @@ const AgentModal = ({ isOpen, onClose, agent }) => {
           <ModalHeader>Delete Agent</ModalHeader>
           <ModalBody>
             <p>
-              Your action will delete <span className="text-black-600 text-lg font-semibold">{agent?.agent_name}</span>{' '}
+              Your action will delete{" "}
+              <span className="text-black-600 text-lg font-semibold">
+                {agent?.agent_name}
+              </span>{" "}
               immediately.
             </p>
             <p>Are you sure you want to proceed with deletion?</p>
             <p>
-              This action is irreversible and will permanently remove the agent. All users will lose access immediately.
+              This action is irreversible and will permanently remove the agent.
+              All users will lose access immediately.
             </p>
           </ModalBody>
 
@@ -45,7 +56,7 @@ const AgentModal = ({ isOpen, onClose, agent }) => {
         </ModalContent>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default AgentModal
+export default AgentModal;
