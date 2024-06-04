@@ -13,7 +13,7 @@ import {
   Pagination,
   Tooltip,
 } from "@nextui-org/react";
-import { getAgents } from "@/api/agent/agent";
+import { getAgents, Agent } from "@/api/agent/agent";
 import {
   MdCached,
   MdAdd,
@@ -41,7 +41,7 @@ const modelList = [
 ];
 
 const Tables = () => {
-  const [agents, setAgents] = useState([]);
+  const [agents, setAgents] = useState<Agent[]>([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -82,7 +82,6 @@ const Tables = () => {
 
     getAgents(params)
       .then((res) => {
-        console.log(res);
         setisLoading(false);
         setAgents(res.agents);
         setTotal(res.total);
@@ -283,7 +282,7 @@ const Tables = () => {
             </div>
           }
         >
-          {agents.map((agent) => (
+          {agents.map((agent: Agent) => (
             <TableRow key={agent.agent_id}>
               <TableCell>
                 <div className="flex flex-col">
