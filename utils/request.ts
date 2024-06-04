@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
 
 const localBackend =
-  process.env.NEXT_PUBLIC_LOCAL_BACKEND.toUpperCase() === "TRUE";
+  process.env.NEXT_PUBLIC_LOCAL_BACKEND?.toUpperCase() === "TRUE";
 
 // default values of the environment variables
 const apiVersion = process.env.NEXT_PUBLIC_API_VERSION;
@@ -61,7 +61,9 @@ instance.interceptors.request.use(
     const refresh_token = Cookies.get("refresh_token");
     if (access_token && access_token !== "" && access_token !== "undefined") {
       // if access token is present, add it to the headers
-      config.headers.Authorization = `Bearer access=${access_token}`;
+      if (config.headers) {
+        config.headers.Authorization = `Bearer access=${access_token}`;
+      }
       return config as any;
     } else if (
       refresh_token &&
@@ -78,7 +80,9 @@ instance.interceptors.request.use(
         console.log("response", response);
         const new_access_token = response.data.data.access_token;
         Cookies.set("access_token", new_access_token, { expires: 1 / 48 });
-        config.headers.Authorization = `Bearer access=${new_access_token}`;
+        if (config.headers) {
+          config.headers.Authorization = `Bearer access=${new_access_token}`;
+        }
         return config as any;
       } catch (error) {
         Cookies.remove("access_token");

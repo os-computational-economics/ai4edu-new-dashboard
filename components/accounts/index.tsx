@@ -12,24 +12,38 @@ import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
 import { TableWrapper } from "@/components/table/table";
 import { AddUser } from "./add-user";
 
+interface CurrentCourse {
+  id: string;
+  name: string;
+  role: string;
+  semester: string;
+}
+
 export const Accounts = () => {
-  const [currentCourse, setCurrentCourse] = useState(null);
+  const [currentCourse, setCurrentCourse] = useState<CurrentCourse>({
+    id: "",
+    name: "",
+    role: "",
+    semester: "",
+  });
   useEffect(() => {
-    const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse'))
+    const storedSelectedCourse = JSON.parse(
+      localStorage.getItem("selectedCourse") || "{}"
+    );
     if (storedSelectedCourse) {
-      setCurrentCourse(storedSelectedCourse)
+      setCurrentCourse(storedSelectedCourse);
     }
 
     const handleCourseSelected = (event) => {
-      const selectedCourse = event.detail
-      setCurrentCourse(selectedCourse)
-    }
+      const selectedCourse = event.detail;
+      setCurrentCourse(selectedCourse);
+    };
 
-    window.addEventListener('courseSelected', handleCourseSelected)
+    window.addEventListener("courseSelected", handleCourseSelected);
 
     return () => {
-      window.removeEventListener('courseSelected', handleCourseSelected)
-    }
+      window.removeEventListener("courseSelected", handleCourseSelected);
+    };
   }, []);
 
   return (

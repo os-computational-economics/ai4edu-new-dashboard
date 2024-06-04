@@ -5,13 +5,13 @@ import HistoryPanel from "./components/HistoryPanel";
 import { Pagination } from "@nextui-org/react";
 import { ToastContainer, toast } from "react-toastify";
 
-import { getThreadsList, getThreadbyID } from "@/api/thread/thread";
+import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from "@/api/thread/thread";
 import useMount from "@/components/hooks/useMount";
 
 export default function App() {
   const [selectedThreadId, setSelectedThreadId] = useState(null);
-  const [threads, setThreads] = useState([]);
-  const [threadDetails, setThreadDetails] = useState(null);
+  const [threads, setThreads] = useState<Thread[]>([]);
+  const [threadDetails, setThreadDetails] = useState<SingleThreadResponse | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0); // Total number of threads

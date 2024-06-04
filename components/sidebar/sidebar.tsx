@@ -11,18 +11,28 @@ import { SidebarMenu } from "./sidebar-menu";
 import { useSidebarContext } from "../layout/layout-context";
 import { usePathname } from "next/navigation";
 
+interface SelectedCourse {
+  id: string;
+  name: string;
+  role: string;
+  semester: string;
+}
+
 export const SidebarWrapper = () => {
   const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(
+    null
+  );
   const pathname = usePathname();
   const { collapsed, setCollapsed } = useSidebarContext();
 
   useEffect(() => {
-    const storedCourses = JSON.parse(localStorage.getItem("courses")) || [];
+    const storedCourses =
+      JSON.parse(localStorage.getItem("courses") || "{}") || [];
     setCourses(storedCourses);
 
     const storedSelectedCourse = JSON.parse(
-      localStorage.getItem("selectedCourse")
+      localStorage.getItem("selectedCourse") || "{}"
     );
     if (storedSelectedCourse) {
       setSelectedCourse(storedSelectedCourse);

@@ -11,13 +11,18 @@ import { Image } from "@nextui-org/react";
 import { BottomIcon } from "../icons/sidebar/bottom-icon";
 import { useRouter } from "next/navigation";
 
+interface Course {
+  id: string;
+  name: string;
+}
+
 const CourseDropdown = ({ courses, setSelectedCourse }) => {
-  const [course, setCourse] = useState(null);
+  const [course, setCourse] = useState<Course | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const storedSelectedCourse = JSON.parse(
-      localStorage.getItem("selectedCourse")
+      localStorage.getItem("selectedCourse") || "{}"
     );
     if (storedSelectedCourse) {
       setCourse(storedSelectedCourse);
@@ -38,7 +43,7 @@ const CourseDropdown = ({ courses, setSelectedCourse }) => {
   }, [setSelectedCourse]);
 
   const handleClickDropdownItem = (e) => {
-    router.push('/accounts')
+    router.push("/accounts");
   };
 
   return (

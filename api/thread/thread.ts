@@ -1,12 +1,14 @@
 import request from "@/utils/request";
 
+export interface Thread {
+  thread_id: string;
+  user_id: string;
+  created_at: string;
+  agent_id: string;
+}
+
 export interface ListThreadsResponse {
-  threads: Array<{
-    thread_id: string;
-    user_id: string;
-    created_at: string;
-    agent_id: string;
-  }>;
+  threads: Array<Thread>;
   total: number;
 }
 
