@@ -15,8 +15,21 @@ import { AddUser } from "./add-user";
 export const Accounts = () => {
   const [currentCourse, setCurrentCourse] = useState(null);
   useEffect(() => {
-    const currentCourse = JSON.parse(localStorage.getItem("selectedCourse"));
-    setCurrentCourse(currentCourse);
+    const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse'))
+    if (storedSelectedCourse) {
+      setCurrentCourse(storedSelectedCourse)
+    }
+
+    const handleCourseSelected = (event) => {
+      const selectedCourse = event.detail
+      setCurrentCourse(selectedCourse)
+    }
+
+    window.addEventListener('courseSelected', handleCourseSelected)
+
+    return () => {
+      window.removeEventListener('courseSelected', handleCourseSelected)
+    }
   }, []);
 
   return (

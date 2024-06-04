@@ -38,10 +38,7 @@ const CourseDropdown = ({ courses, setSelectedCourse }) => {
   }, [setSelectedCourse]);
 
   const handleClickDropdownItem = (e) => {
-    // enforce reload
-    window.location.href = "/accounts";
-    // router.push('/accounts')
-    // router.refresh()
+    router.push('/accounts')
   };
 
   return (
