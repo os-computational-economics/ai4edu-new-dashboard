@@ -111,6 +111,7 @@ instance.interceptors.response.use(
         // authorization error, logout
         Cookies.remove('access_token')
         Cookies.remove('refresh_token')
+        localStorage.clear()
         setTimeout(() => {
           window.location.href = '/auth/signin'
         }, 3000)
