@@ -30,7 +30,10 @@ const CourseDropdown = ({ courses, setSelectedCourse }) => {
   }, [setSelectedCourse])
 
   const handleClickDropdownItem = (e) => {
-    router.push('/accounts')
+    // enforce reload
+    window.location.href = '/accounts'
+    // router.push('/accounts')
+    // router.refresh()
   }
 
   return (
