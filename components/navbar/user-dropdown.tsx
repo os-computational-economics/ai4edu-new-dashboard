@@ -28,6 +28,9 @@ export const UserDropdown = () => {
   useEffect(() => {
     const access_token = Cookies.get("access_token");
     const refresh_token = Cookies.get("refresh_token");
+    const firstLevelDomain =
+      "." + window.location.hostname.split(".").slice(-2).join(".");
+
     if (access_token) {
       const decodedToken = jwt.decode(access_token) as JwtPayload;
       console.log("decodedToken", decodedToken);
@@ -41,9 +44,12 @@ export const UserDropdown = () => {
       Cookies.set(
         "full_name",
         `${decodedToken.first_name} ${decodedToken.last_name}`,
-        { expires: 15 }
+        { expires: 15, domain: firstLevelDomain }
       );
-      Cookies.set("email", decodedToken.email, { expires: 15 });
+      Cookies.set("email", decodedToken.email, {
+        expires: 15,
+        domain: firstLevelDomain,
+      });
     } else if (refresh_token) {
       setFullName(Cookies.get("full_name") || "-");
       setEmail(Cookies.get("email") || "-");
