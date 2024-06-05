@@ -13,12 +13,20 @@ const SigninPage: React.FC = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const refresh = urlParams.get("refresh");
       const access = urlParams.get("access");
+      const firstLevelDomain =
+        "." + window.location.hostname.split(".").slice(-2).join(".");
 
       if (refresh && access) {
-        // refresh token valid for 15 days
-        Cookies.set("refresh_token", refresh, { expires: 15 });
+        // refresh token valid for 15 days, under the domain first level domain
+        Cookies.set("refresh_token", refresh, {
+          expires: 15,
+          domain: firstLevelDomain,
+        });
         // access token valid for 30 minutes
-        Cookies.set("access_token", access, { expires: 1 / 48 });
+        Cookies.set("access_token", access, {
+          expires: 1 / 48,
+          domain: firstLevelDomain,
+        });
 
         urlParams.delete("refresh");
         urlParams.delete("access");
