@@ -15,10 +15,10 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 export const UserDropdown = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const firstLevelDomain =
-    "." + window.location.hostname.split(".").slice(-2).join(".");
 
   const Logout = () => {
+    const firstLevelDomain =
+      "." + window.location.hostname.split(".").slice(-2).join(".");
     Cookies.remove("refresh_token", { domain: firstLevelDomain });
     Cookies.remove("access_token", { domain: firstLevelDomain });
     Cookies.remove("full_name", { domain: firstLevelDomain });
@@ -30,6 +30,8 @@ export const UserDropdown = () => {
   useEffect(() => {
     const access_token = Cookies.get("access_token");
     const refresh_token = Cookies.get("refresh_token");
+    const firstLevelDomain =
+      "." + window.location.hostname.split(".").slice(-2).join(".");
 
     if (access_token) {
       const decodedToken = jwt.decode(access_token) as JwtPayload;
