@@ -79,7 +79,12 @@ instance.interceptors.request.use(
         });
         console.log("response", response);
         const new_access_token = response.data.data.access_token;
-        Cookies.set("access_token", new_access_token, { expires: 1 / 48 });
+        const firstLevelDomain =
+          "." + window.location.hostname.split(".").slice(-2).join(".");
+        Cookies.set("access_token", new_access_token, {
+          expires: 1 / 48,
+          domain: firstLevelDomain,
+        });
         if (config.headers) {
           config.headers.Authorization = `Bearer access=${new_access_token}`;
         }
