@@ -210,7 +210,7 @@ export const Chat = () => {
                 <Switch id="microphone" />
                 <Label htmlFor="microphone">Enable Microphone</Label>
               </div>
-              <Button className="justify-center mt-3" variant="destructive">Reset Chat</Button>
+              <Button className="justify-center mt-3">Reset Chat</Button>
             </section>
           </header>
         </div>
