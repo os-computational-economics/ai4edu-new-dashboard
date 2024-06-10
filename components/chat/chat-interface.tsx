@@ -1,19 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button"
-
-
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
+  Checkbox,
+  Switch,
+  Button,
+  ScrollShadow,
+  Card,
+  Textarea,
+} from "@nextui-org/react";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 interface MessageProps {
   content: string;
@@ -34,17 +30,36 @@ interface InputMessageProps {
   placeholder: string;
 }
 
-const Message: React.FC<MessageProps> = ({
-  content,
-  className,
-  additionalClasses = "",
-}) => (
-  <section
-    className={`${className} ${additionalClasses} justify-center px-4 py-3 mt-2 rounded-2xl`}
-  >
-    {content}
-  </section>
-);
+const messages = [
+  { content: "This is the main chat template", align: "end" },
+  { content: "Oh?", align: "start" },
+  { content: "Cool", align: "start" },
+  { content: "Simple", align: "end" },
+  {
+    content:
+      "You just edit any text to type in the conversation you want to show, and delete any bubbles you don’t want to use",
+    align: "end",
+  },
+  { content: "Boom", align: "end" },
+  { content: "Hmmm", align: "start" },
+  { content: "I think I get it", align: "start" },
+];
+
+const Message = ({ content, align }) => {
+  const className =
+    align === "end"
+      ? "bg-black text-white font-medium self-end max-w-3/4"
+      : "bg-neutral-200 max-w-3/4";
+  const additionalClasses = "rounded-2xl px-4 py-2";
+
+  return (
+    <div
+      className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}
+    >
+      <div className={`${className} ${additionalClasses}`}>{content}</div>
+    </div>
+  );
+};
 
 const ChatUser: React.FC<ChatUserProps> = ({ name, status }) => (
   <section className="flex gap-4">
@@ -60,17 +75,8 @@ const ChatDate: React.FC<ChatDateProps> = ({ date }) => (
 );
 
 const InputMessage: React.FC<InputMessageProps> = ({ placeholder }) => (
-  <form className="flex gap-2 px-4 py-2 mt-10 inset-x-0 bottom-0 bg-white rounded-lg border border-solid border-neutral-200 text-zinc-500">
-    <label htmlFor="messageInput" className="sr-only">
-      {placeholder}
-    </label>
-    <input
-      id="messageInput"
-      type="text"
-      placeholder={placeholder}
-      className="flex-1 text-ellipsis"
-      aria-label={placeholder}
-    />
+  <form className="flex gap-2 px-4 py-2 mt-10 inset-x-0 bottom-0 bg-white rounded-xl border border-solid border-neutral-200 text-zinc-500">
+    <Textarea placeholder={placeholder} className="flex-grow" />
     <img
       loading="lazy"
       src="https://cdn.builder.io/api/v1/image/assets/TEMP/9432ba68df7a4aa97d33ac355c8e33e288f6afba050db4410438593ee51fbc1f?apiKey=e949a1eb83934463a3acc167ebb849e4&"
@@ -90,7 +96,6 @@ type Document = {
   id: number;
   title: string;
 };
-
 
 export const Chat = () => {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
@@ -115,9 +120,9 @@ export const Chat = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-30px)]">
-      <aside className="z-[20] sticky top-0">
-        <div className="flex flex-col grow pb-20 w-full bg-white border-l border-solid border-neutral-200">
+    <div className="flex h-[90vh]">
+      <aside className="z-[20] h-full">
+        <div className="flex flex-col grow pb-20 w-full bg-white">
           <header className="flex flex-col justify-center text-center mx-4 max-md:mx-2.5">
             <section className="flex flex-col justify-center">
               <h2 className="justify-center px-4 py-2 mt-6 text-base font-medium text-white bg-black rounded-lg max-md:px-5">
@@ -207,144 +212,112 @@ export const Chat = () => {
                 Settings
               </h2>
               <div className="flex items-center space-x-2">
-                <Switch id="microphone" />
-                <Label htmlFor="microphone">Enable Microphone</Label>
+                <Switch id="microphone">Enable Microphone</Switch>
               </div>
               <Button className="justify-center mt-3">Reset Chat</Button>
             </section>
           </header>
         </div>
       </aside>
-      <ResizablePanelGroup
+      <PanelGroup
+        autoSaveId="chat-interface"
         direction="horizontal"
-        className="h-full rounded-lg border"
+        className="w-full h-full"
       >
-        <ResizablePanel defaultSize={25}>
-          <div className="flex h-full">
-            <div className="bg-white p-6">
-              <h1 className="text-2xl font-bold mb-4">ECONOMICS 380</h1>
-              <div className="text-wrap">
-                {selectedDocument ? (
-                  <>
-                    <h3 className="text-xl font-bold mb-4">
-                      {selectedDocument.title}
-                    </h3>
-                    <ScrollArea className="h-[700px] w-fit rounded-md">
-                      <p>
-                        Lorem ipsum dolor sit amet, consecteturasdas adipiscing
-                        elit. Sed euismod tellus vel sapien bibendum, vel
-                        bibendum odio consequat. Nullam volutpat metus ac nunc
-                        dapibus, id malesuada velit aliquam. Suspendisse
-                        potenti. Nulla facilisi. Duis euismod, nulla sit amet
-                        aliquam lacinia, nisl nisl aliquam nisl, nec aliquam
-                        nisl nisl sit amet nisl. Sed euismod tellus vel sapien
-                        bibendum, vel bibendum odio consequat.Lorem ipsum dolor
-                        sit amet, consectetur adipiscing elit. Sed euismod
-                        tellus vel sapien bibendum, vel bibendum odio consequat.
-                        Nullam volutpat metus ac nunc dapibus, id malesuada
-                        velit aliquam. Suspendisse potenti. Nulla facilisi. Duis
-                        euismod, nulla sit amet aliquam lacinia, nisl nisl
-                        aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed
-                        euismod tellus vel sapien bibendum, vel bibendum odio
-                        consequat.Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed euismod tellus vel sapien bibendum,
-                        vel bibendum odio consequat. Nullam volutpat metus ac
-                        nunc dapibus, id malesuada velit aliquam. Suspendisse
-                        potenti. Nulla facilisi. Duis euismod, nulla sit amet
-                        aliquam lacinia, nisl nisl aliquam nisl, nec aliquam
-                        nisl nisl sit amet nisl. Sed euismod tellus vel sapien
-                        bibendum, vel bibendum odio consequat.Lorem ipsum dolor
-                        sit amet, consectetur adipiscing elit. Sed euismod
-                        tellus vel sapien bibendum, vel bibendum odio consequat.
-                        Nullam volutpat metus ac nunc dapibus, id malesuada
-                        velit aliquam. Suspendisse potenti. Nulla facilisi. Duis
-                        euismod, nulla sit amet aliquam lacinia, nisl nisl
-                        aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed
-                        euismod tellus vel sapien bibendum, vel bibendum odio
-                        consequat.Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed euismod tellus vel sapien bibendum,
-                        vel bibendum odio consequat. Nullam volutpat metus ac
-                        nunc dapibus, id malesuada velit aliquam. Suspendisse
-                        potenti. Nulla facilisi. Duis euismod, nulla sit amet
-                        aliquam lacinia, nisl nisl aliquam nisl, nec aliquam
-                        nisl nisl sit amet nisl. Sed euismod tellus vel sapien
-                        bibendum, vel bibendum odio consequat.Lorem ipsum dolor
-                        sit amet, consectetur adipiscing elit. Sed euismod
-                        tellus vel sapien bibendum, vel bibendum odio consequat.
-                        Nullam volutpat metus ac nunc dapibus, id malesuada
-                        velit aliquam. Suspendisse potenti. Nulla facilisi. Duis
-                        euismod, nulla sit amet aliquam lacinia, nisl nisl
-                        aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed
-                        euismod tellus vel sapien bibendum, vel bibendum odio
-                        consequat.
-                      </p>
-                    </ScrollArea>
-                  </>
-                ) : (
-                  <p>No document selected.</p>
-                )}
+        <Panel defaultSize={25} maxSize={70} minSize={20}>
+          <Card className="m-1 h-full">
+            <div className="flex h-full">
+              <div className="bg-white p-6">
+                <h1 className="text-2xl font-bold mb-4">ECONOMICS 380</h1>
+                <div className="text-wrap">
+                  {selectedDocument ? (
+                    <>
+                      <h3 className="text-xl font-bold mb-4">
+                        {selectedDocument.title}
+                      </h3>
+                      <ScrollShadow className="h-[700px] w-fit rounded-md">
+                        <p>
+                          Lorem ipsum dolor sit amet, consecteturasdas
+                          adipiscing elit. Sed euismod tellus vel sapien
+                          bibendum, vel bibendum odio consequat. Nullam volutpat
+                          metus ac nunc dapibus, id malesuada velit aliquam.
+                          Suspendisse potenti. Nulla facilisi. Duis euismod,
+                          nulla sit amet aliquam lacinia, nisl nisl aliquam
+                          nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
+                          tellus vel sapien bibendum, vel bibendum odio
+                          consequat.Lorem ipsum dolor sit amet, consectetur
+                          adipiscing elit. Sed euismod tellus vel sapien
+                          bibendum, vel bibendum odio consequat. Nullam volutpat
+                          metus ac nunc dapibus, id malesuada velit aliquam.
+                          Suspendisse potenti. Nulla facilisi. Duis euismod,
+                          nulla sit amet aliquam lacinia, nisl nisl aliquam
+                          nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
+                          tellus vel sapien bibendum, vel bibendum odio
+                          consequat.Lorem ipsum dolor sit amet, consectetur
+                          adipiscing elit. Sed euismod tellus vel sapien
+                          bibendum, vel bibendum odio consequat. Nullam volutpat
+                          metus ac nunc dapibus, id malesuada velit aliquam.
+                          Suspendisse potenti. Nulla facilisi. Duis euismod,
+                          nulla sit amet aliquam lacinia, nisl nisl aliquam
+                          nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
+                          tellus vel sapien bibendum, vel bibendum odio
+                          consequat.Lorem ipsum dolor sit amet, consectetur
+                          adipiscing elit. Sed euismod tellus vel sapien
+                          bibendum, vel bibendum odio consequat. Nullam volutpat
+                          metus ac nunc dapibus, id malesuada velit aliquam.
+                          Suspendisse potenti. Nulla facilisi. Duis euismod,
+                          nulla sit amet aliquam lacinia, nisl nisl aliquam
+                          nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
+                          tellus vel sapien bibendum, vel bibendum odio
+                          consequat.Lorem ipsum dolor sit amet, consectetur
+                          adipiscing elit. Sed euismod tellus vel sapien
+                          bibendum, vel bibendum odio consequat. Nullam volutpat
+                          metus ac nunc dapibus, id malesuada velit aliquam.
+                          Suspendisse potenti. Nulla facilisi. Duis euismod,
+                          nulla sit amet aliquam lacinia, nisl nisl aliquam
+                          nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
+                          tellus vel sapien bibendum, vel bibendum odio
+                          consequat.Lorem ipsum dolor sit amet, consectetur
+                          adipiscing elit. Sed euismod tellus vel sapien
+                          bibendum, vel bibendum odio consequat. Nullam volutpat
+                          metus ac nunc dapibus, id malesuada velit aliquam.
+                          Suspendisse potenti. Nulla facilisi. Duis euismod,
+                          nulla sit amet aliquam lacinia, nisl nisl aliquam
+                          nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
+                          tellus vel sapien bibendum, vel bibendum odio
+                          consequat.
+                        </p>
+                      </ScrollShadow>
+                    </>
+                  ) : (
+                    <p>No document selected.</p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={75}>
-          <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full">
-            <header className="flex z-10 gap-5 justify-center items-start px-6 w-full bg-white border-b border-solid border-neutral-200 max-md:flex-wrap max-md:px-5 max-md:max-w-full">
-              <ChatUser name="Agent Name" status="Powered by ChatGPT" />
-            </header>
-            <main className="flex flex-col mt-9 h-full">
-              <Message
-                content="This is the main chat template"
-                className="bg-black text-white font-medium self-end"
-              />
-              <ChatDate date="Nov 30, 2023, 9:41 AM" />
-              <section className="flex flex-col items-start pr-20 mt-9 font-medium text-black max-md:pr-5 max-md:max-w-full">
-                <Message
-                  content="Oh?"
-                  className="bg-neutral-200"
-                  additionalClasses="whitespace-nowrap rounded-3xl"
-                />
-                <Message
-                  content="Cool"
-                  className="bg-neutral-200"
-                  additionalClasses="whitespace-nowrap rounded-3xl"
-                />
-              </section>
-              <section className="flex flex-col items-end pl-20 mt-9 font-medium text-white max-md:pl-5 max-md:max-w-full">
-                <Message
-                  content="Simple"
-                  className="bg-black"
-                  additionalClasses="whitespace-nowrap rounded-2xl"
-                />
-                <Message
-                  content="You just edit any text to type in the conversation you want to show, and delete any bubbles you don’t want to use"
-                  className="bg-black"
-                  additionalClasses="max-w-full leading-6 w-[480px]"
-                />
-                <Message
-                  content="Boom"
-                  className="bg-black"
-                  additionalClasses="whitespace-nowrap rounded-2xl"
-                />
-              </section>
-              <section className="flex flex-col items-start pr-20 mt-9 font-medium text-black max-md:pr-5 max-md:max-w-full">
-                <Message
-                  content="Hmmm"
-                  className="bg-neutral-200"
-                  additionalClasses="whitespace-nowrap rounded-3xl"
-                />
-                <Message
-                  content="I think I get it"
-                  className="bg-neutral-200"
-                  additionalClasses="rounded-3xl"
-                />
-              </section>
-            </main>
-            <InputMessage placeholder="Enter your message" />
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+          </Card>
+        </Panel>
+        <PanelResizeHandle />
+        <Panel defaultSize={75} maxSize={80} minSize={30}>
+          <Card className="m-1">
+            <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full">
+              <header className="flex z-10 gap-5 justify-center items-start px-6 w-full bg-white border-b border-solid border-neutral-200 max-md:flex-wrap max-md:px-5 max-md:max-w-full">
+                <ChatUser name="Agent Name" status="Powered by ChatGPT" />
+              </header>
+              <main className="flex flex-col mt-9 h-full">
+                {messages.map((message, index) => (
+                  <Message
+                    key={index}
+                    content={message.content}
+                    align={message.align}
+                  />
+                ))}
+              </main>
+              <InputMessage placeholder="Enter your message" />
+            </div>
+          </Card>
+        </Panel>
+      </PanelGroup>
     </div>
   );
 };
