@@ -17,7 +17,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CourseDropdown } from "../course-dropdown";
+import {CourseDropdown} from "../course-dropdown"
 
 interface SidebarWrapperProps {
   selectedCourse: string;
