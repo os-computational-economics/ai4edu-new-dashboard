@@ -19,7 +19,19 @@ const documents: Document[] = [
   { id: 4, title: "Document 4" },
 ];
 
-export default function ChatPage({ isOpen, onClose, status, agent }) {
+interface ChatPageProps {
+  isOpen: boolean;
+  onClose: () => void;
+  status: string;
+  agent: any; // replace 'any' with the actual type if known
+}
+
+export default function ChatPage({
+  isOpen,
+  onClose,
+  status,
+  agent,
+}: ChatPageProps) {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null
   );
