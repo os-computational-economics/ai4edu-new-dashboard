@@ -1,18 +1,23 @@
-'use client'
-import React from 'react'
-import { Card, Textarea, ScrollShadow } from '@nextui-org/react'
-import { MdAttachFile } from 'react-icons/md'
-import messages from './mock'
+"use client";
+import React from "react";
+import { Card, Textarea, ScrollShadow } from "@nextui-org/react";
+import { MdAttachFile } from "react-icons/md";
+import messages from "./mock";
 
 function Message({ content, align }: { content: string; align: string }) {
-  const className = align === 'end' ? 'bg-black text-white font-medium self-end max-w-3/4' : 'bg-neutral-200 max-w-3/4'
-  const additionalClasses = 'rounded-2xl px-4 py-2'
+  const className =
+    align === "end"
+      ? "bg-black text-white font-medium self-end max-w-3/4"
+      : "bg-neutral-200 max-w-3/4";
+  const additionalClasses = "rounded-2xl px-4 py-2";
 
   return (
-    <div className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}>
+    <div
+      className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}
+    >
       <div className={`${className} ${additionalClasses}`}>{content}</div>
     </div>
-  )
+  );
 }
 
 function ChatUser({ name, status }: { name: string; status: string }) {
@@ -23,7 +28,7 @@ function ChatUser({ name, status }: { name: string; status: string }) {
         <p className="text-ellipsis text-zinc-700">{status}</p>
       </div>
     </section>
-  )
+  );
 }
 
 function InputMessage({ placeholder }: { placeholder: string }) {
@@ -32,7 +37,7 @@ function InputMessage({ placeholder }: { placeholder: string }) {
       <Textarea placeholder={placeholder} className="flex-grow" />
       <MdAttachFile />
     </div>
-  )
+  );
 }
 
 export default function ChatPanel() {
@@ -44,7 +49,11 @@ export default function ChatPanel() {
         </header> */}
         <ScrollShadow className="flex flex-col overflow-auto h-full pr-4">
           {messages.map((message, index) => (
-            <Message key={index} content={message.content} align={message.align} />
+            <Message
+              key={index}
+              content={message.content}
+              align={message.align}
+            />
           ))}
         </ScrollShadow>
         <footer className="flex-shrink-0">
@@ -52,5 +61,5 @@ export default function ChatPanel() {
         </footer>
       </div>
     </Card>
-  )
+  );
 }

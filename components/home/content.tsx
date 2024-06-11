@@ -1,71 +1,78 @@
-'use client'
-import React, { useEffect } from 'react'
-import dynamic from 'next/dynamic'
-import { Card, CardHeader, CardBody, Image } from '@nextui-org/react'
-import { useRouter } from 'next/navigation'
+"use client";
+import React, { useEffect } from "react";
+import dynamic from "next/dynamic";
+import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 const courses = [
   {
-    id: 'Student - ECON 380',
-    semester: 'Spring 2023',
-    name: 'Computational Economics',
-    role: 'student'
+    id: "Student - ECON 380",
+    semester: "Spring 2023",
+    name: "Computational Economics",
+    role: "student",
   },
   {
-    id: 'Student - CSDS 301',
-    semester: 'Fall 2022',
-    name: 'Software Engineering',
-    role: 'student'
+    id: "Student - CSDS 301",
+    semester: "Fall 2022",
+    name: "Software Engineering",
+    role: "student",
   },
   {
-    id: 'Teacher - CSDS 401',
-    semester: 'Fall 2022',
-    name: 'Algorithms',
-    role: 'teacher'
+    id: "Teacher - CSDS 401",
+    semester: "Fall 2022",
+    name: "Algorithms",
+    role: "teacher",
   },
   {
-    id: 'Teacher - CSDS 402',
-    semester: 'Fall 2022',
-    name: 'Database Systems',
-    role: 'teacher'
+    id: "Teacher - CSDS 402",
+    semester: "Fall 2022",
+    name: "Database Systems",
+    role: "teacher",
   },
   {
-    id: 'Admin - CSDS 601',
-    semester: 'Fall 2022',
-    name: 'Advanced Topics in AI',
-    role: 'admin'
+    id: "Admin - CSDS 601",
+    semester: "Fall 2022",
+    name: "Advanced Topics in AI",
+    role: "admin",
   },
   {
-    id: 'Admin - MATH 602',
-    semester: 'Spring 2023',
-    name: 'Statistical Learning',
-    role: 'admin'
-  }
-]
+    id: "Admin - MATH 602",
+    semester: "Spring 2023",
+    name: "Statistical Learning",
+    role: "admin",
+  },
+];
 
-const Chart = dynamic(() => import('../charts/steam').then((mod) => mod.Steam), {
-  ssr: false
-})
+const Chart = dynamic(
+  () => import("../charts/steam").then((mod) => mod.Steam),
+  {
+    ssr: false,
+  }
+);
 
 const CourseCard = ({ course }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleCourseClick = () => {
-    localStorage.setItem('selectedCourse', JSON.stringify(course))
-    const event = new CustomEvent('courseSelected', { detail: course })
-    window.dispatchEvent(event)
-    const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
-    if (storedSelectedCourse.role === 'admin') {
-      router.push('/access-control')
+    localStorage.setItem("selectedCourse", JSON.stringify(course));
+    const event = new CustomEvent("courseSelected", { detail: course });
+    window.dispatchEvent(event);
+    const storedSelectedCourse = JSON.parse(
+      localStorage.getItem("selectedCourse") || "{}"
+    );
+    if (storedSelectedCourse.role === "admin") {
+      router.push("/access-control");
     } else {
-      router.push('/agents')
+      router.push("/agents");
     }
-  }
+  };
 
   return (
     <Card className="py-4 w-[300px]" isPressable onPress={handleCourseClick}>
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-        <p className="text-tiny uppercase font-bold truncate w-full">{course.name}</p>
+        <p className="text-tiny uppercase font-bold truncate w-full">
+          {course.name}
+        </p>
         <small className="text-default-500 truncate w-full">{course.id}</small>
       </CardHeader>
       <CardBody className="overflow-visible py-2">
@@ -78,13 +85,13 @@ const CourseCard = ({ course }) => {
         />
       </CardBody>
     </Card>
-  )
-}
+  );
+};
 
 export const Content = () => {
   useEffect(() => {
-    localStorage.setItem('courses', JSON.stringify(courses))
-  }, [])
+    localStorage.setItem("courses", JSON.stringify(courses));
+  }, []);
 
   return (
     <div className="h-full lg:px-6 pb-6 v">
@@ -101,7 +108,7 @@ export const Content = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Content
+export default Content;

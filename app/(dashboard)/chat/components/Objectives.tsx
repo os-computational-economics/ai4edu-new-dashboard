@@ -1,18 +1,21 @@
-'use client'
-import React from 'react'
-import { Checkbox, Switch, Button, ScrollShadow } from '@nextui-org/react'
+"use client";
+import React from "react";
+import { Checkbox, Switch, Button, ScrollShadow } from "@nextui-org/react";
 
 type Document = {
-  id: number
-  title: string
-}
+  id: number;
+  title: string;
+};
 
 interface ObjectivesProps {
-  documents: Document[]
-  onDocumentClick: (document: Document) => void
+  documents: Document[];
+  onDocumentClick: (document: Document) => void;
 }
 
-export default function Objectives({ documents, onDocumentClick }: ObjectivesProps) {
+export default function Objectives({
+  documents,
+  onDocumentClick,
+}: ObjectivesProps) {
   return (
     <ScrollShadow>
       <header className="flex flex-col justify-center text-center mx-4 max-md:mx-2.5">
@@ -20,7 +23,9 @@ export default function Objectives({ documents, onDocumentClick }: ObjectivesPro
           <h2 className="justify-center px-4 py-2 mt-6 text-base font-medium text-white bg-black rounded-lg max-md:px-5">
             Objectives
           </h2>
-          <p className="pt-3 text-base text-ellipsis text-zinc-700 font-bold">Add a vehicle</p>
+          <p className="pt-3 text-base text-ellipsis text-zinc-700 font-bold">
+            Add a vehicle
+          </p>
           <div className="flex items-center py-1 text-base text-ellipsis text-zinc-700 font-bold">
             <span>Progress:</span>
             <span className="ml-2">100%</span>
@@ -29,7 +34,9 @@ export default function Objectives({ documents, onDocumentClick }: ObjectivesPro
             <span>Customer Mood:</span>
             <span className="ml-2 text-green-400">Happy</span>
           </div>
-          <p className="text-base text-ellipsis py-2 text-zinc-700">Remember to use your guidelines!</p>
+          <p className="text-base text-ellipsis py-2 text-zinc-700">
+            Remember to use your guidelines!
+          </p>
         </section>
         <section className="flex flex-col justify-center mt-3">
           <div>
@@ -108,5 +115,5 @@ export default function Objectives({ documents, onDocumentClick }: ObjectivesPro
         </section>
       </header>
     </ScrollShadow>
-  )
+  );
 }

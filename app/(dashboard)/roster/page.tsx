@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react'
+"use client";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -11,59 +11,59 @@ import {
   Spinner,
   Pagination,
   CheckboxGroup,
-  Checkbox
-} from '@nextui-org/react'
-import { getUserList, grantAccess, User } from '@/api/auth/auth'
-import { MdCached } from 'react-icons/md'
-import useMount from '@/components/hooks/useMount'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+  Checkbox,
+} from "@nextui-org/react";
+import { getUserList, grantAccess, User } from "@/api/auth/auth";
+import { MdCached } from "react-icons/md";
+import useMount from "@/components/hooks/useMount";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Tables = () => {
-  const [users, setUsers] = useState<User[]>([])
-  const [total, setTotal] = useState(0)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [isLoading, setisLoading] = useState(false)
+  const [users, setUsers] = useState<User[]>([]);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [isLoading, setisLoading] = useState(false);
 
-  const totalPage = Math.ceil(total / pageSize)
+  const totalPage = Math.ceil(total / pageSize);
 
   useMount(() => {
-    fetchUserList(currentPage, pageSize)
-  })
+    fetchUserList(currentPage, pageSize);
+  });
 
   const fetchUserList = (page: number, pageSize: number) => {
     const params = {
       page,
-      page_size: pageSize
-    }
+      page_size: pageSize,
+    };
 
     getUserList(params)
       .then((res) => {
-        setisLoading(false)
-        setUsers(res.user_list)
-        setTotal(res.total)
+        setisLoading(false);
+        setUsers(res.user_list);
+        setTotal(res.total);
       })
       .catch((error) => {
-        setisLoading(false)
-        console.error('Error fetching users:', error)
-      })
-  }
+        setisLoading(false);
+        console.error("Error fetching users:", error);
+      });
+  };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-    setisLoading(true)
-    fetchUserList(page, pageSize)
-  }
+    setCurrentPage(page);
+    setisLoading(true);
+    fetchUserList(page, pageSize);
+  };
 
   const handleSearch = (reload) => {
     if (reload) {
-      setisLoading(true)
-      setCurrentPage(1) // Reset to first page for new search
+      setisLoading(true);
+      setCurrentPage(1); // Reset to first page for new search
 
-      fetchUserList(1, pageSize)
+      fetchUserList(1, pageSize);
     }
-  }
+  };
 
   return (
     <div className="m-6">
@@ -78,8 +78,15 @@ const Tables = () => {
           totalPage > 0 && (
             <div>
               <div className="flex h-full w-full items-center justify-center">
-                <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
-                <div className="ml-8 text-small text-default-600">Total {total} users</div>
+                <Pagination
+                  isDisabled={isLoading}
+                  page={currentPage}
+                  total={totalPage}
+                  onChange={handlePageChange}
+                />
+                <div className="ml-8 text-small text-default-600">
+                  Total {total} users
+                </div>
               </div>
             </div>
           )
@@ -112,7 +119,7 @@ const Tables = () => {
         </TableBody>
       </Table>
     </div>
-  )
-}
+  );
+};
 
-export default Tables
+export default Tables;
