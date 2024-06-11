@@ -27,7 +27,7 @@ import {
 import useMount from "@/components/hooks/useMount";
 import AgentModal from "./agents-modal/AgentModal";
 import ConfirmDeleteModal from "./agents-modal/ConfirmDeleteModal";
-import ChatPage from "../chat/page";
+import ChatPage from "../chat/ChatPage";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
