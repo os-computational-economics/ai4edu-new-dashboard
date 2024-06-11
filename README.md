@@ -9,12 +9,12 @@
 - Dark Mode Support
 - Full Responsive
 - Home Page with Charts
-- Accounts Page
+- roster Page
 - More pages coming soon...
 
 ```
 ├── components
-│   ├── accounts            # Accounts components
+│   ├── roster            # roster components
 │   ├── charts              # Charts components
 │   ├── breadcrumb          # component
 |   ├── home                # Home components
@@ -26,8 +26,8 @@
 |   ├── icons               # Icons
 |   ├── hooks               # Hooks
 ├── app                     # Documentation files
-│   ├── accounts            # Accounts route
-|       ├── page.tsx        # Accounts page
+│   ├── roster            # roster route
+|       ├── page.tsx        # roster page
 │   ├── page.tsx            # Entry point for the app
 │   ├── layout.tsx          # Layout applied to all application pages
 │   ├── providers.tsx       # Theme provider

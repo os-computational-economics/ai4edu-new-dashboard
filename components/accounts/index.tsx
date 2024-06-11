@@ -1,46 +1,44 @@
-"use client";
-import { Button, Input } from "@nextui-org/react";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { DotsIcon } from "@/components/icons/accounts/dots-icon";
-import { ExportIcon } from "@/components/icons/accounts/export-icon";
+'use client'
+import { Button, Input } from '@nextui-org/react'
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import { DotsIcon } from '@/components/icons/roster/dots-icon'
+import { ExportIcon } from '@/components/icons/roster/export-icon'
 
-import { TableWrapper } from "@/components/table/table";
-import { AddUser } from "./add-user";
+import { TableWrapper } from '@/components/table/table'
+import { AddUser } from './add-user'
 
 interface CurrentCourse {
-  id: string;
-  name: string;
-  role: string;
-  semester: string;
+  id: string
+  name: string
+  role: string
+  semester: string
 }
 
-export const Accounts = () => {
+export const roster = () => {
   const [currentCourse, setCurrentCourse] = useState<CurrentCourse>({
-    id: "",
-    name: "",
-    role: "",
-    semester: "",
-  });
+    id: '',
+    name: '',
+    role: '',
+    semester: ''
+  })
   useEffect(() => {
-    const storedSelectedCourse = JSON.parse(
-      localStorage.getItem("selectedCourse") || "{}"
-    );
+    const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
     if (storedSelectedCourse) {
-      setCurrentCourse(storedSelectedCourse);
+      setCurrentCourse(storedSelectedCourse)
     }
 
     const handleCourseSelected = (event) => {
-      const selectedCourse = event.detail;
-      setCurrentCourse(selectedCourse);
-    };
+      const selectedCourse = event.detail
+      setCurrentCourse(selectedCourse)
+    }
 
-    window.addEventListener("courseSelected", handleCourseSelected);
+    window.addEventListener('courseSelected', handleCourseSelected)
 
     return () => {
-      window.removeEventListener("courseSelected", handleCourseSelected);
-    };
-  }, []);
+      window.removeEventListener('courseSelected', handleCourseSelected)
+    }
+  }, [])
 
   return (
     <div className="my-12 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -51,8 +49,8 @@ export const Accounts = () => {
         <div className="flex items-center gap-2 flex-wrap md:flex-nowrap">
           <Input
             classNames={{
-              input: "w-full",
-              mainWrapper: "w-full",
+              input: 'w-full',
+              mainWrapper: 'w-full'
             }}
             placeholder="Search agents"
           />
@@ -68,5 +66,5 @@ export const Accounts = () => {
         <TableWrapper />
       </div>
     </div>
-  );
-};
+  )
+}
