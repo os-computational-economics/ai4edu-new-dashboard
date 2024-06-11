@@ -2,22 +2,18 @@
 import React, { useState } from "react";
 import { ChevronUpIcon } from "../icons/sidebar/chevron-up-icon";
 import { Accordion, AccordionItem } from "@nextui-org/react";
-import clsx from "clsx";
 
 interface Props {
-  icon: React.ReactNode;
-  title: string;
   items: string[];
 }
 
-export const CollapseItems = ({ icon, items, title }: Props) => {
-  const [open, setOpen] = useState(false);
+export const CollapseItems = ({ items }: Props) => {
 
   return (
     <div className="flex gap-4 h-full items-center cursor-pointer">
-      <Accordion className="px-0">
+      <Accordion className="px-0" defaultExpandedKeys={["0"]}>
         <AccordionItem
-          indicator={<ChevronUpIcon />}
+          key={"0"}
           classNames={{
             indicator: "data-[open=true]:-rotate-180",
             trigger:
@@ -29,19 +25,18 @@ export const CollapseItems = ({ icon, items, title }: Props) => {
           aria-label="Accordion 1"
           title={
             <div className="flex flex-row gap-2">
-              <span>{icon}</span>
-              <span>{title}</span>
+              {"Quick Access"}
             </div>
           }
         >
           <div className="pl-12">
             {items.map((item, index) => (
-              <span
+              <div
                 key={index}
-                className="w-full flex  text-default-500 hover:text-default-900 transition-colors"
+                className="text-default-500 hover:text-default-900 transition-colors bg-slate-100 hover:bg-slate-200 items-center text-center mt-2 py-1 rounded-lg"
               >
                 {item}
-              </span>
+              </div>
             ))}
           </div>
         </AccordionItem>

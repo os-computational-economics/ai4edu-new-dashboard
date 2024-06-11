@@ -10,6 +10,7 @@ import { SidebarItem } from "./sidebar-item";
 import { SidebarMenu } from "./sidebar-menu";
 import { useSidebarContext } from "../layout/layout-context";
 import { usePathname } from "next/navigation";
+import { CollapseItems } from "./collapse-items";
 
 interface SelectedCourse {
   id: string;
@@ -99,6 +100,9 @@ export const SidebarWrapper = () => {
           icon={<AgentsIcon />}
           href="agents"
         />,
+        <CollapseItems
+          items={["Assistant 1", "Assistant 2", "Assistant 3"]}
+        />,
         <SidebarItem
           key="chat-history"
           isActive={pathname === "/chat-history"}
@@ -117,6 +121,9 @@ export const SidebarWrapper = () => {
           title="Learning Assistants"
           icon={<AgentsIcon />}
           href="agents"
+        />,
+        <CollapseItems
+          items={["Assistant 1", "Assistant 2", "Assistant 3"]}
         />,
         <SidebarItem
           key="chat-history"

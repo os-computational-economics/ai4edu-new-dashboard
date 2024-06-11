@@ -6,37 +6,37 @@ import { useRouter } from "next/navigation";
 
 const courses = [
   {
-    id: "Student - ECON 380",
+    id: "ECON 380",
     semester: "Spring 2023",
     name: "Computational Economics",
     role: "student",
   },
   {
-    id: "Student - CSDS 301",
+    id: "CSDS 301",
     semester: "Fall 2022",
     name: "Software Engineering",
     role: "student",
   },
   {
-    id: "Teacher - CSDS 401",
+    id: "CSDS 401",
     semester: "Fall 2022",
     name: "Algorithms",
     role: "teacher",
   },
   {
-    id: "Teacher - CSDS 402",
+    id: "CSDS 402",
     semester: "Fall 2022",
     name: "Database Systems",
     role: "teacher",
   },
   {
-    id: "Admin - CSDS 601",
+    id: "CSDS 601",
     semester: "Fall 2022",
     name: "Advanced Topics in AI",
     role: "admin",
   },
   {
-    id: "Admin - MATH 602",
+    id: "MATH 602",
     semester: "Spring 2023",
     name: "Statistical Learning",
     role: "admin",

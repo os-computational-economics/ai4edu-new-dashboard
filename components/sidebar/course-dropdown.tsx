@@ -1,5 +1,6 @@
 "use client";
 import {
+  Chip,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -13,6 +14,7 @@ import { useRouter } from "next/navigation";
 
 interface Course {
   id: string;
+  role: string;
   name: string;
 }
 
@@ -60,15 +62,14 @@ const CourseDropdown = ({ courses, setSelectedCourse }) => {
         <div className="flex items-center gap-2">
           {course?.id ? (
             <>
-              <Image
-                src="/favicon.ico"
-                alt="logo"
-                className="w-11 rounded-md"
-              />
-              <div className="flex flex-col gap-4">
-                <h3 className="text-xl font-medium m-0 text-default-900 -mb-4 whitespace-nowrap">
-                  {course.id}
-                </h3>
+              <Image src="/favicon.ico" alt="logo" className="rounded-md" />
+              <div className="flex flex-col">
+                <div className="flex flex-col align-middle">
+                  <Chip size="sm">{course.role}</Chip>
+                  <h3 className="text-xl font-medium m-0 text-default-900 whitespace-nowrap">
+                    {course.id}
+                  </h3>
+                </div>
                 <span className="text-xs font-medium text-default-500">
                   {course.name}
                 </span>
@@ -120,6 +121,7 @@ const CourseDropdown = ({ courses, setSelectedCourse }) => {
                 classNames={{ base: "py-4", title: "text-base font-semibold" }}
                 onClick={handleClickDropdownItem}
               >
+                <Chip size="sm" className="mr-1">{course.role}</Chip>
                 {course.id} - {course.name}
               </DropdownItem>
             ))
