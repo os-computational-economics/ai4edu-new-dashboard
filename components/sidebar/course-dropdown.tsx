@@ -36,10 +36,11 @@ const CourseDropdown = ({ courses, setSelectedCourse }) => {
 
   const handleClickDropdownItem = (e) => {
     const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
+    console.log('storedSelectedCourse:', storedSelectedCourse)
     if (storedSelectedCourse.role === 'admin') {
       router.push('/access-control')
     } else {
-      router.push('/manage-agents')
+      router.push('/agents')
     }
   }
 

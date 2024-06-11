@@ -82,11 +82,11 @@ export const SidebarWrapper = () => {
           href="roster"
         />,
         <SidebarItem
-          key="manage-agents"
-          isActive={pathname === '/manage-agents'}
+          key="agents"
+          isActive={pathname === '/agents'}
           title="Learning Assistants"
           icon={<AgentsIcon />}
-          href="manage-agents"
+          href="agents"
         />,
         <SidebarItem
           key="chat-history"
@@ -101,11 +101,11 @@ export const SidebarWrapper = () => {
     if (role === 'student') {
       commonItems.push(
         <SidebarItem
-          key="manage-agents"
-          isActive={pathname === '/manage-agents'}
+          key="agents"
+          isActive={pathname === '/agents'}
           title="Learning Assistants"
           icon={<AgentsIcon />}
-          href="manage-agents"
+          href="agents"
         />,
         <SidebarItem
           key="chat-history"

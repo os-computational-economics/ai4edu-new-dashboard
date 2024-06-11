@@ -58,7 +58,7 @@ const CourseCard = ({ course }) => {
     if (storedSelectedCourse.role === 'admin') {
       router.push('/access-control')
     } else {
-      router.push('/manage-agents')
+      router.push('/agents')
     }
   }
 
