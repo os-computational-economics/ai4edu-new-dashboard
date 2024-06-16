@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
-import { preprocessLaTeX } from './CustomMessageRender'
+import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import 'katex/dist/katex.min.css' // CSS for LaTeX rendering
 import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
 
