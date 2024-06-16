@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === "development") {
   console.log("Unknown environment");
 }
 
-const apiUrl = `${baseURL}/${apiVersion}/${environment}/${role}`;
+export const apiUrl = `${baseURL}/${apiVersion}/${environment}`;
 console.log("****", apiUrl);
 
 const instance = axios.create({

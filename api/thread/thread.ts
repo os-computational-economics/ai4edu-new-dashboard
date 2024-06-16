@@ -36,10 +36,11 @@ export interface GetThread {
 
 // API paths
 const path = "threads";
+const role = "admin"
 
 const api = {
-  listThreads: path + "/get_thread_list",
-  getThread: path + "/get_thread",
+  listThreads: role + `/${path}` + "/get_thread_list",
+  getThread: role + `/${path}` + "/get_thread",
 };
 
 // list threads (GET)

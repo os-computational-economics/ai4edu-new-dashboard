@@ -49,13 +49,14 @@ export interface DeleteAgent {
 
 // API paths
 const path = "agents";
+const role = "admin"
 
 const api = {
-  addAgent: path + "/add_agent",
-  deleteAgent: path + "/delete_agent",
-  updateAgent: path + "/update_agent",
-  getAgentbyID: path + "",
-  getAgents: path + "/agents",
+  addAgent: role + `/${path}` + "/add_agent",
+  deleteAgent: role + `/${path}` + "/delete_agent",
+  updateAgent: role + `/${path}` + "/update_agent",
+  getAgentbyID: role + `/${path}` + "",
+  getAgents: role + `/${path}` + "/agents",
 };
 
 // add agent

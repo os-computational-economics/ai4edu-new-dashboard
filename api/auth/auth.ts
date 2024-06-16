@@ -20,10 +20,11 @@ export interface UserList {
 
 // API paths
 const path = "access";
+const role = "admin"
 
 const api = {
-  getUserList: path + "/get_user_list",
-  grantAccess: path + "/grant_access",
+  getUserList: role + `/${path}` + "/get_user_list",
+  grantAccess: role + `/${path}` + "/grant_access",
 };
 
 // add agent
