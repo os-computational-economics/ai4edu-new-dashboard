@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Table,
   TableHeader,
@@ -58,6 +58,12 @@ const Tables = () => {
     fetchAgents(currentPage, pageSize)
   })
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCreatorId(localStorage.getItem('user_id') || 'test001')
+    }
+  }, [])
+
   const generateShareUrl = (agent) => {
     const baseUrl = 'https://chat.ai4edu.io'
     const url = `${baseUrl}/agent/${agent.agent_id}`
@@ -76,7 +82,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      creator: creatorId || localStorage.getItem('user_id') || 'test001'
+      creator: creatorId || 'test001'
     }
 
     getAgents(params)
@@ -127,6 +133,7 @@ const Tables = () => {
   }
 
   const topContent = React.useMemo(() => {
+    if (typeof window === 'undefined') return null
     const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
     return (
       <div className="flex flex-col gap-4">
@@ -163,6 +170,7 @@ const Tables = () => {
   }, [creatorId, isLoading])
 
   const renderActions = (agent) => {
+    if (typeof window === 'undefined') return null
     const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
 
     if (storedSelectedCourse.role === 'student') {
@@ -246,22 +254,6 @@ const Tables = () => {
       ></ConfirmDeleteModal>
       <AgentModal isOpen={isModalOpen} onClose={closeModal} status={status} agent={currentAgent} />
       <ChatPage isOpen={isChatModalOpen} onClose={closeChatModal} status={status} agent={currentAgent}></ChatPage>
-      {/* <Modal
-        isOpen={isChatModalOpen}
-        onClose={closeChatModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-        size="full"
-      >
-        <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ChatPage />
-            </>
-          )}
-        </ModalContent>
-      </Modal> */}
 
       <Table
         topContent={topContent}
