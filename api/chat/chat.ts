@@ -7,12 +7,14 @@ const role = "user"
 
 const api = {
   testQuery: role + '/test_query',
+  fileUpload: role + '/file_upload',
   streamChat: role + '/stream_chat',
   newThread: role + '/get_new_thread',
   getAgent: role + `/${path}` + '/agent/get'
 }
 
 export const testQueryURL = apiUrl + '/' + api.testQuery
+export const fileUploadURL = apiUrl + '/' + api.fileUpload
 export const steamChatURL = apiUrl + '/' + api.streamChat
 export const newThreadURL = apiUrl + '/' + api.newThread
 

@@ -12,6 +12,7 @@ import rehypeHighlight from 'rehype-highlight'
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import 'katex/dist/katex.min.css' // CSS for LaTeX rendering
 import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
+import { FileUploadForm } from './FileUpload'
 
 function Message({ content, align }: { content: string; align: string }) {
   const className = align === 'end' ? 'bg-black text-white font-medium self-end max-w-3/4' : 'bg-neutral-200 max-w-3/4'
@@ -53,7 +54,7 @@ function InputMessage({
           }
         }}
       />
-      <MdAttachFile />
+      <FileUploadForm />
       <Button onPress={sendMessage}>Send</Button>
     </div>
   )
@@ -72,6 +73,12 @@ const ChatPanel = ({ agent }) => {
   useEffect(() => {
     console.log('$$$', agent)
   }, [agent])
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages])
 
   const appendMessage = (content, align) => {
     setMessages((prevMessages) => [...prevMessages, { content, align }])
@@ -128,6 +135,7 @@ const ChatPanel = ({ agent }) => {
     const access_token = Cookies.get('access_token')
 
     fetch(testQueryURL, {
+    // fetch('http://localhost:8000/v1/dev/user/test_query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
