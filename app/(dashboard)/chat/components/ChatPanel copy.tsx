@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Card, Textarea, ScrollShadow, Button } from '@nextui-org/react'
 import { MdAttachFile } from 'react-icons/md'
-import { testQueryURL, getNewThread } from '@/api/chat/chat'
+import { steamChatURL, getNewThread } from '@/api/chat/chat'
 import Cookies from 'js-cookie'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
@@ -77,6 +77,16 @@ const ChatPanel = ({ agent }) => {
     setMessages((prevMessages) => [...prevMessages, { content, align }])
   }
 
+  const updateLastMessage = (content) => {
+    setMessages((prevMessages) => {
+      const newMessages = [...prevMessages]
+      if (newMessages.length > 0) {
+        newMessages[newMessages.length - 1].content = content
+      }
+      return newMessages
+    })
+  }
+
   const getNewThreadID = async () => {
     console.log(threadId)
     const params = {
@@ -97,6 +107,7 @@ const ChatPanel = ({ agent }) => {
   }
 
   const sendMessage = async () => {
+    // generate new thread id before sending message, not onload to prevent unnecessary calls
     let currentThreadId = threadId
     if (!currentThreadId) {
       currentThreadId = await getNewThreadID()
@@ -127,17 +138,40 @@ const ChatPanel = ({ agent }) => {
 
     const access_token = Cookies.get('access_token')
 
-    fetch(testQueryURL, {
+    fetch(steamChatURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer access=${access_token}`
       },
-      body: JSON.stringify({ question: message })
+      body: JSON.stringify(chatMessage)
     })
-      .then((response) => response.json())
-      .then((data) => {
-        appendMessage(data.answer, 'start')
+      .then((response) => {
+        const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+
+        let responseMessage = ''
+
+        const processStream = async () => {
+          appendMessage('', 'start') // Append an empty message for AI response
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            const lines = value.split('\n').filter((line) => line.trim() !== '')
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                try {
+                  const data = JSON.parse(line.slice(6))
+                  responseMessage = data.response
+                  updateLastMessage(responseMessage)
+                } catch (e) {
+                  console.error('Error parsing JSON:', e, line)
+                }
+              }
+            }
+          }
+        }
+
+        processStream()
       })
       .catch((err) => {
         console.error(err)

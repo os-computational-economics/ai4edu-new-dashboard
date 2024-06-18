@@ -6,11 +6,13 @@ const path = 'users'
 const role = "user"
 
 const api = {
+  testQuery: role + '/test_query',
   streamChat: role + '/stream_chat',
   newThread: role + '/get_new_thread',
   getAgent: role + `/${path}` + '/agent/get'
 }
 
+export const testQueryURL = apiUrl + '/' + api.testQuery
 export const steamChatURL = apiUrl + '/' + api.streamChat
 export const newThreadURL = apiUrl + '/' + api.newThread
 
