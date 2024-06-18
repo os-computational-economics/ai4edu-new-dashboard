@@ -7,7 +7,7 @@ const role = "user"
 
 const api = {
   testQuery: role + '/test_query',
-  fileUpload: role + '/file_upload',
+  fileUpload: role + '/upload_file',
   streamChat: role + '/stream_chat',
   newThread: role + '/get_new_thread',
   getAgent: role + `/${path}` + '/agent/get'
