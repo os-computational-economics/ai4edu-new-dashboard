@@ -16,6 +16,7 @@ import {
 import { fileUploadURL } from "@/api/chat/chat";
 import { on } from "events";
 import { set } from "react-hook-form";
+import Cookies from "js-cookie";
 
 export const FileUploadForm: React.FC = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -61,9 +62,14 @@ export const FileUploadForm: React.FC = () => {
       formData.append("file", file);
       formData.append("file_name", fileName);
 
+      const access_token = Cookies.get("access_token");
+
       fetch(fileUploadURL, {
-      // fetch("http://localhost:8000/v1/dev/user/upload_file", {
+        // fetch("http://localhost:8000/v1/dev/user/upload_file", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer access=${access_token}`,
+        },
         body: formData,
       })
         .then((response) => {
