@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Card, Textarea, ScrollShadow, Button } from '@nextui-org/react'
 import { MdAttachFile } from 'react-icons/md'
-import { steamChatURL, getNewThread } from '@/api/chat/chat'
+import { testQueryURL, getNewThread } from '@/api/chat/chat'
 import Cookies from 'js-cookie'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
@@ -12,6 +12,7 @@ import rehypeHighlight from 'rehype-highlight'
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import 'katex/dist/katex.min.css' // CSS for LaTeX rendering
 import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
+import { FileUploadForm } from './FileUpload'
 
 function Message({ content, align }: { content: string; align: string }) {
   const className = align === 'end' ? 'bg-black text-white font-medium self-end max-w-3/4' : 'bg-neutral-200 max-w-3/4'
@@ -53,7 +54,7 @@ function InputMessage({
           }
         }}
       />
-      <MdAttachFile />
+      <FileUploadForm />
       <Button onPress={sendMessage}>Send</Button>
     </div>
   )
@@ -73,18 +74,14 @@ const ChatPanel = ({ agent }) => {
     console.log('$$$', agent)
   }, [agent])
 
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages])
+
   const appendMessage = (content, align) => {
     setMessages((prevMessages) => [...prevMessages, { content, align }])
-  }
-
-  const updateLastMessage = (content) => {
-    setMessages((prevMessages) => {
-      const newMessages = [...prevMessages]
-      if (newMessages.length > 0) {
-        newMessages[newMessages.length - 1].content = content
-      }
-      return newMessages
-    })
   }
 
   const getNewThreadID = async () => {
@@ -107,7 +104,6 @@ const ChatPanel = ({ agent }) => {
   }
 
   const sendMessage = async () => {
-    // generate new thread id before sending message, not onload to prevent unnecessary calls
     let currentThreadId = threadId
     if (!currentThreadId) {
       currentThreadId = await getNewThreadID()
@@ -138,40 +134,18 @@ const ChatPanel = ({ agent }) => {
 
     const access_token = Cookies.get('access_token')
 
-    fetch(steamChatURL, {
+    fetch(testQueryURL, {
+    // fetch('http://localhost:8000/v1/dev/user/test_query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer access=${access_token}`
       },
-      body: JSON.stringify(chatMessage)
+      body: JSON.stringify({ question: message })
     })
-      .then((response) => {
-        const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
-
-        let responseMessage = ''
-
-        const processStream = async () => {
-          appendMessage('', 'start') // Append an empty message for AI response
-          while (true) {
-            const { done, value } = await reader.read()
-            if (done) break
-            const lines = value.split('\n').filter((line) => line.trim() !== '')
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                try {
-                  const data = JSON.parse(line.slice(6))
-                  responseMessage = data.response
-                  updateLastMessage(responseMessage)
-                } catch (e) {
-                  console.error('Error parsing JSON:', e, line)
-                }
-              }
-            }
-          }
-        }
-
-        processStream()
+      .then((response) => response.json())
+      .then((data) => {
+        appendMessage(data.answer, 'start')
       })
       .catch((err) => {
         console.error(err)

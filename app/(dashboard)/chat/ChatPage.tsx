@@ -5,7 +5,6 @@ import Objectives from './components/Objectives'
 import DocumentPanel from './components/DocumentPanel'
 import ChatPanel from './components/ChatPanel'
 import { Modal, ModalContent, ModalHeader } from '@nextui-org/react'
-import { set } from 'react-hook-form'
 
 type Document = {
   id: number
