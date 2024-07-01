@@ -19,6 +19,8 @@ import {
   WorkflowPopup,
 } from "@/app/(dashboard)/agent-dev/dev-popups";
 import { AgentResourcesPopup } from "@/app/(dashboard)/agent-dev/dev-popups";
+import { DropdownMenu, DropdownItem, Dropdown, DropdownTrigger } from "@nextui-org/react";
+import { Selection } from "@nextui-org/react";
 
 const AgentDevelopment = ({ agent, onUpdate, status, onClose }) => {
   const [message, setMessage] = useState("");
@@ -37,6 +39,10 @@ const AgentDevelopment = ({ agent, onUpdate, status, onClose }) => {
     agent?.allow_model_choice || false
   );
   const [agentModel, setAgentModel] = useState(agent?.model === "openai");
+  const [localAgentModel, setLocalAgentModel] = useState(
+    agent?.model || "openai"
+  );
+
   const [agentStatus, setAgentStatus] = useState(agent?.status === 1);
 
   useEffect(() => {
@@ -48,6 +54,7 @@ const AgentDevelopment = ({ agent, onUpdate, status, onClose }) => {
       setVoiceInput(agent.voice || false);
       setModelSelection(agent.allow_model_choice || false);
       setAgentModel(agent.model === "openai");
+      setLocalAgentModel(agent.model || "openai");
     }
   }, [agent]);
 
@@ -64,40 +71,58 @@ const AgentDevelopment = ({ agent, onUpdate, status, onClose }) => {
     handleChange("status", checked ? 1 : 0);
   };
 
-  const handleUpdate = () => {
-    // Create an updated agent object with the current state values
-    const updatedAgent = {
-      agent_id: agent?.agent_id,
-      agent_name: agentName,
-      course_id: courseId,
-      system_prompt: persona,
-      status: agentStatus ? 1 : 0,
-      voice: voiceInput,
-      allow_model_choice: modelSelection,
-      model: agentModel ? "openai" : "anthropic", // Adjust this based on your model selection logic
-      creator: localStorage.getItem("user_id") || "",
-    };
+  const handleModelChange = (keys: Selection) => {
+    const selectedModel = Array.from(keys)[0] as string;
+    setLocalAgentModel(selectedModel);
+    handleChange("model", selectedModel);
+  };
 
-    onUpdate(updatedAgent);
+  // const handleUpdate = () => {
+  //   // Create an updated agent object with the current state values
+  //   const updatedAgent = {
+  //     agent_id: agent?.agent_id,
+  //     agent_name: agentName,
+  //     course_id: courseId,
+  //     system_prompt: persona,
+  //     status: agentStatus ? 1 : 0,
+  //     voice: voiceInput,
+  //     allow_model_choice: modelSelection,
+  //     model: tempAgentModel, // Adjust this based on your model selection logic
+  //     creator: localStorage.getItem("user_id") || "",
+  //   };
 
-    if (status === 1) {
-      addAgent(updatedAgent)
-        .then((res) => {
-          console.log("Agent added successfully:", res);
-          onClose(true);
-        })
-        .catch((err) => {
-          console.error("Error adding agent:", err);
-        });
-    } else {
-      updateAgent(updatedAgent)
-        .then((res) => {
-          console.log("Agent updated successfully:", res);
-          onClose(true);
-        })
-        .catch((err) => {
-          console.error("Error updating agent:", err);
-        });
+  //   onUpdate(updatedAgent);
+  //   setAgentModel(tempAgentModel);
+
+  //   if (status === 1) {
+  //     addAgent(updatedAgent)
+  //       .then((res) => {
+  //         console.log("Agent added successfully:", res);
+  //         onClose(true);
+  //       })
+  //       .catch((err) => {
+  //         console.error("Error adding agent:", err);
+  //       });
+  //   } else {
+  //     updateAgent(updatedAgent)
+  //       .then((res) => {
+  //         console.log("Agent updated successfully:", res);
+  //         onClose(true);
+  //       })
+  //       .catch((err) => {
+  //         console.error("Error updating agent:", err);
+  //       });
+  //   }
+  // };
+
+  const getModelDisplayName = (model) => {
+    switch (model) {
+      case "openai":
+        return "OpenAI - ChatGPT";
+      case "anthropic":
+        return "Anthropic - Claude AI";
+      default:
+        return "Select a model";
     }
   };
 
@@ -213,13 +238,26 @@ const AgentDevelopment = ({ agent, onUpdate, status, onClose }) => {
             </div>
             <div className="flex justify-between items-center">
               <span>Agent Model</span>
-              <Switch
-                checked={modelSelection}
-                onCheckedChange={(checked) => {
-                  setModelSelection(checked);
-                  handleChange("allow_model_choice", checked);
-                }}
-              />
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button variant="outline" className="capitalize">
+                    {getModelDisplayName(localAgentModel)}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Agent Model Selection"
+                  variant="flat"
+                  disallowEmptySelection
+                  selectionMode="single"
+                  selectedKeys={new Set([localAgentModel])}
+                  onSelectionChange={(keys) => handleModelChange(keys)}
+                >
+                  <DropdownItem key="openai">OpenAI - ChatGPT</DropdownItem>
+                  <DropdownItem key="anthropic">
+                    Anthropic - Claude AI
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
             <div className="flex justify-between items-center">
               <span>Enable Voice Input</span>
