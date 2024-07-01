@@ -1,76 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-
-type AgentSettingProps = {
-  label: string;
-  isEnabled: boolean;
-  onToggle: () => void;
-};
-
-const AgentSetting: React.FC<AgentSettingProps> = ({ label, isEnabled, onToggle }) => (
-  <div
-    className="flex gap-2 py-px pr-0.5 pl-6 rounded-lg shadow-sm bg-zinc-50 max-md:pl-5 cursor-pointer"
-    onClick={onToggle}
-  >
-    <div>{label}</div>
-    <img
-      loading="lazy"
-      src={isEnabled ? "http://b.io/ext_13-" : "http://b.io/ext_14-"}
-      alt={isEnabled ? "Enabled" : "Disabled"}
-      className="shrink-0 my-auto aspect-[0.95] w-[19px]"
-    />
-  </div>
-);
-
-type MessageProps = {
-  sender: string;
-  content: string;
-  isAgent: boolean;
-};
-
-const Message: React.FC<MessageProps> = ({ sender, content, isAgent }) => (
-  <section className="mt-9">
-    <div className="flex gap-3.5 self-start ml-9 text-xl font-bold leading-6 text-black max-md:ml-2.5">
-      <img
-        loading="lazy"
-        src="http://b.io/ext_15-"
-        alt={`${sender} avatar`}
-        className="shrink-0 aspect-[1.05] w-[38px]"
-      />
-      <div className={`my-auto ${isAgent ? 'flex-auto' : ''}`}>{sender}</div>
-    </div>
-    <p className="mt-5 mr-11 ml-9 text-xl leading-6 text-black max-md:mr-2.5 max-md:max-w-full">
-      {content}
-    </p>
-  </section>
-);
-
-type PopupProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-};
-
-const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg">
-        {children}
-        <button
-          onClick={onClose}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const courses = [
   {
@@ -159,61 +91,6 @@ const CourseCard = ({ course }) => {
 export const Content = () => {
   useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
-  }, []);
-
-
-  const [agentName, setAgentName] = useState('Agent Name');
-  const [courseId, setCourseId] = useState('Course ID');
-  const [persona, setPersona] = useState('Design the bot\'s persona, features and workflows using natural language.');
-  const [message, setMessage] = useState('');
-  const [isWorkflowPopupOpen, setIsWorkflowPopupOpen] = useState(false);
-  const [isKnowledgeBasePopupOpen, setIsKnowledgeBasePopupOpen] = useState(false);
-  const [isAgentResourcesPopupOpen, setIsAgentResourcesPopupOpen] = useState(false);
-  const [isMemoryDropdownOpen, setIsMemoryDropdownOpen] = useState(false);
-  const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
-  const [agentStatus, setAgentStatus] = useState(true);
-  const [agentModel, setAgentModel] = useState(true);
-  const [voiceInput, setVoiceInput] = useState(true);
-  const [modelSelection, setModelSelection] = useState(true);
-  const leftPanelRef = useRef<HTMLDivElement>(null);
-  const rightPanelRef = useRef<HTMLDivElement>(null);
-  const resizerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const resizer = resizerRef.current;
-    const leftPanel = leftPanelRef.current;
-    const rightPanel = rightPanelRef.current;
-
-    if (!resizer || !leftPanel || !rightPanel) return;
-
-    let x = 0;
-    let leftWidth = 0; 
-
-    const mouseDownHandler = (e: MouseEvent) => {
-      x = e.clientX;
-      leftWidth = leftPanel.getBoundingClientRect().width;
-
-      document.addEventListener('mousemove', mouseMoveHandler);
-      document.addEventListener('mouseup', mouseUpHandler);
-    };
-
-    const mouseMoveHandler = (e: MouseEvent) => {
-      const dx = e.clientX - x;
-      const newLeftWidth = ((leftWidth + dx) / window.innerWidth) * 100;
-      leftPanel.style.width = `${newLeftWidth}%`;
-      rightPanel.style.width = `${100 - newLeftWidth}%`;
-    };
-
-    const mouseUpHandler = () => {
-      document.removeEventListener('mousemove', mouseMoveHandler);
-      document.removeEventListener('mouseup', mouseUpHandler);
-    };
-
-    resizer.addEventListener('mousedown', mouseDownHandler);
-
-    return () => {
-      resizer.removeEventListener('mousedown', mouseDownHandler);
-    };
   }, []);
 
   return (
