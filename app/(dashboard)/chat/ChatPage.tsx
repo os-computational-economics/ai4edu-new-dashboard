@@ -47,7 +47,7 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
               </ModalHeader>
               <div className="flex h-[calc(100vh-62px)]">
                 <aside className="z-30 overflow-auto">
-                  <div className="flex flex-col grow pb-20 w-full bg-white ">
+                  <div className="flex flex-col grow pb-20 w-full bg-white">
                     <Objectives documents={documents} onDocumentClick={handleDocumentClick} />
                   </div>
                 </aside>
