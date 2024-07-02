@@ -300,7 +300,7 @@ const Tables = () => {
               <TableCell>
                 <div className="flex flex-col">
                   <span className="text-bold text-sm">{agent.agent_name}</span>
-                  <span className="text-bold text-sm capitalize text-default-400">{agent.course_id}</span>
+                  {/* <span className="text-bold text-sm capitalize text-default-400">{agent.course_id}</span> */}
                 </div>
               </TableCell>
               <TableCell>

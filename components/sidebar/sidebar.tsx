@@ -1,168 +1,155 @@
-import React, { useState, useEffect } from "react";
-import { Sidebar } from "./sidebar.styles";
-import { Avatar, Tooltip, Image } from "@nextui-org/react";
-import CourseDropdown from "./course-dropdown";
-import { HomeIcon } from "../icons/sidebar/home-icon";
-import { AgentsIcon } from "../icons/sidebar/agents-icon";
-import { AccountsIcon } from "../icons/sidebar/accounts-icon";
-import { ChatsIcon } from "../icons/sidebar/chats-icon";
-import { SidebarItem } from "./sidebar-item";
-import { SidebarMenu } from "./sidebar-menu";
-import { useSidebarContext } from "../layout/layout-context";
-import { usePathname } from "next/navigation";
-import { CollapseItems } from "./collapse-items";
+import React, { useState, useEffect } from 'react'
+import { Sidebar } from './sidebar.styles'
+import { Avatar, Tooltip, Image } from '@nextui-org/react'
+import CourseDropdown from './course-dropdown'
+import { HomeIcon } from '../icons/sidebar/home-icon'
+import { AgentsIcon } from '../icons/sidebar/agents-icon'
+import { AccountsIcon } from '../icons/sidebar/accounts-icon'
+import { ChatsIcon } from '../icons/sidebar/chats-icon'
+import { SidebarItem } from './sidebar-item'
+import { SidebarMenu } from './sidebar-menu'
+import { useSidebarContext } from '../layout/layout-context'
+import { usePathname } from 'next/navigation'
+import { CollapseItems } from './collapse-items'
+import { isAdmin, formatedCourses } from '@/utils/CookiesUtil'
+import { useRouter } from 'next/navigation'
 
 interface SelectedCourse {
-  id: string;
-  name: string;
-  role: string;
-  semester: string;
+  id: string
+  name: string
+  role: string
+  semester: string
+}
+
+interface Course {
+  id: string
+  role: string
+  name: string
 }
 
 export const SidebarWrapper = () => {
-  const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(
-    null
-  );
-  const pathname = usePathname();
-  const { collapsed, setCollapsed } = useSidebarContext();
+  const [courses, setCourses] = useState<Course[]>([])
+
+  const [selectedCourse, setSelectedCourse] = useState<SelectedCourse>()
+  const pathname = usePathname()
+  const { collapsed, setCollapsed } = useSidebarContext()
+
+  const router = useRouter()
 
   useEffect(() => {
-    const storedCourses =
-      JSON.parse(localStorage.getItem("courses") || "{}") || [];
-    setCourses(storedCourses);
+    window.addEventListener('courseSelected', handleCourseSelected)
+  }, [])
 
-    const storedSelectedCourse = JSON.parse(
-      localStorage.getItem("selectedCourse") || "{}"
-    );
-    if (storedSelectedCourse) {
-      setSelectedCourse(storedSelectedCourse);
-    }
+  const handleCourseSelected = (event) => {
+    console.log('event.detail', event.detail)
+    setSelectedCourse(event.detail)
+  }
 
-    const handleCourseSelected = (event) => {
-      setSelectedCourse(event.detail);
-    };
-
-    window.addEventListener("courseSelected", handleCourseSelected);
-
-    return () => {
-      window.removeEventListener("courseSelected", handleCourseSelected);
-    };
-  }, []);
-
-  const renderCommonItems = (role) => {
+  const renderCommonItems = () => {
     const commonItems = [
-      <SidebarItem
-        key="home"
-        title="Home"
-        icon={<HomeIcon />}
-        isActive={pathname === "/"}
-        href="/"
-      />,
-    ];
-    if (role === "admin") {
-      commonItems.push(
-        <SidebarItem
-          key="access-control"
-          isActive={pathname === "/access-control"}
-          title="Access Control"
-          icon={<AgentsIcon />}
-          href="access-control"
-        />,
-        <SidebarItem
-          key="chat-history"
-          isActive={pathname === "/chat-history"}
-          title="Chat History"
-          icon={<ChatsIcon />}
-          href="chat-history"
-        />
-      );
-    }
-    return commonItems;
-  };
+      <SidebarItem key="dashboard" title="Dashboard" icon={<HomeIcon />} isActive={pathname === '/'} href="/" />
+    ]
+    return commonItems
+  }
 
   const renderSidebarItems = (role) => {
-    const commonItems = [<></>];
+    const sidebarItems = [<></>]
 
-    if (role === "teacher") {
-      commonItems.push(
+    if (role === 'teacher') {
+      sidebarItems.push(
         <SidebarItem
           key="roster"
-          isActive={pathname === "/roster"}
+          isActive={pathname === '/roster'}
           title="Roster"
           icon={<AccountsIcon />}
           href="roster"
         />,
         <SidebarItem
           key="agents"
-          isActive={pathname === "/agents"}
+          isActive={pathname === '/agents'}
           title="Learning Assistants"
           icon={<AgentsIcon />}
           href="agents"
         />,
-        <CollapseItems
-          items={["Assistant 1", "Assistant 2", "Assistant 3"]}
-        />,
         <SidebarItem
           key="chat-history"
-          isActive={pathname === "/chat-history"}
+          isActive={pathname === '/chat-history'}
           title="Chat History"
           icon={<ChatsIcon />}
           href="chat-history"
         />
-      );
+      )
     }
 
-    if (role === "student") {
-      commonItems.push(
+    if (role === 'student') {
+      sidebarItems.push(
         <SidebarItem
           key="agents"
-          isActive={pathname === "/agents"}
+          isActive={pathname === '/agents'}
           title="Learning Assistants"
           icon={<AgentsIcon />}
           href="agents"
         />,
-        <CollapseItems
-          items={["Assistant 1", "Assistant 2", "Assistant 3"]}
-        />,
         <SidebarItem
           key="chat-history"
-          isActive={pathname === "/chat-history"}
+          isActive={pathname === '/chat-history'}
           title="Chat History"
           icon={<ChatsIcon />}
           href="chat-history"
         />
-      );
+      )
     }
 
-    return commonItems;
-  };
+    return sidebarItems
+  }
+
+  const renderAdminItems = () => {
+    const adminItems = [<></>]
+
+    adminItems.push(
+      <SidebarItem
+        key="access-control"
+        isActive={pathname === '/access-control'}
+        title="Access Control"
+        icon={<AgentsIcon />}
+        href="access-control"
+      />,
+      <SidebarItem
+        key="chat-history"
+        isActive={pathname === '/chat-history'}
+        title="Chat History"
+        icon={<ChatsIcon />}
+        href="chat-history"
+      />
+    )
+
+    return adminItems
+  }
 
   return (
     <aside className="h-screen z-[20] sticky top-0">
-      {collapsed ? (
-        <div className={Sidebar.Overlay()} onClick={setCollapsed} />
-      ) : null}
+      {collapsed ? <div className={Sidebar.Overlay()} onClick={setCollapsed} /> : null}
       <div className={Sidebar({ collapsed: collapsed })}>
         <div className={Sidebar.Header()}>
-          <CourseDropdown
-            courses={courses}
-            setSelectedCourse={setSelectedCourse}
-          />
+          <Image src="/favicon.ico" alt="logo" className="rounded-md" />
+          <div>
+            <div className="text-xl font-medium m-0 text-default-900 whitespace-nowrap">AI4EDU</div>
+            <div className="text-xs font-medium text-default-500">Learning Assistant</div>
+          </div>
+          {/* <CourseDropdown courses={courses} setSelectedCourse={setSelectedCourse} /> */}
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
-            {renderCommonItems(selectedCourse?.role)}
-            {selectedCourse && selectedCourse.role != "admin" && (
-              <SidebarMenu title={selectedCourse.name}>
-                {renderSidebarItems(selectedCourse.role)}
-              </SidebarMenu>
+            {renderCommonItems()}
+            {selectedCourse && (
+              <SidebarMenu title={selectedCourse.name}>{renderSidebarItems(selectedCourse.role)}</SidebarMenu>
             )}
+            {isAdmin() && <SidebarMenu title="Admin">{renderAdminItems()}</SidebarMenu>}
           </div>
         </div>
       </div>
     </aside>
-  );
-};
+  )
+}
 
-export default SidebarWrapper;
+export default SidebarWrapper
