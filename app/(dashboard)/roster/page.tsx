@@ -29,7 +29,11 @@ const Tables = () => {
 
   const totalPage = Math.ceil(total / pageSize)
 
-  const [currentWorkspace, setCurrentWorkspace] = useContext(WorkspaceContext)
+  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
+
+  useEffect(() => {
+    fetchUserList(currentPage, pageSize)
+  }, [])
 
   const fetchUserList = (page: number, pageSize: number) => {
     const params = {

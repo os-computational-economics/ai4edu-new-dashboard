@@ -13,7 +13,7 @@ interface Course {
 }
 
 const CourseCard = ({ course }) => {
-  const [currentWorkspace, setCurrentWorkspace] = useContext(WorkspaceContext)
+  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
 
   const router = useRouter()
 

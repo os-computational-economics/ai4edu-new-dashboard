@@ -20,7 +20,7 @@ interface SelectedCourse {
 }
 
 export const NavbarWrapper = ({ children }: Props) => {
-  const [currentWorkspace, setCurrentWorkspace] = useContext(WorkspaceContext)
+  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
 
   return (
     <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">

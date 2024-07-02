@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, createContext } from 'react'
 import { useLockedBody } from '../hooks/useBodyLock'
 import { NavbarWrapper } from '../navbar/navbar'
 import { SidebarWrapper } from '../sidebar/sidebar'
@@ -7,8 +7,17 @@ import { SidebarContext } from './layout-context'
 interface Props {
   children: React.ReactNode
 }
+interface WorkspaceContextType {
+  currentWorkspace: any
+  setCurrentWorkspace: React.Dispatch<React.SetStateAction<any>>
+}
 
-export const WorkspaceContext = React.createContext()
+const defaultWorkspaceContext: WorkspaceContextType = {
+  currentWorkspace: null,
+  setCurrentWorkspace: () => {}
+}
+
+export const WorkspaceContext = createContext<WorkspaceContextType>(defaultWorkspaceContext)
 
 export const Layout = ({ children }: Props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -26,7 +35,7 @@ export const Layout = ({ children }: Props) => {
         setCollapsed: handleToggleSidebar
       }}
     >
-      <WorkspaceContext.Provider value={[currentWorkspace, setCurrentWorkspace]}>
+      <WorkspaceContext.Provider value={{ currentWorkspace, setCurrentWorkspace }}>
         <section className="flex">
           <SidebarWrapper />
           <NavbarWrapper>{children}</NavbarWrapper>
