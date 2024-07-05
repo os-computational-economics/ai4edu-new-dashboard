@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   Table,
   TableHeader,
@@ -22,6 +22,7 @@ import useMount from '@/components/hooks/useMount'
 import AgentModal from './agents-modal/AgentModal'
 import ConfirmDeleteModal from './agents-modal/ConfirmDeleteModal'
 import ChatPage from '../chat/ChatPage'
+import { WorkspaceContext } from '@/components/layout/layout'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -48,6 +49,7 @@ const Tables = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
+  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
 
   const [status, setStatus] = useState(1) // 1 - new Agent, 2 - Edit Agent
   const [currentAgent, setCurrentAgent] = useState(null)
@@ -82,7 +84,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      creator: creatorId || 'test001'
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
     }
 
     getAgents(params)

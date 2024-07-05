@@ -2,7 +2,7 @@ import request from "@/utils/request";
 
 export interface Agent {
   agent_id: string;
-  creator: string;
+  student_id: string;
   allow_model_choice: boolean;
   model: string;
   created_at: string;
@@ -21,7 +21,7 @@ export interface AgentsResponse {
 export interface NewAgent {
   agent_name: string;
   course_id: string;
-  creator: string;
+  student_id: string;
   voice: boolean;
   status: number;
   allow_model_choice: boolean;
@@ -32,7 +32,7 @@ export interface UpdateAgent {
   agent_id: string;
   agent_name: string;
   course_id: string;
-  creator: string;
+  student_id: string;
   voice: boolean;
   status: number;
   allow_model_choice: boolean;
@@ -43,7 +43,7 @@ export interface DeleteAgent {
   agent_id: string;
   agent_name: string;
   course_id: string;
-  creator: string;
+  student_id: string;
   status: number;
 }
 

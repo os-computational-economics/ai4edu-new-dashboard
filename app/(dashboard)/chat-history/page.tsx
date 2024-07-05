@@ -1,9 +1,10 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import CardList from './components/CardList'
 import HistoryPanel from './components/HistoryPanel'
 import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
+import { WorkspaceContext } from '@/components/layout/layout'
 
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
@@ -16,6 +17,7 @@ export default function App() {
   const [pageSize, setPageSize] = useState(10)
   const [total, setTotal] = useState(0) // Total number of threads
   const [creatorId, setCreatorId] = useState('')
+  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
 
   useMount(() => {
     fetchLists(currentPage, pageSize)
@@ -25,7 +27,8 @@ export default function App() {
     const params = {
       page,
       page_size: pageSize,
-      creator: creatorId || localStorage.getItem('user_id') || 'test001'
+      student_id: creatorId || localStorage.getItem('user_id') || 'rxy216',
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
     }
 
     getThreadsList(params)

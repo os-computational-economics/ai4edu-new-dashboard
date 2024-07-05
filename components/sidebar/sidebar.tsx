@@ -38,6 +38,7 @@ export const SidebarWrapper = () => {
 
   useEffect(() => {
     window.addEventListener('courseSelected', handleCourseSelected)
+    setSelectedCourse(JSON.parse(localStorage.getItem('workplace')!))
   }, [])
 
   const handleCourseSelected = (event) => {
@@ -115,9 +116,9 @@ export const SidebarWrapper = () => {
         href="access-control"
       />,
       <SidebarItem
-        key="chat-history"
+        key="chat-history-admin"
         isActive={pathname === '/chat-history'}
-        title="Chat History"
+        title="Chat History Admin"
         icon={<ChatsIcon />}
         href="chat-history"
       />

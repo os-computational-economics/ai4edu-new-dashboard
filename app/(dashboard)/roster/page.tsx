@@ -11,13 +11,16 @@ import {
   Spinner,
   Pagination,
   CheckboxGroup,
-  Checkbox
+  Checkbox,
+  Input,
+  Tooltip
 } from '@nextui-org/react'
-import { getUserList, grantAccess, User } from '@/api/auth/auth'
+import { getUserList, grantAccess, User, addUsersViaCsv } from '@/api/auth/auth'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { MdInfoOutline } from 'react-icons/md'
 import { WorkspaceContext } from '@/components/layout/layout'
 
 const Tables = () => {
@@ -26,6 +29,7 @@ const Tables = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [isLoading, setisLoading] = useState(false)
+  const [file, setFile] = useState(null)
 
   const totalPage = Math.ceil(total / pageSize)
 
@@ -39,7 +43,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: currentWorkspace?.id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
     }
 
     getUserList(params)
@@ -69,10 +73,58 @@ const Tables = () => {
     }
   }
 
+  const handleFileChange = (event) => {
+    console.log('file:', event)
+    setFile(event.target.files[0])
+    // handleFileUpload()
+  }
+
+  const handleFileUpload = () => {
+    if (!file) {
+      toast.error('Please select a file to upload')
+      return
+    }
+
+    const formData = new FormData()
+
+    const workspaceId = currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
+    const urlWorkspace = `admin/workspace/add_users_via_csv?workspace_id=${workspaceId}`
+
+    formData.append('file', file)
+
+    addUsersViaCsv(formData, urlWorkspace)
+      .then((response) => {
+        if (response.success) {
+          toast.success('Users added successfully')
+          // Optionally refresh the user list
+          fetchUserList(currentPage, pageSize)
+        } else {
+          toast.error(response.message)
+        }
+      })
+      .catch((error) => {
+        toast.error('Error uploading file')
+        console.error('Error uploading file:', error)
+      })
+  }
+
   return (
     <div className="m-6">
       <div>
         <h1 className="text-2xl font-bold">Course Roster</h1>
+      </div>
+      <div className="flex justify-end gap-2 items-center mb-4">
+        <Tooltip content="Upload student roster from SIS">
+          <MdInfoOutline />
+        </Tooltip>
+        <input
+          type="file"
+          accept=".xls,.xlsx"
+          onChange={handleFileChange}
+          className="py-2 px-4 border border-gray-300 rounded-lg text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+
+        {file && <Button onClick={handleFileUpload}>Add Students</Button>}
       </div>
       <ToastContainer />
       <Table

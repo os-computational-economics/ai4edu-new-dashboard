@@ -1,18 +1,20 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client'
+import { useEffect, useState, useContext } from 'react'
 
-import { Modal, ModalContent, Button } from "@nextui-org/react";
-import { addAgent, updateAgent } from "@/api/agent/agent";
-import { MdArrowBackIosNew, MdAdd } from "react-icons/md";
+import { Modal, ModalContent, Button } from '@nextui-org/react'
+import { addAgent, updateAgent } from '@/api/agent/agent'
+import { MdArrowBackIosNew, MdAdd } from 'react-icons/md'
+import { WorkspaceContext } from '@/components/layout/layout'
 
-import AgentDevelopment from "../../agent-dev/agent-development";
+import AgentDevelopment from '../../agent-dev/agent-development'
 
 const AgentModal = ({ isOpen, onClose, status, agent }) => {
-  const [currentAgent, setCurrentAgent] = useState(agent);
+  const [currentAgent, setCurrentAgent] = useState(agent)
+  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
 
   useEffect(() => {
-    setCurrentAgent(agent);
-  }, [agent]);
+    setCurrentAgent(agent)
+  }, [agent])
 
   const handleUpdate = () => {
     const adjustedData = {
@@ -21,29 +23,30 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
       voice: currentAgent.voice === true,
       allow_model_choice: currentAgent.allow_model_choice === true,
       status: currentAgent.status === 1 ? 1 : 0,
-      creator: localStorage.getItem("user_id") || "test001",
-    };
+      student_id: localStorage.getItem('user_id') || 'test001',
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
+    }
 
     if (status === 1) {
       addAgent(adjustedData)
         .then((res) => {
-          console.log("Agent added successfully:", res);
-          onClose(true);
+          console.log('Agent added successfully:', res)
+          onClose(true)
         })
         .catch((err) => {
-          console.error("Error adding agent:", err);
-        });
+          console.error('Error adding agent:', err)
+        })
     } else {
       updateAgent(adjustedData)
         .then((res) => {
-          console.log("Agent updated successfully:", res);
-          onClose(true);
+          console.log('Agent updated successfully:', res)
+          onClose(true)
         })
         .catch((err) => {
-          console.error("Error updating agent:", err);
-        });
+          console.error('Error updating agent:', err)
+        })
     }
-  };
+  }
 
   return (
     <div>
@@ -65,16 +68,10 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
                     <MdArrowBackIosNew className="mr-2" onClick={onClose} size={24} />
                   </Button>
                   <div className="flex flex-col ml-3">
-                    <h1 className="text-2xl font-bold">
-                      {currentAgent?.agent_name || "Agent Name"}
-                    </h1>
+                    <h1 className="text-2xl font-bold">{currentAgent?.agent_name || 'Agent Name'}</h1>
                     <div className="flex items-center text-sm text-gray-600 mt-1">
-                      <span className="text-sm mr-2">
-                        {currentAgent?.course_id || "Course ID"}{" "}
-                      </span>
-                      <span className="mr-2">
-                        {currentAgent?.status === 1 ? "Active" : "Inactive"}
-                      </span>
+                      <span className="text-sm mr-2">{currentAgent?.course_id || 'Course ID'} </span>
+                      <span className="mr-2">{currentAgent?.status === 1 ? 'Active' : 'Inactive'}</span>
                       <span>{new Date().toLocaleString()}</span>
                     </div>
                   </div>
@@ -83,20 +80,19 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
                   <h2 className="text-2xl font-bold">Agent Development Mode</h2>
                 </div>
                 <div>
-                  <Button className="bg-blue-500 text-white" onClick={handleUpdate}>Publish Agent</Button>
+                  <Button className="bg-blue-500 text-white" onClick={handleUpdate}>
+                    Publish Agent
+                  </Button>
                 </div>
               </header>
               <div className="flex h-[calc(100vh-62px)]">
-                <AgentDevelopment
-                  agent={currentAgent}
-                  onUpdate={setCurrentAgent}
-                />
+                <AgentDevelopment agent={currentAgent} onUpdate={setCurrentAgent} />
               </div>
             </>
           )}
         </ModalContent>
       </Modal>
     </div>
-  );
-};
-export default AgentModal;
+  )
+}
+export default AgentModal

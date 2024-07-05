@@ -18,7 +18,7 @@ const CourseCard = ({ course }) => {
   const router = useRouter()
 
   const handleCourseClick = () => {
-    // localStorage.setItem('selectedCourse', JSON.stringify(course))
+    localStorage.setItem('workplace', JSON.stringify(course))
     console.log('course', course)
     setCurrentWorkspace(course)
     const event = new CustomEvent('courseSelected', { detail: course })
