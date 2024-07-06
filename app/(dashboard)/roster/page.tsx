@@ -15,7 +15,8 @@ import {
   Input,
   Tooltip
 } from '@nextui-org/react'
-import { getUserList, grantAccess, User, addUsersViaCsv } from '@/api/auth/auth'
+import { getUserList, grantAccess, User } from '@/api/auth/auth'
+import { addUsersViaCsv } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
@@ -94,13 +95,10 @@ const Tables = () => {
 
     addUsersViaCsv(formData, urlWorkspace)
       .then((response) => {
-        if (response.success) {
-          toast.success('Users added successfully')
-          // Optionally refresh the user list
-          fetchUserList(currentPage, pageSize)
-        } else {
-          toast.error(response.message)
-        }
+        toast.success('Users added successfully')
+        setCurrentPage(1)
+        setFile(null)
+        fetchUserList(currentPage, pageSize)
       })
       .catch((error) => {
         toast.error('Error uploading file')
@@ -110,22 +108,22 @@ const Tables = () => {
 
   return (
     <div className="m-6">
-      <div>
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Course Roster</h1>
+        <div className="flex gap-2 items-center">
+          <Tooltip content="Upload student roster from SIS">
+            <MdInfoOutline />
+          </Tooltip>
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileChange}
+            className="py-2 px-4 border border-gray-300 rounded-lg text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+          {file && <Button onClick={handleFileUpload}>Add Students</Button>}
+        </div>
       </div>
-      <div className="flex justify-end gap-2 items-center mb-4">
-        <Tooltip content="Upload student roster from SIS">
-          <MdInfoOutline />
-        </Tooltip>
-        <input
-          type="file"
-          accept=".xls,.xlsx"
-          onChange={handleFileChange}
-          className="py-2 px-4 border border-gray-300 rounded-lg text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-        />
 
-        {file && <Button onClick={handleFileUpload}>Add Students</Button>}
-      </div>
       <ToastContainer />
       <Table
         topContentPlacement="outside"

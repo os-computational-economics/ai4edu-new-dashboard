@@ -3,6 +3,8 @@ import { useLockedBody } from '../hooks/useBodyLock'
 import { NavbarWrapper } from '../navbar/navbar'
 import { SidebarWrapper } from '../sidebar/sidebar'
 import { SidebarContext } from './layout-context'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface Props {
   children: React.ReactNode
@@ -35,6 +37,7 @@ export const Layout = ({ children }: Props) => {
         setCollapsed: handleToggleSidebar
       }}
     >
+      <ToastContainer />
       <WorkspaceContext.Provider value={{ currentWorkspace, setCurrentWorkspace }}>
         <section className="flex">
           <SidebarWrapper />

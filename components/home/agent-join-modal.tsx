@@ -1,0 +1,78 @@
+import { Modal, ModalHeader, ModalBody, ModalFooter, ModalContent, Button, Input } from '@nextui-org/react'
+import { useContext, useState } from 'react'
+import { deleteAgent } from '@/api/agent/agent'
+import { WorkspaceContext } from '@/components/layout/layout'
+import { studentJoinWorkspace } from '@/api/workspace/workspace'
+import { MdInfoOutline } from 'react-icons/md'
+
+const AgentJoinModal = ({ isOpen, onClose }) => {
+  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
+  const [workspaceID, setWorkspaceID] = useState('')
+  const [workspacePassword, setWorkspacePassword] = useState('')
+
+  const handleCloseModal = () => {
+    setWorkspaceID('')
+    setWorkspacePassword('')
+    onClose()
+  }
+
+  const onSubmit = () => {
+    const param = { workspace_id: workspaceID, password: workspacePassword }
+    studentJoinWorkspace(param)
+      .then((response) => {
+        console.log('response', response)
+      })
+      .catch((error) => {
+        console.error('Error joining workspace:', error)
+      })
+  }
+
+  return (
+    <div>
+      <Modal isOpen={isOpen} onClose={() => handleCloseModal()}>
+        <ModalContent>
+          <ModalHeader>Join Workspace</ModalHeader>
+          <ModalBody>
+            <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-lg">
+              <MdInfoOutline size={24} />
+              <span className="text-black-100 text-xs">
+                To join new workspace, enter <span className="font-semibold">Workspace ID</span> and
+                <span className="font-semibold"> Workspace Password</span> provided from your instructor.
+              </span>
+            </div>
+
+            <Input
+              size="sm"
+              variant="bordered"
+              label="Workspace ID"
+              isRequired
+              value={workspaceID}
+              onValueChange={(value) => setWorkspaceID(value)}
+              isClearable
+            />
+            <Input
+              size="sm"
+              variant="bordered"
+              label="Workspace Password"
+              isRequired
+              value={workspacePassword}
+              onValueChange={(value) => setWorkspacePassword(value)}
+              isClearable
+            />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button variant="faded" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            <Button color="primary" onClick={onSubmit} isDisabled={!workspaceID || !workspacePassword}>
+              Join
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </div>
+  )
+}
+
+export default AgentJoinModal

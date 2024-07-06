@@ -21,14 +21,10 @@ export interface UserList {
 // API paths
 const path = "access";
 const role = "admin"
-const workspace = "workspace"
 
 const api = {
   getUserList: role + `/${path}` + "/get_user_list",
   grantAccess: role + `/${path}` + "/grant_access",
-  addUsersViaCsv: role + `/${workspace}` + "/add_users_via_csv",
-  getWorkspaceList: role + `/${workspace}` + "/get_workspace_list",
-
 };
 
 // add agent
@@ -44,27 +40,6 @@ export function grantAccess(data): Promise<any> {
 export function getUserList(params): Promise<UserList> {
   return request({
     url: api.getUserList,
-    method: "get",
-    params: params,
-  });
-}
-
-// add users via CSV
-export function addUsersViaCsv(data, url): Promise<any> {
-  return request({
-    url: url,
-    method: "post",
-    data,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-}
-
-// get workspace list
-export function getWorkspaceList(params): Promise<any> {
-  return request({
-    url: api.getWorkspaceList,
     method: "get",
     params: params,
   });

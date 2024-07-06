@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import {
   Table,
   TableHeader,
@@ -11,13 +11,25 @@ import {
   Spinner,
   Pagination,
   CheckboxGroup,
-  Checkbox
+  Checkbox,
+  Select,
+  SelectSection,
+  SelectItem
 } from '@nextui-org/react'
-import { getUserList, grantAccess, User, getWorkspaceList } from '@/api/auth/auth'
+import { getUserList, grantAccess, User } from '@/api/auth/auth'
+import { getWorkspaceList } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { set } from 'react-hook-form'
+
+interface Workspace {
+  workspace_id: string
+  workspace_name: string
+  workspace_password: string
+  school_id: string
+}
 
 const Tables = () => {
   const [users, setUsers] = useState<User[]>([])
@@ -25,13 +37,16 @@ const Tables = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [isLoading, setisLoading] = useState(false)
+  const [workspaceList, setWorkspaceList] = useState<Workspace[]>([])
+  const [workspaceID, setWorkspaceID] = useState('')
+  const [values, setValues] = useState([])
 
   const totalPage = Math.ceil(total / pageSize)
 
-  useMount(() => {
+  useEffect(() => {
     fetchWorkspaceList(currentPage, pageSize)
     fetchUserList(currentPage, pageSize)
-  })
+  }, [])
 
   const fetchWorkspaceList = (page: number, pageSize: number) => {
     const params = {
@@ -41,18 +56,21 @@ const Tables = () => {
     getWorkspaceList(params)
       .then((res) => {
         console.log(res)
+        setWorkspaceList(res.workspace_list)
       })
       .catch((error) => {
         console.error('Error fetching workspace list:', error)
       })
   }
 
-  const fetchUserList = (page: number, pageSize: number) => {
+  const fetchUserList = (page: number, pageSize: number, id = 'all') => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: 'ai4edu'
+      workspace_id: id || workspaceID
     }
+
+    console.log('params', params)
 
     getUserList(params)
       .then((res) => {
@@ -78,6 +96,7 @@ const Tables = () => {
       setCurrentPage(1) // Reset to first page for new search
 
       fetchUserList(1, pageSize)
+      fetchWorkspaceList(1, pageSize)
     }
   }
 
@@ -103,30 +122,49 @@ const Tables = () => {
       })
   }
 
-  const topContent = React.useMemo(() => {
-    return (
+  const onSelectionchange = (e) => {
+    console.log(values)
+    setValues(values)
+    setWorkspaceID(e.target.value)
+    fetchUserList(1, pageSize, e.target.value)
+  }
+
+  const topContent = useMemo(
+    () => (
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="text-sm">
             Access changes may take up to 30 minutes to take effect. To apply changes immediately, please have the user
             log out and log back in.
           </div>
-          <div className="flex gap-3">
-            <Button
-              variant="bordered"
-              size="sm"
-              color="default"
-              onClick={() => handleSearch(true)}
-              isLoading={isLoading}
-              endContent={<MdCached />}
-            >
-              Reload List
-            </Button>
-          </div>
+          <Button
+            variant="bordered"
+            size="sm"
+            color="default"
+            onClick={() => handleSearch(true)}
+            isLoading={isLoading}
+            endContent={<MdCached />}
+          >
+            Reload List
+          </Button>
         </div>
+        <Select
+          size="sm"
+          label="Select Workspace"
+          onChange={(e) => {
+            onSelectionchange(e)
+          }}
+          selectedKeys={values}
+          disabled={isLoading}
+        >
+          {workspaceList.map((workspace) => (
+            <SelectItem key={workspace.workspace_id}>{workspace.workspace_name}</SelectItem>
+          ))}
+        </Select>
       </div>
-    )
-  }, [isLoading])
+    ),
+    [isLoading]
+  )
 
   return (
     <div className="m-6">

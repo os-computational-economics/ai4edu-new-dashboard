@@ -5,6 +5,7 @@ import CourseDropdown from './course-dropdown'
 import { HomeIcon } from '../icons/sidebar/home-icon'
 import { AgentsIcon } from '../icons/sidebar/agents-icon'
 import { AccountsIcon } from '../icons/sidebar/accounts-icon'
+import { SettingsIcon } from '../icons/sidebar/settings-icon'
 import { ChatsIcon } from '../icons/sidebar/chats-icon'
 import { SidebarItem } from './sidebar-item'
 import { SidebarMenu } from './sidebar-menu'
@@ -29,32 +30,37 @@ interface Course {
 
 export const SidebarWrapper = () => {
   const [courses, setCourses] = useState<Course[]>([])
-
-  const [selectedCourse, setSelectedCourse] = useState<SelectedCourse>()
+  const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(null)
   const pathname = usePathname()
   const { collapsed, setCollapsed } = useSidebarContext()
-
   const router = useRouter()
 
   useEffect(() => {
+    const handleCourseSelected = (event) => {
+      console.log('event.detail', event.detail)
+      setSelectedCourse(event.detail)
+    }
+
     window.addEventListener('courseSelected', handleCourseSelected)
-    setSelectedCourse(JSON.parse(localStorage.getItem('workplace')!))
+
+    if (typeof window !== 'undefined') {
+      const savedCourse = localStorage.getItem('workplace')
+      if (savedCourse) {
+        setSelectedCourse(JSON.parse(savedCourse))
+      }
+    }
+
+    return () => {
+      window.removeEventListener('courseSelected', handleCourseSelected)
+    }
   }, [])
 
-  const handleCourseSelected = (event) => {
-    console.log('event.detail', event.detail)
-    setSelectedCourse(event.detail)
+  const renderCommonItems = (): React.ReactNode[] => {
+    return [<SidebarItem key="dashboard" title="Dashboard" icon={<HomeIcon />} isActive={pathname === '/'} href="/" />]
   }
 
-  const renderCommonItems = () => {
-    const commonItems = [
-      <SidebarItem key="dashboard" title="Dashboard" icon={<HomeIcon />} isActive={pathname === '/'} href="/" />
-    ]
-    return commonItems
-  }
-
-  const renderSidebarItems = (role) => {
-    const sidebarItems = [<></>]
+  const renderSidebarItems = (role: string): React.ReactNode[] => {
+    const sidebarItems: React.ReactNode[] = []
 
     if (role === 'teacher') {
       sidebarItems.push(
@@ -104,10 +110,17 @@ export const SidebarWrapper = () => {
     return sidebarItems
   }
 
-  const renderAdminItems = () => {
-    const adminItems = [<></>]
+  const renderAdminItems = (): React.ReactNode[] => {
+    const adminItems: React.ReactNode[] = []
 
     adminItems.push(
+      <SidebarItem
+        key="workspace"
+        isActive={pathname === '/workspace'}
+        title="Workspace Management"
+        icon={<SettingsIcon />}
+        href="workspace"
+      />,
       <SidebarItem
         key="access-control"
         isActive={pathname === '/access-control'}
@@ -137,7 +150,6 @@ export const SidebarWrapper = () => {
             <div className="text-xl font-medium m-0 text-default-900 whitespace-nowrap">AI4EDU</div>
             <div className="text-xs font-medium text-default-500">Learning Assistant</div>
           </div>
-          {/* <CourseDropdown courses={courses} setSelectedCourse={setSelectedCourse} /> */}
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>

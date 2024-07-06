@@ -1,10 +1,23 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { Card, CardHeader, CardBody, Image } from '@nextui-org/react'
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Image,
+  Input,
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { formatedCourses, isAdmin } from '@/utils/CookiesUtil'
 import { WorkspaceContext } from '@/components/layout/layout'
+import AgentJoinModal from '@/components/home/agent-join-modal'
 
 interface Course {
   id: string
@@ -54,6 +67,7 @@ const CourseCard = ({ course }) => {
 
 export const Content = () => {
   const [courses, setCourses] = useState<Course[]>([])
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false)
 
   useEffect(() => {
     const courseList = formatedCourses()
@@ -62,12 +76,23 @@ export const Content = () => {
     setCourses(courseList)
   }, [])
 
+  const closeJoinModal = () => {
+    // todo: reload workspace list
+    setIsJoinModalOpen(false)
+  }
+
   return (
     <div className="h-full lg:px-6 pb-6 v">
+      <AgentJoinModal isOpen={isJoinModalOpen} onClose={closeJoinModal}></AgentJoinModal>
       <div className="flex justify-center gap-4 xl:gap-6 pt-1 px-4 lg:px-0 flex-wrap xl:flex-nowrap sm:pt-5 max-w-[90rem] mx-auto w-full">
         <div className="mt-1 gap-6 flex flex-col w-full">
           <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold">Workspaces</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-2xl font-bold">My Workspace</h1>
+              <div className="flex gap-2 items-center">
+                <Button onPress={() => setIsJoinModalOpen(true)}>Join Workspace</Button>
+              </div>
+            </div>
             <div className="grid md:grid-cols-3 grid-cols-1 2xl:grid-cols-4 gap-5 justify-center w-full">
               {courses.map((course) => (
                 <CourseCard key={course.id} course={course} />
