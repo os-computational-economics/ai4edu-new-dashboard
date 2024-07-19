@@ -36,7 +36,7 @@ export const NavbarWrapper = ({ children }: Props) => {
             Current Workspace: {currentWorkspace?.name} - {currentWorkspace?.role}
           </NavbarContent>
         ) : (
-          'no workspace selected'
+          'No Workspace Selected'
         )}
         <NavbarContent className="md:hidden">
           <BurguerButton />

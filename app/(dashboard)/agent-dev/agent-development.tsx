@@ -20,7 +20,7 @@ import {
   WorkflowPopup,
 } from "@/app/(dashboard)/agent-dev/dev-popups";
 import { AgentResourcesPopup } from "@/app/(dashboard)/agent-dev/dev-popups";
-import ChatPanel from "../chat/components/ChatPanel";
+import ChatPanel from "../chat/components/ChatPanel copy1";
 
 const AgentDevelopment = ({ agent, onUpdate }) => {
   const [message, setMessage] = useState("");

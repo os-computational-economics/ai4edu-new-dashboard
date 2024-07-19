@@ -2,9 +2,12 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 
-import { Card, Textarea, ScrollShadow, Button } from "@nextui-org/react";
+import { Textarea } from "@nextui-org/react";
 import { MdAttachFile } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
+import { VscChromeMinimize } from "react-icons/vsc";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 
 import Cookies from "js-cookie";
 import ReactMarkdown from "react-markdown";
@@ -15,6 +18,15 @@ import rehypeHighlight from "rehype-highlight";
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
 import { FileUploadForm } from "./FileUpload";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  Card,
+  ScrollShadow,
+  Button,
+  Badge,
+} from "@nextui-org/react";
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/atom-one-dark.min.css";
@@ -47,7 +59,7 @@ function InputMessage({
   message,
   setMessage,
   sendMessage,
-  FileUploadForm
+  FileUploadForm,
 }: {
   placeholder: string;
   message: string;
@@ -68,17 +80,17 @@ function InputMessage({
           }
         }}
       />
-      <Button 
-        isIconOnly 
-        variant="light" 
+      <Button
+        isIconOnly
+        variant="light"
         aria-label="Attach file"
         onClick={FileUploadForm}
       >
         <MdAttachFile className="text-2xl" />
       </Button>
-      <Button 
-        isIconOnly 
-        color="primary" 
+      <Button
+        isIconOnly
+        color="primary"
         aria-label="Send message"
         onClick={sendMessage}
       >
@@ -88,13 +100,14 @@ function InputMessage({
   );
 }
 
-const ChatPanel = ({ agent }) => {
+const ChatPanel = ({ agent, onClose, selectedDocument, onMinimize }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(
     localStorage.getItem("threadIdLocalStorageKey") || null
   );
   const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
+  const [isMinimized, setIsMinimized] = useState(false);
   const model = agent.model || "openai";
   const voice = agent.voice;
   const agentID = agent.agent_id;
@@ -211,32 +224,154 @@ const ChatPanel = ({ agent }) => {
       });
   };
 
+  const AgentInfo = () => (
+    <div className="flex flex-col ml-8 mt-4 text-3xl">
+      {agent?.agent_name}
+      <span className="text-sm">
+        <span className="text-gray-700 mr-6">{agent?.workspace_id}</span>
+        {agent?.status === 1 ? (
+          <span className="text-green-700">Active</span>
+        ) : (
+          <span className="text-red-700">Inactive</span>
+        )}
+      </span>
+    </div>
+  );
+
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+  };
+
+  // if (isMinimized && selectedDocument) {
+  //   return (
+  //     <div 
+  //       className="absolute bottom-4 right-4 w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 ease-in-out hover:bg-blue-600 z-100"
+  //       onClick={toggleMinimize}
+  //     >
+  //       <IoChatbubbleEllipsesOutline size={32} color="white" />
+  //     </div>
+  //   );
+  // }
+  
+  if (onMinimize && selectedDocument && isMinimized) {
+    return (
+      <div 
+        className="fixed bottom-4 right-4 w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 ease-in-out hover:bg-blue-600 z-10"
+        onClick={toggleMinimize}
+      >
+        <IoChatbubbleEllipsesOutline size={32} color="white" />
+      </div>
+    );
+  }
+
   return (
     <Card className="m-1 h-full rounded-xl">
-      <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full h-full">
-        <ScrollShadow
-          size={20}
-          className="flex flex-col overflow-auto h-full pr-4"
+    <span className="z-10">
+      <AgentInfo />
+    </span>
+    <Button
+          isIconOnly
+          variant="light"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-4 top-2 z-10"
         >
-          {messages.map((message, index) => (
-            <Message
-              key={index}
-              content={message.content}
-              align={message.align}
-            />
-          ))}
-          <div ref={lastMessageRef}></div>
-        </ScrollShadow>
-        <footer className="flex-shrink-0">
-          <InputMessage
-            placeholder="Enter your message"
-            message={message}
-            setMessage={setMessage}
-            sendMessage={sendMessage}
+          <IoClose size={24} />
+        </Button>
+    {selectedDocument && (
+      <>
+        <Button
+          isIconOnly
+          variant="light"
+          onClick={toggleMinimize}
+          aria-label="Minimize"
+          className="absolute right-12 top-2 z-10"
+        >
+          <VscChromeMinimize size={24} />
+        </Button>
+      </>
+    )}
+    <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full h-full">
+      <ScrollShadow
+        size={20}
+        className="flex flex-col overflow-auto h-full pr-4"
+      >
+        {messages.map((message, index) => (
+          <Message
+            key={index}
+            content={message.content}
+            align={message.align}
           />
-        </footer>
-      </div>
-    </Card>
+        ))}
+        <div ref={lastMessageRef}></div>
+      </ScrollShadow>
+      <footer className="flex-shrink-0">
+        <InputMessage
+          placeholder="Enter your message"
+          message={message}
+          setMessage={setMessage}
+          sendMessage={sendMessage}
+        />
+      </footer>
+    </div>
+  </Card>
+  // <Card className="m-1 h-full rounded-xl">
+  //     <span className="z-10">
+  //       <AgentInfo />
+  //     </span>
+  //     <Button
+  //       isIconOnly
+  //       variant="light"
+  //       onClick={onClose}
+  //       aria-label="Close"
+  //       className="absolute right-4 top-2 z-10"
+  //     >
+  //       <IoClose size={24} />
+  //     </Button>
+  //     <Button
+  //         isIconOnly
+  //         variant="light"
+  //         onClick={onMinimize}
+  //         aria-label="Minimize"
+  //         className="absolute right-12 top-2 z-10"
+  //       >
+  //         <VscChromeMinimize size={24} />
+  //       </Button>
+  //     {selectedDocument && (
+  //       <Button
+  //         isIconOnly
+  //         variant="light"
+  //         onClick={onMinimize}
+  //         aria-label="Minimize"
+  //         className="absolute right-12 top-2 z-10"
+  //       >
+  //         <VscChromeMinimize size={24} />
+  //       </Button>
+  //     )}
+  //     <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full h-full">
+  //       <ScrollShadow
+  //         size={20}
+  //         className="flex flex-col overflow-auto h-full pr-4"
+  //       >
+  //         {messages.map((message, index) => (
+  //           <Message
+  //             key={index}
+  //             content={message.content}
+  //             align={message.align}
+  //           />
+  //         ))}
+  //         <div ref={lastMessageRef}></div>
+  //       </ScrollShadow>
+  //       <footer className="flex-shrink-0">
+  //         <InputMessage
+  //           placeholder="Enter your message"
+  //           message={message}
+  //           setMessage={setMessage}
+  //           sendMessage={sendMessage}
+  //         />
+  //       </footer>
+  //     </div>
+  //   </Card>
   );
 };
 

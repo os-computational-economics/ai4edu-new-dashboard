@@ -70,7 +70,7 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
                   <div className="flex flex-col ml-3">
                     <h1 className="text-2xl font-bold">{currentAgent?.agent_name || 'Agent Name'}</h1>
                     <div className="flex items-center text-sm text-gray-600 mt-1">
-                      <span className="text-sm mr-2">{currentAgent?.course_id || 'Course ID'} </span>
+                      <span className="text-sm mr-2">{currentAgent?.workspace_id || 'Workspace ID'} </span>
                       <span className="mr-2">{currentAgent?.status === 1 ? 'Active' : 'Inactive'}</span>
                       <span>{new Date().toLocaleString()}</span>
                     </div>
