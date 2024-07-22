@@ -110,6 +110,20 @@ const ChatPanel = ({ agent }) => {
   const agentID = agent.agent_id
   const lastMessageRef = useRef(null)
 
+  const AgentInfo = () => (
+    <div className="flex flex-col ml-8 mt-4 text-3xl">
+      {agent?.agent_name}
+      <span className="text-sm">
+        <span className="text-gray-700 mr-6">{agent?.workspace_id}</span>
+        {agent?.status === 1 ? (
+          <span className="text-green-700">Active</span>
+        ) : (
+          <span className="text-red-700">Inactive</span>
+        )}
+      </span>
+    </div>
+  );
+
   useEffect(() => {
     console.log('$$$', agent)
   }, [agent])
@@ -194,6 +208,10 @@ const ChatPanel = ({ agent }) => {
 
   return (
     <Card className="m-1 h-full">
+      <span className="relative">
+      <AgentInfo />
+      <span className="text-sm right-1 top-1 absolute m-5 text-gray-500">Preview Mode</span>
+    </span>
       <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full h-full">
       <ScrollShadow
         size={20}

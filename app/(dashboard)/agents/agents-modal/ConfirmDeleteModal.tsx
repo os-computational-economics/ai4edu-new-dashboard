@@ -41,7 +41,6 @@ const AgentModal = ({ isOpen, onClose, agent }) => {
               immediately.
             </p>
           </ModalBody>
-
           <ModalFooter>
             <Button variant="faded" onClick={handleCloseModal}>
               Cancel

@@ -62,22 +62,23 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <header className="w-full bg-gray-100 p-4 flex items-center justify-between">
+              <header className="w-full bg-gray-900 p-4 flex items-center justify-between">
                 <div className="flex items-center">
                   <Button variant="light" className="border-none">
-                    <MdArrowBackIosNew className="mr-2" onClick={onClose} size={24} />
+                    <MdArrowBackIosNew className="mr-2 text-white" onClick={onClose} size={24} />
                   </Button>
                   <div className="flex flex-col ml-3">
-                    <h1 className="text-2xl font-bold">{currentAgent?.agent_name || 'Agent Name'}</h1>
-                    <div className="flex items-center text-sm text-gray-600 mt-1">
-                      <span className="text-sm mr-2">{currentAgent?.workspace_id || 'Workspace ID'} </span>
-                      <span className="mr-2">{currentAgent?.status === 1 ? 'Active' : 'Inactive'}</span>
+                    <h1 className="text-2xl font-bold text-white">{currentAgent?.agent_name || 'Agent Name'}</h1>
+                    <div className="flex items-center text-sm text-white mt-1">
+                      <span className="text-sm mr-2 text-white">{currentAgent?.workspace_id || 'Workspace ID'} </span>
+                      <span className="mr-2">{currentAgent?.status === 1 ?
+                      (<span className='text-green-300 font-bold'>Active</span>) : (<span className='text-red-300'>Inactive</span>)}</span>
                       <span>{new Date().toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
                 <div className="absolute left-1/2 transform -translate-x-1/2">
-                  <h2 className="text-2xl font-bold">Agent Development Mode</h2>
+                  <h2 className="text-2xl font-bold text-white">Agent Development Mode</h2>
                 </div>
                 <div>
                   <Button className="bg-blue-500 text-white" onClick={handleUpdate}>

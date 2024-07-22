@@ -243,10 +243,10 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
   );
   const renderChatPanel = () => (
     <div className="h-full w-full p-4 flex flex-col">
-      <div className="flex justify-between items-center mb-4 p-4">
+      {/* <div className="flex justify-between items-center mb-4 p-4">
         <h2 className="text-2xl font-bold">{agentName || "Agent"}</h2>
         <span className="text-sm text-gray-500">Preview Mode</span>
-      </div>
+      </div> */}
       <div className="flex-grow overflow-hidden">
         {agent ? (
           <ChatPanel agent={agent} />

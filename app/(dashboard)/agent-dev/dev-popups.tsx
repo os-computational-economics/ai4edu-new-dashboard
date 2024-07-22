@@ -160,7 +160,8 @@ export const WorkflowPopup = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen: isCreateWorkflowOpen, onOpen: onOpenCreateWorkflow, onClose: onCloseCreateWorkflow } = useDisclosure();
-
+  const [workflows, setWorkflows] = useState([]);
+  
   if (!isOpen) return null;
 
   const tabs = ["All", "Documents", "Tables", "Photos"];
@@ -170,7 +171,7 @@ export const WorkflowPopup = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-100">
       <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Workflow</h2>
