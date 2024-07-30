@@ -23,6 +23,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { MdInfoOutline } from 'react-icons/md'
 import { WorkspaceContext } from '@/components/layout/layout'
+import Upload from '@/components/upload/upload'
 
 const Tables = () => {
   const [users, setUsers] = useState<User[]>([])
@@ -33,6 +34,7 @@ const Tables = () => {
   const [file, setFile] = useState(null)
 
   const totalPage = Math.ceil(total / pageSize)
+  const [isModalVisible, setIsModalVisible] = useState(false)
 
   const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
 
@@ -44,7 +46,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
     }
 
     getUserList(params)
@@ -80,7 +82,7 @@ const Tables = () => {
     // handleFileUpload()
   }
 
-  const handleFileUpload = () => {
+  const handleFileUpload = (file) => {
     if (!file) {
       toast.error('Please select a file to upload')
       return
@@ -88,7 +90,7 @@ const Tables = () => {
 
     const formData = new FormData()
 
-    const workspaceId = currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
+    const workspaceId = currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
     const urlWorkspace = `admin/workspace/add_users_via_csv?workspace_id=${workspaceId}`
 
     formData.append('file', file)
@@ -106,12 +108,14 @@ const Tables = () => {
       })
   }
 
+  const openModal = () => setIsModalVisible(true)
+
   return (
     <div className="m-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Course Roster</h1>
         <div className="flex gap-2 items-center">
-          <Tooltip content="Upload student roster from SIS">
+          {/* <Tooltip content="Upload student roster from SIS">
             <MdInfoOutline />
           </Tooltip>
           <input
@@ -120,9 +124,24 @@ const Tables = () => {
             onChange={handleFileChange}
             className="py-2 px-4 border border-gray-300 rounded-lg text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
-          {file && <Button onClick={handleFileUpload}>Add Students</Button>}
+          {file && <Button onClick={handleFileUpload}>Add Students</Button>} */}
+          <p className="text-gray-600 text-tiny">
+            Download{' '}
+            <a href="./template.csv" download="template.csv" className="text-blue-700 font-bold ">
+              template
+            </a>
+          </p>
+          <Button onClick={() => openModal()}>Add Student</Button>
         </div>
       </div>
+
+      <Upload
+        isOpen={isModalVisible}
+        modalTitle="Add Student"
+        customMessage="Upload the CSV file downloaded from SIS or from template."
+        onClose={() => setIsModalVisible(false)}
+        onFileUpload={handleFileUpload}
+      />
 
       <ToastContainer />
       <Table

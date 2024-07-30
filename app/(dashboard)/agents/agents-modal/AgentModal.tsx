@@ -24,7 +24,7 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
       allow_model_choice: currentAgent.allow_model_choice === true,
       status: currentAgent.status === 1 ? 1 : 0,
       student_id: localStorage.getItem('user_id') || 'test001',
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
     }
 
     if (status === 1) {

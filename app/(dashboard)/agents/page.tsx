@@ -84,7 +84,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
     }
 
     getAgents(params)

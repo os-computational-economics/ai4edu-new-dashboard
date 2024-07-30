@@ -28,7 +28,7 @@ export default function App() {
       page,
       page_size: pageSize,
       student_id: creatorId || localStorage.getItem('user_id') || 'rxy216',
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!).id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
     }
 
     getThreadsList(params)
