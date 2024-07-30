@@ -35,6 +35,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
   const [courseId, setCourseId] = useState(agent?.course_id || "");
   const [persona, setPersona] = useState(agent?.system_prompt || "");
   const [voiceInput, setVoiceInput] = useState(agent?.voice || false);
+  const [files, setFiles] = useState(agent?.agent_files || {});
   const [modelSelection, setModelSelection] = useState(
     agent?.allow_model_choice || false
   );
@@ -55,6 +56,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
       setModelSelection(agent.allow_model_choice || false);
       setAgentModel(agent.model === "openai");
       setLocalAgentModel(agent.model || "openai");
+      setFiles(agent.agent_files || {});
     }
   }, [agent]);
 
@@ -74,6 +76,11 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
     const selectedModel = Array.from(keys)[0] as string;
     setLocalAgentModel(selectedModel);
     handleChange("model", selectedModel);
+  };
+
+  const handleFilesChange = (files) => {
+    setFiles(files);
+    handleChange("agent_files", files);
   };
 
   const getModelDisplayName = (model) => {
@@ -290,6 +297,8 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
             <KnowledgebasePopup
               isOpen={isKnowledgeBasePopupOpen}
               onClose={() => setIsKnowledgeBasePopupOpen(false)}
+              files={files}
+              setFiles={handleFilesChange}
             />
           </div>
         </div>

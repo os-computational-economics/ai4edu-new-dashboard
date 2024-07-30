@@ -1,18 +1,29 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 // import { ChevronLeft, Plus, ChevronDown, Send, Search, X } from "lucide-react";
-import { MdArrowBackIosNew , MdAdd } from "react-icons/md";
+import { MdArrowBackIosNew, MdAdd, MdDeleteForever } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
+import Upload from "@/components/upload/upload";
 
-
-export const KnowledgebasePopup = ({ isOpen, onClose }) => {
+export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
+  // files is a dict {file_id: file_name}, the actual file is stored in the backend, not in the frontend
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFileUploadModalVisible, setIsFileUploadModalVisible] =
+    useState(false);
+
+  const handleFileUpload = (file) => {
+    console.log(file);
+    // generate a random file_id
+    const fileId = Math.random().toString(36).substring(7);
+    const newFiles = { ...files, [fileId]: file.name };
+    setFiles(newFiles);
+  };
 
   if (!isOpen) return null;
 
-  const tabs = ["All", "Documents", "Tables", "Photos"];
+  const tabs = ["All", "Documents"];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -57,23 +68,52 @@ export const KnowledgebasePopup = ({ isOpen, onClose }) => {
                 size={18}
               />
             </div>
-            <select className="border rounded-md px-3 py-2">
-              <option>Create Time ↓</option>
-            </select>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center"
+              onClick={() => setIsFileUploadModalVisible(true)}
+            >
               <MdAdd size={18} className="mr-2" />
               Create Knowledge
             </button>
           </div>
         </div>
 
+        <Upload
+          isOpen={isFileUploadModalVisible}
+          modalTitle="Add Knowledge"
+          customMessage="Upload a PDF file to create a new knowledge."
+          onClose={() => setIsFileUploadModalVisible(false)}
+          onFileUpload={handleFileUpload}
+          acceptFileTypes={".pdf"}
+        />
+
         <div className="flex-grow p-4 overflow-y-auto">
-          <div className="flex flex-col items-center justify-center h-full text-gray-500">
-            <p>No Knowledge Yet</p>
-            <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md">
-              Create Knowledge
-            </button>
-          </div>
+          {Object.keys(files).length > 0 ? (
+            <div className="grid grid-cols-3 gap-4">
+              {Object.entries(files).map(([fileId, fileName]) => (
+                <div
+                  key={fileId}
+                  className="border p-4 rounded-lg shadow-sm flex justify-between items-center"
+                >
+                  <h3 className="text-lg font-medium">{fileName as string}</h3>
+                  <button
+                    className="text-red-500 hover:text-red-700"
+                    onClick={() => {
+                      const newFiles = { ...files };
+                      delete newFiles[fileId];
+                      setFiles(newFiles);
+                    }}
+                  >
+                    <MdDeleteForever size={24} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-gray-500">
+              <p>No Knowledge Yet</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
