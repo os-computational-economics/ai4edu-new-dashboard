@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Tooltip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from '@nextui-org/react'
 import { MdInfoOutline } from 'react-icons/md'
 
-const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload }) => {
+const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acceptFileTypes }) => {
   const [fileName, setFileName] = useState('')
   const [file, setFile] = useState(null)
 
@@ -33,6 +33,7 @@ const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload }) =>
   const handleUpload = () => {
     if (file) {
       onFileUpload(file)
+      handleRemoveFile()
       onClose()
     } else {
       alert('Please select a file to upload')
@@ -62,7 +63,7 @@ const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload }) =>
               onDragOver={handleDragOver}
               onDrop={handleDrop}
             >
-              <input id="files" type="file" accept=".csv" onChange={handleFileChange} style={{ display: 'none' }} />
+              <input id="files" type="file" accept={acceptFileTypes} onChange={handleFileChange} style={{ display: 'none' }} />
               <label
                 htmlFor="files"
                 className="w-full h-24 flex items-center justify-center bg-white hover:bg-gray-100 cursor-pointer"

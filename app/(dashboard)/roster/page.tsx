@@ -141,6 +141,7 @@ const Tables = () => {
         customMessage="Upload the CSV file downloaded from SIS or from template."
         onClose={() => setIsModalVisible(false)}
         onFileUpload={handleFileUpload}
+        acceptFileTypes={'.csv'}
       />
 
       <ToastContainer />
