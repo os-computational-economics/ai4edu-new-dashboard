@@ -127,7 +127,7 @@ const Tables = () => {
           {file && <Button onClick={handleFileUpload}>Add Students</Button>} */}
           <p className="text-gray-600 text-tiny">
             Download{' '}
-            <a href="./template.csv" download="template.csv" className="text-blue-700 font-bold ">
+            <a href="/template.csv" download="template.csv" className="text-blue-700 font-bold ">
               template
             </a>
           </p>
