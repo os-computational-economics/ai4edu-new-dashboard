@@ -141,7 +141,7 @@ const Tables = () => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className={'w-full  sm:max-w-[44%]'}></div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-5">
             <Button
               variant="bordered"
               size="sm"

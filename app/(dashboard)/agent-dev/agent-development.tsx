@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
 import { MdArrowBackIosNew, MdAdd } from "react-icons/md";
-
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { Switch } from "@nextui-org/switch";
@@ -25,36 +23,34 @@ import ChatPanel from "../chat/components/ChatPanel copy1";
 const AgentDevelopment = ({ agent, onUpdate }) => {
   const [message, setMessage] = useState("");
   const [isWorkflowPopupOpen, setIsWorkflowPopupOpen] = useState(false);
-  const [isKnowledgeBasePopupOpen, setIsKnowledgeBasePopupOpen] =
-    useState(false);
-  const [isAgentResourcesPopupOpen, setIsAgentResourcesPopupOpen] =
-    useState(false);
+  const [isKnowledgeBasePopupOpen, setIsKnowledgeBasePopupOpen] = useState(false);
+  const [isAgentResourcesPopupOpen, setIsAgentResourcesPopupOpen] = useState(false);
   const [isMemoryDropdownOpen, setIsMemoryDropdownOpen] = useState(false);
   const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
   const [agentName, setAgentName] = useState(agent?.agent_name || "");
-  const [courseId, setCourseId] = useState(agent?.course_id || "");
-  const [persona, setPersona] = useState(agent?.system_prompt || "");
-  const [voiceInput, setVoiceInput] = useState(agent?.voice || false);
-  const [modelSelection, setModelSelection] = useState(
-    agent?.allow_model_choice || false
-  );
-  const [agentModel, setAgentModel] = useState(agent?.model === "openai");
-  const [localAgentModel, setLocalAgentModel] = useState(
-    agent?.model || "openai"
-  );
-
-  const [agentStatus, setAgentStatus] = useState(agent?.status === 1);
+  const [courseId, setCourseId] = useState(agent?.workspace_id || "");
+  const [isVoiceInputEnabled, setIsVoiceInputEnabled] = useState(agent?.voice || false);
+  const [isModelSelectionEnabled, setIsModelSelectionEnabled] = useState(agent?.allow_model_choice || false);
+  const [localAgentModel, setLocalAgentModel] = useState(agent?.model || "openai");
+  const [isAgentActive, setIsAgentActive] = useState(agent?.status === 1);
+  const [basePrompt, setBasePrompt] = useState("");
+  const [persona, setPersona] = useState("");
+  const [selectedKnowledge, setSelectedKnowledge] = useState([]);
 
   useEffect(() => {
     if (agent) {
-      setAgentName(agent.agent_name || "");
-      setCourseId(agent.course_id || "");
-      setPersona(agent.system_prompt || "");
-      setAgentStatus(agent.status === 1);
-      setVoiceInput(agent.voice || false);
-      setModelSelection(agent.allow_model_choice || false);
-      setAgentModel(agent.model === "openai");
-      setLocalAgentModel(agent.model || "openai");
+      const initialPrompt = agent.system_prompt || "";
+      setBasePrompt(initialPrompt);
+      setPersona(initialPrompt);
+
+      const storedSelectedItems = localStorage.getItem('selectedKnowledgeItems');
+      if (storedSelectedItems) {
+        const parsedSelectedItems = JSON.parse(storedSelectedItems);
+        setSelectedKnowledge(parsedSelectedItems);
+        
+        const updatedPersona = addKnowledgeToPersona(initialPrompt, parsedSelectedItems);
+        setPersona(updatedPersona);
+      }
     }
   }, [agent]);
 
@@ -64,10 +60,82 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
       [field]: value,
     };
     onUpdate(updatedAgent);
+
+    console.log("Agent edited. Updated information:", {
+      field,
+      newValue: value,
+      updatedAgent,
+    });
   };
-  const handleStatusChange = (checked) => {
-    setAgentStatus(checked);
-    handleChange("status", checked ? 1 : 0);
+
+  const addKnowledgeToPersona = (currentPersona, knowledgeItems) => {
+    return knowledgeItems.reduce((updatedPersona, item) => {
+      if (!updatedPersona.includes(item.description)) {
+        return `${updatedPersona} ${item.description}`.trim();
+      }
+      return updatedPersona;
+    }, currentPersona);
+  };
+
+  const handleSelectKnowledge = (selectedItems) => {
+    const previouslySelected = new Set(selectedKnowledge.map(item => item.id));
+    const currentlySelected = new Set(selectedItems.map(item => item.id));
+    
+    let updatedPersona = persona;
+
+    // Handle newly selected items
+    selectedItems.forEach(item => {
+      if (!previouslySelected.has(item.id) && !updatedPersona.includes(item.description)) {
+        updatedPersona = `${updatedPersona} ${item.description}`.trim();
+      }
+    });
+
+    // Handle deselected items
+    selectedKnowledge.forEach(item => {
+      if (!currentlySelected.has(item.id)) {
+        updatedPersona = updatedPersona.replace(item.description, '').trim();
+      }
+    });
+
+    setSelectedKnowledge(selectedItems);
+    setPersona(updatedPersona);
+    handleChange("system_prompt", updatedPersona);
+  };
+
+  const handleDeleteKnowledge = (deletedItem) => {
+    const updatedSelectedKnowledge = selectedKnowledge.filter(item => item.id !== deletedItem.id);
+    
+    // Remove the deleted item's description from the persona
+    const updatedPersona = persona.replace(deletedItem.description, "").trim();
+    
+    setSelectedKnowledge(updatedSelectedKnowledge);
+    setPersona(updatedPersona);
+    handleChange("system_prompt", updatedPersona);
+  };
+
+  const handleBasePromptChange = (e) => {
+    const newBasePrompt = e.target.value;
+    setBasePrompt(newBasePrompt);
+    
+    // Preserve existing knowledge when base prompt changes
+    const updatedPersona = addKnowledgeToPersona(newBasePrompt, selectedKnowledge);
+    
+    setPersona(updatedPersona);
+    handleChange("system_prompt", updatedPersona);
+  };
+  const handleAgentStatusChange = (isSelected) => {
+    setIsAgentActive(isSelected);
+    handleChange("status", isSelected ? 1 : 0);
+  };
+
+  const handleVoiceInputChange = (isSelected) => {
+    setIsVoiceInputEnabled(isSelected);
+    handleChange("voice", isSelected);
+  };
+
+  const handleModelSelectionChange = (isSelected) => {
+    setIsModelSelectionEnabled(isSelected);
+    handleChange("allow_model_choice", isSelected);
   };
 
   const handleModelChange = (keys: Selection) => {
@@ -113,7 +181,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
           value={courseId}
           onChange={(e) => {
             setCourseId(e.target.value);
-            handleChange("course_id", e.target.value);
+            handleChange("workspace_id", e.target.value);
           }}
           className="px-4 bg-transparent"
         />
@@ -123,15 +191,16 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
         Persona & Prompt
       </span>
       <div className="mb-4 px-4">
-        <textarea
-          className="w-full h-24 p-2 rounded-xl bg-gray-100 resize-none focus:outline-none"
-          placeholder="Design the bot's persona, features and workflows using natural language."
-          value={persona}
-          onChange={(e) => {
-            setPersona(e.target.value);
-            handleChange("system_prompt", e.target.value);
-          }}
-        />
+      <textarea
+        className="w-full h-24 p-2 rounded-xl bg-gray-100 resize-none focus:outline-none"
+        placeholder="Final prompt with knowledge"
+        value={persona}
+        onChange={(e) => {
+          setPersona(e.target.value);
+          handleChange("system_prompt", e.target.value);
+        }}
+        rows={4}
+      />
       </div>
 
       <div className="pb-5 px-2 space-y-4">
@@ -171,7 +240,10 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
             <div className="mt-2 px-5">
               <div className="flex justify-between items-center">
                 <span>Long-term Memory</span>
-                <Switch checked={agentStatus} onValueChange={setAgentStatus} />
+                <Switch
+                  checked={isAgentActive}
+                  onValueChange={setIsAgentActive}
+                />
               </div>
             </div>
           )}
@@ -190,28 +262,27 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
               <div className="flex justify-between items-center">
                 <span>Agent Status</span>
                 <Switch
-                  checked={agentStatus}
-                  onValueChange={handleStatusChange}
-                />
+                  isSelected={isAgentActive}
+                  onValueChange={handleAgentStatusChange}
+                ></Switch>
               </div>
 
               <div className="flex justify-between items-center">
                 <span>Enable Voice Input</span>
                 <Switch
-                  checked={voiceInput}
-                  onValueChange={(checked) => {
-                    setVoiceInput(checked);
-                    handleChange("voice", checked);
-                  }}
-                />
+                  isSelected={isVoiceInputEnabled}
+                  onValueChange={handleVoiceInputChange}
+                ></Switch>
               </div>
+
               <div className="flex justify-between items-center">
-                <span>Enable Model Selection</span>
+                <span> Enable Model Selection</span>
                 <Switch
-                  checked={modelSelection}
-                  onValueChange={setModelSelection}
-                />
+                  isSelected={isModelSelectionEnabled}
+                  onValueChange={handleModelSelectionChange}
+                ></Switch>
               </div>
+
               <div className="flex justify-between items-center">
                 <span>Agent Model</span>
                 <Dropdown>
@@ -241,12 +312,9 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
       </div>
     </div>
   );
+
   const renderChatPanel = () => (
     <div className="h-full w-full p-4 flex flex-col">
-      {/* <div className="flex justify-between items-center mb-4 p-4">
-        <h2 className="text-2xl font-bold">{agentName || "Agent"}</h2>
-        <span className="text-sm text-gray-500">Preview Mode</span>
-      </div> */}
       <div className="flex-grow overflow-hidden">
         {agent ? (
           <ChatPanel agent={agent} />
@@ -259,6 +327,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
       </div>
     </div>
   );
+
   if (!agent) {
     return (
       <div className="flex flex-col h-full w-full items-center justify-center text-gray-500">
@@ -287,10 +356,12 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
       {isKnowledgeBasePopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <KnowledgebasePopup
-              isOpen={isKnowledgeBasePopupOpen}
-              onClose={() => setIsKnowledgeBasePopupOpen(false)}
-            />
+          <KnowledgebasePopup
+          isOpen={isKnowledgeBasePopupOpen}
+          onClose={() => setIsKnowledgeBasePopupOpen(false)}
+          onSelectKnowledge={handleSelectKnowledge}
+          onDeleteKnowledge={handleDeleteKnowledge}
+        />
           </div>
         </div>
       )}
@@ -303,6 +374,42 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
         </div>
       )}
     </div>
+    // <div className="flex flex-col h-full w-full">
+    //   <PanelGroup direction="horizontal" className="flex-grow">
+    //     <Panel minSize={30} defaultSize={41}>
+    //       {renderSettingsPanel()}
+    //     </Panel>
+    //     <PanelResizeHandle className="w-2 bg-gray-200 hover:bg-gray-300 transition-colors" />
+    //     <Panel minSize={30}>{renderChatPanel()}</Panel>
+    //   </PanelGroup>
+    //   {isWorkflowPopupOpen && (
+    //     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    //       <WorkflowPopup
+    //         isOpen={isWorkflowPopupOpen}
+    //         onClose={() => setIsWorkflowPopupOpen(false)}
+    //       />
+    //     </div>
+    //   )}
+    //   {isKnowledgeBasePopupOpen && (
+    //     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    //       <KnowledgebasePopup
+    //         isOpen={isKnowledgeBasePopupOpen}
+    //         onClose={() => setIsKnowledgeBasePopupOpen(false)}
+    //         onSelectKnowledge={handleSelectKnowledge}
+    //         onDeleteKnowledge={handleDeleteKnowledge}
+    //       />
+    //     </div>
+    //   )}
+    //   {isAgentResourcesPopupOpen && (
+    //     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    //       <AgentResourcesPopup
+    //         isOpen={isAgentResourcesPopupOpen}
+    //         onClose={() => setIsAgentResourcesPopupOpen(false)}
+    //       />
+    //     </div>
+    //   )}
+    // </div>
   );
 };
+
 export default AgentDevelopment;

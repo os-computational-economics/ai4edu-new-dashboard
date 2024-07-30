@@ -187,11 +187,154 @@ const DocumentView = ({ document, onClose, onMinimize }) => (
   </Card>
 );
 
+// const ChatPage = ({ isOpen, onClose, status, agent }) => {
+//   const [activeTab, setActiveTab] = useState("Documents");
+//   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
+//     null
+//   );
+//   const [isChatMinimized, setIsChatMinimized] = useState(false);
+
+//   const handleDocumentClick = (document: Document) => {
+//     setSelectedDocument(document);
+//   };
+
+//   const handleDocumentClose = () => {
+//     setSelectedDocument(null);
+//   };
+
+//   const toggleChatMinimize = () => {
+//     setIsChatMinimized(!isChatMinimized);
+//   };
+
+//   useEffect(() => {
+//     console.log("$$$", agent);
+//   }, [agent]);
+
+//   return (
+//     <Modal isOpen={isOpen} onClose={onClose} size="full" hideCloseButton>
+//       <ModalContent>
+//         {(onClose) => (
+//           <div className="h-screen flex flex-col">
+//             <div className="flex-grow flex">
+//               <PanelGroup direction="horizontal" className=" h-full w-full">
+//                 {/* Left Panel (Resources + Documents) */}
+//                 <Panel defaultSize={25} minSize={18} maxSize={25}>
+//                   <LeftPanel
+//                     activeTab={activeTab}
+//                     setActiveTab={setActiveTab}
+//                     documents={documents}
+//                     taskGuides={taskGuides}
+//                     onDocumentClick={handleDocumentClick}
+//                   />
+//                 </Panel>
+//                 <PanelResizeHandle />
+//                 {/* Middle and Right Panels (Document View + Chat) */}
+//                 <Panel>
+//                   <div className="relative h-full">
+//                     <PanelGroup direction="horizontal">
+//                       {/* {selectedDocument && !isChatMinimized && (
+//                         <Panel defaultSize={isChatMinimized ? 100 : 50} minSize={30}>
+//                           <div className="h-full">
+//                             <DocumentView
+//                               document={selectedDocument}
+//                               onMinimize={isChatMinimized}
+//                               onClose={handleDocumentClose}
+//                             />
+//                           </div>
+//                         </Panel>
+//                       )} */}
+//                       {/* {selectedDocument && isChatMinimized && (
+//                         <Panel defaultSize={100} minSize={30}>
+//                         <div className="h-full">
+//                           <DocumentView
+//                             document={selectedDocument}
+//                             onMinimize={isChatMinimized}
+//                             onClose={handleDocumentClose}
+//                           />
+//                         </div>
+//                       </Panel>
+//                       )} */}
+
+//                       {selectedDocument && !isChatMinimized && (
+//                         <>
+//                           <Panel defaultSize={50} minSize={30}>
+//                             <div className="h-full">
+//                               <DocumentView
+//                                 document={selectedDocument}
+//                                 onClose={handleDocumentClose}
+//                                 onMinimize={toggleChatMinimize}
+//                               />
+//                             </div>
+//                           </Panel>
+//                           <PanelResizeHandle />
+//                         </>
+//                       )}
+//                       {(isChatMinimized && selectedDocument) ||
+//                       (!selectedDocument && !isChatMinimized) ? (
+//                         <Panel defaultSize={100} minSize={30}>
+//                           {isChatMinimized && selectedDocument ? (
+//                             <div className="h-full">
+//                               <DocumentView
+//                                 document={selectedDocument}
+//                                 onClose={handleDocumentClose}
+//                                 onMinimize={toggleChatMinimize}
+//                               />
+//                             </div>
+//                           ) : (
+//                             <div className="relative w-full h-full z-50">
+//                               <ChatPanel
+//                                 agent={agent}
+//                                 onClose={onClose}
+//                                 selectedDocument={selectedDocument}
+//                                 onMinimize={toggleChatMinimize}
+//                               />
+//                             </div>
+//                           )}
+//                         </Panel>
+//                       ) : null}
+//                       {!isChatMinimized && selectedDocument && (
+//                         <Panel defaultSize={50} minSize={30}>
+//                           <div className="relative w-full h-full">
+//                             <ChatPanel
+//                               agent={agent}
+//                               onClose={onClose}
+//                               selectedDocument={selectedDocument}
+//                               onMinimize={toggleChatMinimize}
+//                             />
+//                           </div>
+//                         </Panel>
+//                       )}
+//                       <PanelResizeHandle />
+//                       {/* <Panel
+//                         defaultSize={selectedDocument ? 100 : 50}
+//                         minSize={30}
+//                       >
+//                         <div className="relative w-full h-full z-50">
+//                           <ChatPanel
+//                             agent={agent}
+//                             onClose={onClose}
+//                             selectedDocument={selectedDocument}
+//                             onMinimize={toggleChatMinimize}
+//                           />
+//                         </div>
+//                       </Panel> */}
+//                     </PanelGroup>
+//                   </div>
+//                 </Panel>
+//               </PanelGroup>
+//             </div>
+//           </div>
+//         )}
+//       </ModalContent>
+//     </Modal>
+//   );
+// };
+
+// export default ChatPage;
+
 const ChatPage = ({ isOpen, onClose, status, agent }) => {
   const [activeTab, setActiveTab] = useState("Documents");
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(
-    null
-  );
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [isChatMinimized, setIsChatMinimized] = useState(false);
 
   const handleDocumentClick = (document: Document) => {
@@ -211,12 +354,12 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
   }, [agent]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="full">
+    <Modal isOpen={isOpen} onClose={onClose} size="full" hideCloseButton>
       <ModalContent>
         {(onClose) => (
           <div className="h-screen flex flex-col">
             <div className="flex-grow flex">
-              <PanelGroup direction="horizontal" className=" h-full w-full">
+              <PanelGroup direction="horizontal" className="h-full w-full">
                 {/* Left Panel (Resources + Documents) */}
                 <Panel defaultSize={25} minSize={18} maxSize={25}>
                   <LeftPanel
@@ -230,96 +373,43 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
                 <PanelResizeHandle />
                 {/* Middle and Right Panels (Document View + Chat) */}
                 <Panel>
-                  <div className="relative h-full">
-                    <PanelGroup direction="horizontal">
-                      {/* {selectedDocument && !isChatMinimized && (
-                        <Panel defaultSize={isChatMinimized ? 100 : 50} minSize={30}>
-                          <div className="h-full">
-                            <DocumentView
-                              document={selectedDocument}
-                              onMinimize={isChatMinimized}
-                              onClose={handleDocumentClose}
-                            />
-                          </div>
-                        </Panel>
-                      )} */}
-                      {/* {selectedDocument && isChatMinimized && (
-                        <Panel defaultSize={100} minSize={30}>
-                        <div className="h-full">
-                          <DocumentView
-                            document={selectedDocument}
-                            onMinimize={isChatMinimized}
-                            onClose={handleDocumentClose}
-                          />
-                        </div>
+                  <PanelGroup direction="horizontal">
+                    {selectedDocument && (
+                      <Panel defaultSize={isChatMinimized ? 100 : 50} minSize={30}>
+                        <DocumentView
+                          document={selectedDocument}
+                          onClose={handleDocumentClose}
+                          onMinimize={toggleChatMinimize}
+                        />
                       </Panel>
-                      )} */}
-
-                      {selectedDocument && !isChatMinimized && (
-                        <>
-                          <Panel defaultSize={50} minSize={30}>
-                            <div className="h-full">
-                              <DocumentView
-                                document={selectedDocument}
-                                onClose={handleDocumentClose}
-                                onMinimize={toggleChatMinimize}
-                              />
-                            </div>
-                          </Panel>
-                          <PanelResizeHandle />
-                        </>
-                      )}
-                      {(isChatMinimized && selectedDocument) ||
-                      (!selectedDocument && !isChatMinimized) ? (
-                        <Panel defaultSize={100} minSize={30}>
-                          {isChatMinimized && selectedDocument ? (
-                            <div className="h-full">
-                              <DocumentView
-                                document={selectedDocument}
-                                onClose={handleDocumentClose}
-                                onMinimize={toggleChatMinimize}
-                              />
-                            </div>
-                          ) : (
-                            <div className="relative w-full h-full z-50">
-                              <ChatPanel
-                                agent={agent}
-                                onClose={onClose}
-                                selectedDocument={selectedDocument}
-                                onMinimize={toggleChatMinimize}
-                              />
-                            </div>
-                          )}
-                        </Panel>
-                      ) : null}
-                      {!isChatMinimized && selectedDocument && (
-                        <Panel defaultSize={50} minSize={30}>
-                          <div className="relative w-full h-full">
-                            <ChatPanel
-                              agent={agent}
-                              onClose={onClose}
-                              selectedDocument={selectedDocument}
-                              onMinimize={toggleChatMinimize}
-                            />
-                          </div>
-                        </Panel>
-                      )}
-                      <PanelResizeHandle />
-                      {/* <Panel
-                        defaultSize={selectedDocument ? 100 : 50}
-                        minSize={30}
-                      >
-                        <div className="relative w-full h-full z-50">
+                    )}
+                    {!isChatMinimized && (
+                      <>
+                        {selectedDocument && <PanelResizeHandle />}
+                        <Panel defaultSize={selectedDocument ? 50 : 100} minSize={30}>
                           <ChatPanel
                             agent={agent}
                             onClose={onClose}
                             selectedDocument={selectedDocument}
                             onMinimize={toggleChatMinimize}
                           />
-                        </div>
-                      </Panel> */}
-                    </PanelGroup>
-                  </div>
+                        </Panel>
+                      </>
+                    )}
+                  </PanelGroup>
+                  {isChatMinimized && (
+                    <div className="absolute bottom-4 right-4 z-30">
+                      <Button
+                        isIconOnly
+                        color="primary"
+                        aria-label="Chat"
+                        className="rounded-full w-12 h-12"
+                        onClick={toggleChatMinimize}
+                      >
+                        <IoChatbubbleEllipsesOutline className="w-6 h-6" />
+                      </Button>
+                    </div>
+                  )}
                 </Panel>
               </PanelGroup>
             </div>
@@ -331,3 +421,5 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
 };
 
 export default ChatPage;
+
+
