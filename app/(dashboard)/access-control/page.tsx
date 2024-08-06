@@ -37,7 +37,7 @@ const Tables = () => {
   const [pageSize, setPageSize] = useState(10)
   const [isLoading, setisLoading] = useState(false)
   const [workspaceList, setWorkspaceList] = useState<Workspace[]>([])
-  const [workspaceID, setWorkspaceID] = useState('')
+  const [workspaceID, setWorkspaceID] = useState('all')
   const [values, setValues] = useState<string[]>([])
   const [roleValue, setroleValue] = useState<string[]>([])
   const [userValue, setUserValue] = useState('')
@@ -54,7 +54,7 @@ const Tables = () => {
 
   useMount(() => {
     fetchWorkspaceList(currentPage, pageSize)
-    fetchUserList(currentPage, pageSize)
+    fetchUserList(currentPage, pageSize, 'all')
   })
 
   const fetchWorkspaceList = (page: number, pageSize: number) => {
@@ -72,11 +72,11 @@ const Tables = () => {
       })
   }
 
-  const fetchUserList = (page: number, pageSize: number) => {
+  const fetchUserList = (page: number, pageSize: number, workspace_id: string) => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: workspaceID || 'all',
+      workspace_id: workspace_id || 'all',
       user_name: searchValue || '',
       user_id: userID || ''
     }
@@ -98,7 +98,7 @@ const Tables = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page)
     setisLoading(true)
-    fetchUserList(page, pageSize)
+    fetchUserList(page, pageSize, workspaceID)
   }
 
   const handleSearch = (reload) => {
@@ -106,7 +106,7 @@ const Tables = () => {
       setisLoading(true)
       setCurrentPage(1) // Reset to first page for new search
 
-      fetchUserList(1, pageSize)
+      fetchUserList(1, pageSize, workspaceID)
       fetchWorkspaceList(1, pageSize)
     }
   }
@@ -142,7 +142,7 @@ const Tables = () => {
     }
     setUserRoleStudentID(requestData).then(() => {
       toast.success(`User ${studentID} updated with role ${roleValue}`)
-      fetchUserList(1, pageSize)
+      fetchUserList(1, pageSize, workspaceID)
     })
   }
 
@@ -151,7 +151,7 @@ const Tables = () => {
     console.log('selectedValue', selectedValue)
     setValues([selectedValue])
     setWorkspaceID(selectedValue)
-    fetchUserList(1, pageSize)
+    fetchUserList(1, pageSize, selectedValue)
   }
 
   const topContent = (
