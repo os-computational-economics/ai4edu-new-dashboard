@@ -43,7 +43,7 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 bg-white">
-                {agent?.course_id} - {agent?.agent_name}
+                {agent?.workspace_id} - {agent?.agent_name}
               </ModalHeader>
               <div className="flex h-[calc(100vh-62px)]">
                 <aside className="z-30 overflow-auto">

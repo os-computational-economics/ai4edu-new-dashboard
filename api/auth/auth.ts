@@ -6,6 +6,7 @@ export interface User {
   first_name: string;
   last_name: string;
   student_id: string;
+  workspace_role: { [key: string]: string }
   role: Array<{
     student: boolean;
     teacher: boolean;

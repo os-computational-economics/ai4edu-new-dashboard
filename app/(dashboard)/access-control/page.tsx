@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import {
   Table,
   TableHeader,
@@ -10,19 +10,18 @@ import {
   Button,
   Spinner,
   Pagination,
-  CheckboxGroup,
-  Checkbox,
   Select,
-  SelectSection,
-  SelectItem
+  SelectItem,
+  Input
 } from '@nextui-org/react'
 import { getUserList, grantAccess, User } from '@/api/auth/auth'
-import { getWorkspaceList } from '@/api/workspace/workspace'
+import { getWorkspaceList, setUserRole, setUserRoleStudentID } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { set } from 'react-hook-form'
+import throttle from 'lodash/throttle'
+import { set } from 'lodash'
 
 interface Workspace {
   workspace_id: string
@@ -39,14 +38,24 @@ const Tables = () => {
   const [isLoading, setisLoading] = useState(false)
   const [workspaceList, setWorkspaceList] = useState<Workspace[]>([])
   const [workspaceID, setWorkspaceID] = useState('')
-  const [values, setValues] = useState([])
+  const [values, setValues] = useState<string[]>([])
+  const [roleValue, setroleValue] = useState<string[]>([])
+  const [userValue, setUserValue] = useState('')
+  const [searchValue, setSearchValue] = useState('')
+  const [userID, setUserID] = useState('')
+  const [studentID, setStudentID] = useState('')
 
   const totalPage = Math.ceil(total / pageSize)
 
-  useEffect(() => {
+  const roleDict = [
+    { key: 'student', label: 'student' },
+    { key: 'teacher', label: 'teacher' }
+  ]
+
+  useMount(() => {
     fetchWorkspaceList(currentPage, pageSize)
     fetchUserList(currentPage, pageSize)
-  }, [])
+  })
 
   const fetchWorkspaceList = (page: number, pageSize: number) => {
     const params = {
@@ -63,11 +72,13 @@ const Tables = () => {
       })
   }
 
-  const fetchUserList = (page: number, pageSize: number, id = 'all') => {
+  const fetchUserList = (page: number, pageSize: number) => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: id || workspaceID
+      workspace_id: workspaceID || 'all',
+      user_name: searchValue || '',
+      user_id: userID || ''
     }
 
     console.log('params', params)
@@ -122,32 +133,46 @@ const Tables = () => {
       })
   }
 
-  const onSelectionchange = (e) => {
-    console.log(values)
-    setValues(values)
-    setWorkspaceID(e.target.value)
-    fetchUserList(1, pageSize, e.target.value)
+  const setUsersRole = () => {
+    const requestData = {
+      user_id: '-1', // setting to -1 as we are not using user_id
+      student_id: studentID,
+      workspace_id: workspaceID,
+      role: roleValue[0]
+    }
+    setUserRoleStudentID(requestData).then(() => {
+      toast.success(`User ${studentID} updated with role ${roleValue}`)
+      fetchUserList(1, pageSize)
+    })
   }
 
-  const topContent = useMemo(
-    () => (
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <div className="text-sm">
-            Access changes may take up to 30 minutes to take effect. To apply changes immediately, please have the user
-            log out and log back in.
-          </div>
-          <Button
-            variant="bordered"
-            size="sm"
-            color="default"
-            onClick={() => handleSearch(true)}
-            isLoading={isLoading}
-            endContent={<MdCached />}
-          >
-            Reload List
-          </Button>
+  const onSelectionchange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue: string = e.target.value
+    console.log('selectedValue', selectedValue)
+    setValues([selectedValue])
+    setWorkspaceID(selectedValue)
+    fetchUserList(1, pageSize)
+  }
+
+  const topContent = (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <div className="text-sm">
+          Access changes may take up to 30 minutes to take effect. To apply changes immediately, please have the user
+          log out and log back in.
         </div>
+        <Button
+          variant="bordered"
+          size="sm"
+          color="default"
+          onClick={() => handleSearch(true)}
+          isLoading={isLoading}
+          endContent={<MdCached />}
+        >
+          Reload List
+        </Button>
+      </div>
+      <div className="flex justify-between items-center gap-4">
         <Select
           size="sm"
           label="Select Workspace"
@@ -155,15 +180,45 @@ const Tables = () => {
             onSelectionchange(e)
           }}
           selectedKeys={values}
-          disabled={isLoading}
+          // disabled={isLoading}
         >
           {workspaceList.map((workspace) => (
             <SelectItem key={workspace.workspace_id}>{workspace.workspace_name}</SelectItem>
           ))}
         </Select>
+        <Input
+          size="sm"
+          isDisabled={!values.length || isLoading}
+          type="email"
+          label="Case ID / Student ID"
+          className="max-w-xs"
+          onValueChange={setStudentID}
+        />
+        <Select
+          label="Select a role"
+          className="max-w-xs"
+          size="sm"
+          selectedKeys={roleValue}
+          isDisabled={!values.length || isLoading}
+          onChange={(e) => {
+            setroleValue([e.target.value])
+          }}
+        >
+          {roleDict.map((role) => (
+            <SelectItem key={role.key}>{role.label}</SelectItem>
+          ))}
+        </Select>
+        <Button
+          color="primary"
+          isDisabled={!values.length || !studentID || !roleValue.length || isLoading}
+          onClick={() => setUsersRole()}
+          isLoading={isLoading}
+          endContent={<MdCached />}
+        >
+          Add User
+        </Button>
       </div>
-    ),
-    [isLoading]
+    </div>
   )
 
   return (
@@ -191,9 +246,7 @@ const Tables = () => {
           <TableColumn key="user_id">User ID</TableColumn>
           <TableColumn key="student_id">Student ID</TableColumn>
           <TableColumn key="name">User Name</TableColumn>
-          <TableColumn key="roles" align="center">
-            Roles
-          </TableColumn>
+          <TableColumn key="role">Role</TableColumn>
         </TableHeader>
         <TableBody
           items={users}
@@ -212,17 +265,7 @@ const Tables = () => {
               <TableCell>
                 {user.first_name} {user.last_name}
               </TableCell>
-              <TableCell>
-                <CheckboxGroup
-                  orientation="horizontal"
-                  // defaultValue={Object.keys(user.role).filter((role) => user.role[role])}
-                  onChange={(selectedRoles) => handleRoleChange(user, selectedRoles)}
-                >
-                  <Checkbox value="student">Student</Checkbox>
-                  <Checkbox value="teacher">Teacher</Checkbox>
-                  <Checkbox value="admin">Admin</Checkbox>
-                </CheckboxGroup>
-              </TableCell>
+              <TableCell>{user?.workspace_role[workspaceID]}</TableCell>
             </TableRow>
           ))}
         </TableBody>
