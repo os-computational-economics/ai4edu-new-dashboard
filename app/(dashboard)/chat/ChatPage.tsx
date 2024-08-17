@@ -12,10 +12,10 @@ type Document = {
 }
 
 const documents: Document[] = [
-  { id: 1, title: 'Document 1' },
-  { id: 2, title: 'Document 2' },
-  { id: 3, title: 'Document 3' },
-  { id: 4, title: 'Document 4' }
+  // { id: 1, title: 'Document 1' },
+  // { id: 2, title: 'Document 2' },
+  // { id: 3, title: 'Document 3' },
+  // { id: 4, title: 'Document 4' }
 ]
 
 const ChatPage = ({ isOpen, onClose, status, agent }) => {
@@ -52,7 +52,7 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
                   </div>
                 </aside>
                 <PanelGroup autoSaveId="chat-interface" direction="horizontal" className="w-full">
-                  <Panel defaultSize={25} maxSize={70} minSize={20}>
+                  <Panel defaultSize={15} maxSize={70} minSize={20}>
                     <DocumentPanel selectedDocument={selectedDocument} />
                   </Panel>
                   <PanelResizeHandle />

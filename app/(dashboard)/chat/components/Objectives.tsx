@@ -1,21 +1,18 @@
-"use client";
-import React from "react";
-import { Checkbox, Switch, Button, ScrollShadow } from "@nextui-org/react";
+'use client'
+import React from 'react'
+import { Checkbox, Switch, Button, ScrollShadow } from '@nextui-org/react'
 
 type Document = {
-  id: number;
-  title: string;
-};
-
-interface ObjectivesProps {
-  documents: Document[];
-  onDocumentClick: (document: Document) => void;
+  id: number
+  title: string
 }
 
-export default function Objectives({
-  documents,
-  onDocumentClick,
-}: ObjectivesProps) {
+interface ObjectivesProps {
+  documents: Document[]
+  onDocumentClick: (document: Document) => void
+}
+
+export default function Objectives({ documents, onDocumentClick }: ObjectivesProps) {
   return (
     <ScrollShadow>
       <header className="flex flex-col justify-center text-center mx-4 max-md:mx-2.5">
@@ -23,62 +20,14 @@ export default function Objectives({
           <h2 className="justify-center px-4 py-2 mt-6 text-base font-medium text-white bg-black rounded-lg max-md:px-5">
             Objectives
           </h2>
-          <p className="pt-3 text-base text-ellipsis text-zinc-700 font-bold">
-            Add a vehicle
-          </p>
-          <div className="flex items-center py-1 text-base text-ellipsis text-zinc-700 font-bold">
-            <span>Progress:</span>
-            <span className="ml-2">100%</span>
-          </div>
-          <div className="flex items-center py-1 text-base text-ellipsis text-zinc-700 font-bold">
-            <span>Customer Mood:</span>
-            <span className="ml-2 text-green-400">Happy</span>
-          </div>
-          <p className="text-base text-ellipsis py-2 text-zinc-700">
-            Remember to use your guidelines!
-          </p>
+          <div className="flex space-x-2 mt-5 ml-1">No objectives available</div>
         </section>
         <section className="flex flex-col justify-center mt-3">
           <div>
             <h2 className="justify-center px-4 py-2 mt-3 text-base font-medium text-white bg-black rounded-lg max-md:px-5">
               Task Guide
             </h2>
-            <div className="flex space-x-2 mt-5 ml-1">
-              <Checkbox id="terms1" />
-              <label
-                htmlFor="terms1"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Greetings
-              </label>
-            </div>
-            <div className="flex space-x-2 mt-5 ml-1">
-              <Checkbox id="terms2" />
-              <label
-                htmlFor="terms2"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Verify Caller
-              </label>
-            </div>
-            <div className="flex space-x-2 mt-5 ml-1">
-              <Checkbox id="terms3" />
-              <label
-                htmlFor="terms3"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Verify Intention
-              </label>
-            </div>
-            <div className="flex space-x-2 mt-5 ml-1">
-              <Checkbox id="terms4" />
-              <label
-                htmlFor="terms4"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Make/Model/Year/VIN
-              </label>
-            </div>
+            <div className="flex space-x-2 mt-5 ml-1">No tasks available</div>
           </div>
         </section>
         <section className="flex flex-col h-full justify-center mt-3">
@@ -86,7 +35,9 @@ export default function Objectives({
             <h2 className="justify-center px-4 py-2 mt-3 text-base font-medium text-white bg-black rounded-lg max-md:px-5">
               Documents
             </h2>
-            {documents.map((document) => (
+            <div className="flex space-x-2 mt-5 ml-1">No documents available</div>
+
+            {/* {documents.map((document) => (
               <div
                 key={document.id}
                 className="flex justify-center space-x-2 mt-5 ml-1 cursor-pointer"
@@ -99,21 +50,23 @@ export default function Objectives({
                   {document.title}
                 </label>
               </div>
-            ))}
+            ))} */}
           </div>
         </section>
         <section className="flex flex-col justify-center items-center">
           <h2 className="justify-center py-2 mt-6 mb-6 w-full text-base font-medium text-white bg-black rounded-lg max-md:px-5">
             Settings
           </h2>
-          <div className="flex items-center space-x-2">
+          <div className="flex space-x-2 mt-5 ml-1">No settings available</div>
+
+          {/* <div className="flex items-center space-x-2">
             <Switch id="microphone">Enable Microphone</Switch>
-          </div>
-          <Button className="justify-center mt-10" color="danger">
+          </div> */}
+          {/* <Button className="justify-center mt-10" color="danger">
             Reset Chat
-          </Button>
+          </Button> */}
         </section>
       </header>
     </ScrollShadow>
-  );
+  )
 }
