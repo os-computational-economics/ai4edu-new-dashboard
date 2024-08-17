@@ -31,13 +31,13 @@ export const NavbarWrapper = ({ children }: Props) => {
           wrapper: 'w-full max-w-full'
         }}
       >
-        {currentWorkspace ? (
+        {/* {currentWorkspace ? (
           <NavbarContent justify="start">
             Current Workspace: {currentWorkspace?.name} - {currentWorkspace?.role}
           </NavbarContent>
         ) : (
           'no workspace selected'
-        )}
+        )} */}
         <NavbarContent className="md:hidden">
           <BurguerButton />
         </NavbarContent>

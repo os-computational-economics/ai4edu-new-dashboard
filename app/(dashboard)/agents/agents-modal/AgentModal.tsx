@@ -64,15 +64,17 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
             <>
               <header className="w-full bg-gray-100 p-4 flex items-center justify-between">
                 <div className="flex items-center">
-                  <Button variant="light" className="border-none">
-                    <MdArrowBackIosNew className="mr-2" onClick={onClose} size={24} />
+                  <Button variant="light" className="border-none" onClick={onClose}>
+                    <MdArrowBackIosNew className="mr-2" size={24} />
                   </Button>
                   <div className="flex flex-col ml-3">
                     <h1 className="text-2xl font-bold">{currentAgent?.agent_name || 'Agent Name'}</h1>
                     <div className="flex items-center text-sm text-gray-600 mt-1">
-                      <span className="text-sm mr-2">{currentAgent?.course_id || 'Course ID'} </span>
+                      <span className="text-sm mr-2">
+                        {JSON.parse(localStorage.getItem('workplace')!)?.id || 'Course ID'}{' '}
+                      </span>
                       <span className="mr-2">{currentAgent?.status === 1 ? 'Active' : 'Inactive'}</span>
-                      <span>{new Date().toLocaleString()}</span>
+                      {/* <span>{new Date().toLocaleString()}</span> */}
                     </div>
                   </div>
                 </div>

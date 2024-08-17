@@ -14,4 +14,10 @@ body {
 
 .Toastify__toast-container {
   z-index: 200000;
-  }
+}
+
+/* uncomment to turn off the nextjs runtime alert */
+nextjs-portal {
+  display: none;
+}
+  

@@ -156,6 +156,7 @@ const Tables = () => {
               <Button
                 onClick={() => {
                   setStatus(1)
+                  setCurrentAgent(null)
                   openModal()
                 }}
                 className="bg-foreground text-background"
@@ -274,13 +275,13 @@ const Tables = () => {
       >
         <TableHeader>
           <TableColumn key="agent_name">Assistant Name</TableColumn>
-          <TableColumn key="voice" align="center">
+          {/* <TableColumn key="voice" align="center">
             Voice
           </TableColumn>
           <TableColumn key="allow_model_choice" align="center">
             Allow Model Choice
           </TableColumn>
-          <TableColumn key="model">Model</TableColumn>
+          <TableColumn key="model">Model</TableColumn> */}
           <TableColumn key="status">Status</TableColumn>
           <TableColumn key="updated_at">Last Updated</TableColumn>
           <TableColumn key="actions" align="center" className="px-14">
@@ -305,7 +306,7 @@ const Tables = () => {
                   {/* <span className="text-bold text-sm capitalize text-default-400">{agent.course_id}</span> */}
                 </div>
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <Chip color={statusColorMap[agent.voice.toString()]} size="sm" variant="flat">
                   {agent.voice ? 'Active' : 'Disabled'}
                 </Chip>
@@ -321,7 +322,7 @@ const Tables = () => {
                     return model.label
                   }
                 })}
-              </TableCell>
+              </TableCell> */}
               <TableCell>
                 <Chip color={statusColorMap[agent.status]} size="sm" variant="flat">
                   {agent.status ? 'Active' : 'Disabled'}

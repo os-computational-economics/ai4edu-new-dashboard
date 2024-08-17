@@ -1,39 +1,35 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
+'use client'
+import React, { useState, useEffect, useRef } from 'react'
 // import { ChevronLeft, Plus, ChevronDown, Send, Search, X } from "lucide-react";
-import { MdArrowBackIosNew, MdAdd, MdDeleteForever } from "react-icons/md";
-import { CiSearch } from "react-icons/ci";
-import { IoClose } from "react-icons/io5";
-import Upload from "@/components/upload/upload";
+import { MdArrowBackIosNew, MdAdd, MdDeleteForever } from 'react-icons/md'
+import { CiSearch } from 'react-icons/ci'
+import { IoClose } from 'react-icons/io5'
+import Upload from '@/components/upload/upload'
 
 export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
   // files is a dict {file_id: file_name}, the actual file is stored in the backend, not in the frontend
-  const [activeTab, setActiveTab] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isFileUploadModalVisible, setIsFileUploadModalVisible] =
-    useState(false);
+  const [activeTab, setActiveTab] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isFileUploadModalVisible, setIsFileUploadModalVisible] = useState(false)
 
   const handleFileUpload = (file) => {
-    console.log(file);
+    console.log(file)
     // generate a random file_id
-    const fileId = Math.random().toString(36).substring(7);
-    const newFiles = { ...files, [fileId]: file.name };
-    setFiles(newFiles);
-  };
+    const fileId = Math.random().toString(36).substring(7)
+    const newFiles = { ...files, [fileId]: file.name }
+    setFiles(newFiles)
+  }
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
-  const tabs = ["All", "Documents"];
+  const tabs = ['All', 'Documents']
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-999">
       <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Knowledge Base</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <IoClose size={24} />
           </button>
         </div>
@@ -44,9 +40,7 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
               <button
                 key={tab}
                 className={`px-3 py-2 ${
-                  activeTab === tab
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600"
+                  activeTab === tab ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -63,10 +57,7 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <CiSearch
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={18}
-              />
+              <CiSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
             </div>
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center"
@@ -84,24 +75,21 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
           customMessage="Upload a PDF file to create a new knowledge."
           onClose={() => setIsFileUploadModalVisible(false)}
           onFileUpload={handleFileUpload}
-          acceptFileTypes={".pdf"}
+          acceptFileTypes={'.pdf'}
         />
 
         <div className="flex-grow p-4 overflow-y-auto">
           {Object.keys(files).length > 0 ? (
             <div className="grid grid-cols-3 gap-4">
               {Object.entries(files).map(([fileId, fileName]) => (
-                <div
-                  key={fileId}
-                  className="border p-4 rounded-lg shadow-sm flex justify-between items-center"
-                >
+                <div key={fileId} className="border p-4 rounded-lg shadow-sm flex justify-between items-center">
                   <h3 className="text-lg font-medium">{fileName as string}</h3>
                   <button
                     className="text-red-500 hover:text-red-700"
                     onClick={() => {
-                      const newFiles = { ...files };
-                      delete newFiles[fileId];
-                      setFiles(newFiles);
+                      const newFiles = { ...files }
+                      delete newFiles[fileId]
+                      setFiles(newFiles)
                     }}
                   >
                     <MdDeleteForever size={24} />
@@ -117,26 +105,23 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const AgentResourcesPopup = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
-  const tabs = ["All", "Documents", "Tables", "Photos"];
+  const tabs = ['All', 'Documents', 'Tables', 'Photos']
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-999">
       <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Agent Resources</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <IoClose size={24} />
           </button>
         </div>
@@ -147,9 +132,7 @@ export const AgentResourcesPopup = ({ isOpen, onClose }) => {
               <button
                 key={tab}
                 className={`px-3 py-2 ${
-                  activeTab === tab
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600"
+                  activeTab === tab ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -166,10 +149,7 @@ export const AgentResourcesPopup = ({ isOpen, onClose }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <CiSearch
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={18}
-              />
+              <CiSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
             </div>
             <select className="border rounded-md px-3 py-2">
               <option>Create Time ↓</option>
@@ -184,33 +164,28 @@ export const AgentResourcesPopup = ({ isOpen, onClose }) => {
         <div className="flex-grow p-4 overflow-y-auto">
           <div className="flex flex-col items-center justify-center h-full text-gray-500">
             <p>No Resources Yet</p>
-            <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md">
-              Create Resource
-            </button>
+            <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md">Create Resource</button>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const WorkflowPopup = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
-  const tabs = ["All", "Documents", "Tables", "Photos"];
+  const tabs = ['All', 'Documents', 'Tables', 'Photos']
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Workflow</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <IoClose size={24} />
           </button>
         </div>
@@ -221,9 +196,7 @@ export const WorkflowPopup = ({ isOpen, onClose }) => {
               <button
                 key={tab}
                 className={`px-3 py-2 ${
-                  activeTab === tab
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600"
+                  activeTab === tab ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -240,10 +213,7 @@ export const WorkflowPopup = ({ isOpen, onClose }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <CiSearch
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={18}
-              />
+              <CiSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
             </div>
             <select className="border rounded-md px-3 py-2">
               <option>Create Time ↓</option>
@@ -258,12 +228,10 @@ export const WorkflowPopup = ({ isOpen, onClose }) => {
         <div className="flex-grow p-4 overflow-y-auto">
           <div className="flex flex-col items-center justify-center h-full text-gray-500">
             <p>No Workflows Yet</p>
-            <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md">
-              Create Workflow
-            </button>
+            <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md">Create Workflow</button>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
