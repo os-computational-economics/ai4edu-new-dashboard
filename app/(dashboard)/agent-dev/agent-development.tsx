@@ -261,7 +261,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
       <div className="flex-grow h-80">
         <ChatPanelPH agent={agent} />
       </div>
-      <div className="h-8"></div>
+      <div className="h-2"></div>
     </div>
   )
   // if (!agent) {
