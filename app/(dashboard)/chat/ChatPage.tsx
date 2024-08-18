@@ -30,11 +30,16 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
     console.log('$$$', agent)
   }, [agent])
 
+  const handleModalClose = () => {
+    setSelectedDocumentFileID(null)
+    onClose()
+  }
+
   return (
     <div>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleModalClose}
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
         size="full"

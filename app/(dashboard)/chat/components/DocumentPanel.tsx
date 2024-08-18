@@ -33,7 +33,6 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
   useEffect(() => {
     if (selectedDocument) {
       getPresignedURLForFile({ fileID: selectedDocument as string }).then((response) => {
-        console.log('Response:', response.url)
         if (response.url) setDocumentUrl(response.url)
       })
     }
@@ -47,11 +46,7 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
           <div className="text-wrap w-full h-full">
             {selectedDocument ? (
               <>
-                <iframe
-                  src={documentUrl as string}
-                  title="Document"
-                  className="w-full h-full"
-                />
+                <iframe src={documentUrl as string} title="Document" className="w-full h-full" />
               </>
             ) : (
               <div>
