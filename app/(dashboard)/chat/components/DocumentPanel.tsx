@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Card, ScrollShadow } from '@nextui-org/react'
+import { getPresignedURLForFile } from '@/api/chat/chat'
 
 type Document = {
   id: number
@@ -15,11 +16,12 @@ interface SelectedCourse {
 }
 
 interface DocumentPanelProps {
-  selectedDocument: Document | null
+  selectedDocument: Document | string | null
 }
 
 export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) {
   const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(null)
+  const [documentUrl, setDocumentUrl] = useState<string | null>(null)
 
   useEffect(() => {
     const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
@@ -28,83 +30,28 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
     }
   }, [])
 
+  useEffect(() => {
+    if (selectedDocument) {
+      getPresignedURLForFile({ fileID: selectedDocument as string }).then((response) => {
+        console.log('Response:', response.url)
+        if (response.url) setDocumentUrl(response.url)
+      })
+    }
+  }, [selectedDocument])
+
   return (
     <Card className="m-1 h-full">
-      <div className="flex h-full">
-        <div className="bg-white p-6">
+      <div className="h-full w-full">
+        <div className="bg-white p-3 h-full">
           {/* <h1 className="text-2xl font-bold mb-4">{selectedCourse?.id}</h1> */}
-          <div className="text-wrap">
+          <div className="text-wrap w-full h-full">
             {selectedDocument ? (
               <>
-                <h3 className="text-xl font-bold mb-4">{selectedDocument?.title || 'No selected document'}</h3>
-                <ScrollShadow className="h-[calc(100vh-140px)] w-fit rounded-md">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod tellus vel sapien bibendum, vel
-                    bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit aliquam.
-                    Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam
-                    nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio
-                    consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit aliquam. Suspendisse potenti.
-                    Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam
-                    nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio consequat. Nullam
-                    volutpat metus ac nunc dapibus, id malesuada velit aliquam. Suspendisse potenti. Nulla facilisi.
-                    Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet
-                    nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio consequat. Nullam volutpat metus ac
-                    nunc dapibus, id malesuada velit aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla
-                    sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
-                    tellus vel sapien bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id
-                    malesuada velit aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam
-                    lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien
-                    bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit
-                    aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl
-                    nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel
-                    bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit aliquam.
-                    Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam
-                    nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio
-                    consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod tellus vel sapien
-                    bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit
-                    aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl
-                    nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel
-                    bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit aliquam.
-                    Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam
-                    nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio
-                    consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit aliquam. Suspendisse potenti.
-                    Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam
-                    nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio consequat. Nullam
-                    volutpat metus ac nunc dapibus, id malesuada velit aliquam. Suspendisse potenti. Nulla facilisi.
-                    Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet
-                    nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio consequat. Nullam volutpat metus ac
-                    nunc dapibus, id malesuada velit aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla
-                    sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
-                    tellus vel sapien bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id
-                    malesuada velit aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam
-                    lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien
-                    bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit
-                    aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl
-                    nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel
-                    bibendum odio consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod tellus
-                    vel sapien bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id
-                    malesuada velit aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam
-                    lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien
-                    bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit
-                    aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl
-                    nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel
-                    bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit aliquam.
-                    Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam
-                    nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio
-                    consequat. Nullam volutpat metus ac nunc dapibus, id malesuada velit aliquam. Suspendisse potenti.
-                    Nulla facilisi. Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam
-                    nisl nisl sit amet nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio consequat. Nullam
-                    volutpat metus ac nunc dapibus, id malesuada velit aliquam. Suspendisse potenti. Nulla facilisi.
-                    Duis euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet
-                    nisl. Sed euismod tellus vel sapien bibendum, vel bibendum odio consequat. Nullam volutpat metus ac
-                    nunc dapibus, id malesuada velit aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla
-                    sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod
-                    tellus vel sapien bibendum, vel bibendum odio consequat. Nullam volutpat metus ac nunc dapibus, id
-                    malesuada velit aliquam. Suspendisse potenti. Nulla facilisi. Duis euismod, nulla sit amet aliquam
-                    lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl. Sed euismod tellus vel sapien
-                    bibendum, vel bibendum odio consequat.
-                  </p>
-                </ScrollShadow>
+                <iframe
+                  src={documentUrl as string}
+                  title="Document"
+                  className="w-full h-full"
+                />
               </>
             ) : (
               <div>

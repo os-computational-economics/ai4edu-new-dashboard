@@ -19,11 +19,11 @@ const documents: Document[] = [
 ]
 
 const ChatPage = ({ isOpen, onClose, status, agent }) => {
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
+  const [selectedDocumentFileID, setSelectedDocumentFileID] = useState<Document | string | null>(null)
   const [isChatModalOpen, setIsChatModalOpen] = useState(true)
 
   const handleDocumentClick = (document: Document) => {
-    setSelectedDocument(document)
+    setSelectedDocumentFileID(document)
   }
 
   useEffect(() => {
@@ -53,11 +53,11 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
                 </aside>
                 <PanelGroup autoSaveId="chat-interface" direction="horizontal" className="w-full">
                   <Panel defaultSize={15} maxSize={70} minSize={20}>
-                    <DocumentPanel selectedDocument={selectedDocument} />
+                    <DocumentPanel selectedDocument={selectedDocumentFileID} />
                   </Panel>
                   <PanelResizeHandle />
                   <Panel defaultSize={75} maxSize={80} minSize={30}>
-                    <ChatPanel agent={agent} />
+                    <ChatPanel agent={agent} setSelectedDocument={setSelectedDocumentFileID} />
                   </Panel>
                 </PanelGroup>
               </div>
