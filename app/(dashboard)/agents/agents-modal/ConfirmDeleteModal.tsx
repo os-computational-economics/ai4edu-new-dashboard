@@ -17,11 +17,11 @@ const AgentModal = ({ isOpen, onClose, agent }) => {
     }
     deleteAgent(data)
       .then((res) => {
-        console.log('Assistant deleted successfully:', res)
+        console.log('Agent deleted successfully:', res)
         handleCloseModal(true)
       })
       .catch((err) => {
-        console.error('Error deleting assistant:', err)
+        console.error('Error deleting agent:', err)
       })
   }
 
@@ -29,7 +29,7 @@ const AgentModal = ({ isOpen, onClose, agent }) => {
     <div>
       <Modal isOpen={isOpen} onClose={() => handleCloseModal(true)}>
         <ModalContent>
-          <ModalHeader>Delete Assistant</ModalHeader>
+          <ModalHeader>Delete Agent</ModalHeader>
           <ModalBody>
             <p>
               Your action will delete <span className="text-black-600 text-lg font-semibold">{agent?.agent_name}</span>{' '}
@@ -37,8 +37,7 @@ const AgentModal = ({ isOpen, onClose, agent }) => {
             </p>
             <p>Are you sure you want to proceed with deletion?</p>
             <p>
-              This action is irreversible and will permanently remove the assistant. All users will lose access
-              immediately.
+              This action is irreversible and will permanently remove the agent. All users will lose access immediately.
             </p>
           </ModalBody>
 
