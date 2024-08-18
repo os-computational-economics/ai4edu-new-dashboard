@@ -70,7 +70,7 @@ function Message({
                   </div>
                 </li>
               ))}
-              <li className="text-gray-400 text-xs">*click source to view source file</li>
+              <li className="text-gray-400 text-xs">*Click to view the source file.</li>
             </ul>
           )}
         </div>
@@ -105,9 +105,9 @@ function InputMessage({
           }
         }}
       />
-      <Button isIconOnly variant="light" aria-label="Attach file" onClick={FileUploadForm}>
+      {/* <Button isIconOnly variant="light" aria-label="Attach file" onClick={FileUploadForm}>
         <MdAttachFile className="text-2xl" />
-      </Button>
+      </Button> */}
       <Button isIconOnly color="primary" aria-label="Send message" onClick={sendMessage}>
         <IoSend className="text-xl" />
       </Button>

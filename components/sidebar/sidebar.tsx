@@ -74,7 +74,7 @@ export const SidebarWrapper = () => {
         <SidebarItem
           key="agents"
           isActive={pathname === '/agents'}
-          title="Learning Assistants"
+          title="Agents"
           icon={<AgentsIcon />}
           href="agents"
         />,
@@ -93,7 +93,7 @@ export const SidebarWrapper = () => {
         <SidebarItem
           key="agents"
           isActive={pathname === '/agents'}
-          title="Learning Assistants"
+          title="Agents"
           icon={<AgentsIcon />}
           href="agents"
         />,
@@ -148,7 +148,7 @@ export const SidebarWrapper = () => {
           <Image src="/favicon.ico" alt="logo" className="rounded-md" />
           <div>
             <div className="text-xl font-medium m-0 text-default-900 whitespace-nowrap">AI4EDU</div>
-            <div className="text-xs font-medium text-default-500">Learning Assistant</div>
+            {/* <div className="text-xs font-medium text-default-500">Learning Assitant</div> */}
           </div>
         </div>
         <div className="flex flex-col justify-between h-full">

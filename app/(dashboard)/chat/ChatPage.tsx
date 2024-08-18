@@ -57,11 +57,11 @@ const ChatPage = ({ isOpen, onClose, status, agent }) => {
                   </div>
                 </aside>
                 <PanelGroup autoSaveId="chat-interface" direction="horizontal" className="w-full">
-                  <Panel defaultSize={15} maxSize={70} minSize={20}>
+                  <Panel defaultSize={25} maxSize={70} minSize={20}>
                     <DocumentPanel selectedDocument={selectedDocumentFileID} />
                   </Panel>
                   <PanelResizeHandle />
-                  <Panel defaultSize={75} maxSize={80} minSize={30}>
+                  <Panel defaultSize={65} maxSize={80} minSize={30}>
                     <ChatPanel agent={agent} setSelectedDocument={setSelectedDocumentFileID} />
                   </Panel>
                 </PanelGroup>

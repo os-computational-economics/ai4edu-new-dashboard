@@ -179,7 +179,7 @@ const Tables = () => {
     if (storedSelectedCourse.role === 'student') {
       return (
         <div className="relative flex items-center justify-center gap-2">
-          <Tooltip content="Chat with assistant" isDisabled={!agent.status}>
+          <Tooltip content="Chat with agent" isDisabled={!agent.status}>
             <Button
               isIconOnly
               size="md"
@@ -200,7 +200,7 @@ const Tables = () => {
     }
     return (
       <div className="relative flex items-center gap-2">
-        <Tooltip content="Chat with assistant" isDisabled={!agent.status}>
+        <Tooltip content="Chat with agent" isDisabled={!agent.status}>
           <Button
             isIconOnly
             size="md"
@@ -274,7 +274,7 @@ const Tables = () => {
         }
       >
         <TableHeader>
-          <TableColumn key="agent_name">Assistant Name</TableColumn>
+          <TableColumn key="agent_name">Agent Name</TableColumn>
           {/* <TableColumn key="voice" align="center">
             Voice
           </TableColumn>
