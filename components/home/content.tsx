@@ -96,9 +96,11 @@ export const Content = () => {
               </div>
             </div>
             <div className="grid md:grid-cols-3 grid-cols-1 2xl:grid-cols-4 gap-5 justify-center w-full">
-              {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
+              {courses.length > 0 ? (
+                courses.map((course) => <CourseCard key={course.id} course={course} />)
+              ) : (
+                <p>No workspaces available at the moment. Please click &apos;Join Workspace&apos; to join one.</p>
+              )}
             </div>
           </div>
         </div>
