@@ -281,7 +281,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
   return (
     <div className="flex flex-col h-full w-full">
       <PanelGroup direction="horizontal" className="flex-grow">
-        <Panel minSize={30} defaultSize={41}>
+        <Panel minSize={30} defaultSize={60}>
           {renderSettingsPanel()}
         </Panel>
         <PanelResizeHandle className="w-2 bg-gray-200 hover:bg-gray-300 transition-colors" />

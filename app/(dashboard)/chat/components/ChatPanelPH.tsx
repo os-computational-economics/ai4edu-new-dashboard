@@ -47,6 +47,7 @@ function InputMessage({
   return (
     <div className="flex gap-2 px-4 py-2 inset-x-0 bottom-0 bg-white rounded-xl">
       <Textarea
+        isDisabled
         placeholder={placeholder}
         className="flex-grow"
         value={message}
@@ -82,7 +83,7 @@ const ChatPanel = ({ agent }) => {
           <div ref={lastMessageRef}></div>
         </ScrollShadow>
         <footer className="flex-shrink-0">
-          <InputMessage placeholder="Enter your message" message={message} setMessage={setMessage} />
+          <InputMessage placeholder="Preview mode coming soon!" message={message} setMessage={setMessage} />
         </footer>
       </div>
     </Card>
