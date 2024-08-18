@@ -78,7 +78,7 @@ const ChatPanel = ({ agent }) => {
   const model = agent.model || 'openai'
   const voice = agent.voice
   const agentID = agent.agent_id
-  const workspace_id = agent.workspace_id || JSON.parse(localStorage.getItem('workplace')!)?.id
+  const workspace_id = agent.workspace_id || JSON.parse(localStorage.getItem('workspace')!)?.id
   const lastMessageRef = useRef(null)
 
   useEffect(() => {

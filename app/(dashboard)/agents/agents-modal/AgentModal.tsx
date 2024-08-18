@@ -24,7 +24,7 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
       allow_model_choice: currentAgent.allow_model_choice === true,
       status: currentAgent.status === 1 ? 1 : 0,
       student_id: localStorage.getItem('user_id') || 'test001',
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
     }
 
     if (status === 1) {
@@ -71,7 +71,7 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
                     <h1 className="text-2xl font-bold">{currentAgent?.agent_name || 'Agent Name'}</h1>
                     <div className="flex items-center text-sm text-gray-600 mt-1">
                       <span className="text-sm mr-2">
-                        {JSON.parse(localStorage.getItem('workplace')!)?.id || 'Course ID'}{' '}
+                        {JSON.parse(localStorage.getItem('workspace')!)?.id || 'Course ID'}{' '}
                       </span>
                       <span className="mr-2">{currentAgent?.status === 1 ? 'Active' : 'Inactive'}</span>
                       {/* <span>{new Date().toLocaleString()}</span> */}

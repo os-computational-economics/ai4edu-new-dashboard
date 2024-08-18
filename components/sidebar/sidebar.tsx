@@ -44,7 +44,7 @@ export const SidebarWrapper = () => {
     window.addEventListener('courseSelected', handleCourseSelected)
 
     if (typeof window !== 'undefined') {
-      const savedCourse = localStorage.getItem('workplace')
+      const savedCourse = localStorage.getItem('workspace')
       if (savedCourse) {
         setSelectedCourse(JSON.parse(savedCourse))
       }

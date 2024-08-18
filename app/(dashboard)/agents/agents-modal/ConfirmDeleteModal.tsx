@@ -13,7 +13,7 @@ const AgentModal = ({ isOpen, onClose, agent }) => {
   const onSubmit = () => {
     const data = {
       agent_id: agent?.agent_id,
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
     }
     deleteAgent(data)
       .then((res) => {

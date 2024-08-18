@@ -46,7 +46,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
+      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
     }
 
     getUserList(params)
@@ -90,7 +90,7 @@ const Tables = () => {
 
     const formData = new FormData()
 
-    const workspaceId = currentWorkspace?.id || JSON.parse(localStorage.getItem('workplace')!)?.id
+    const workspaceId = currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
     const urlWorkspace = `admin/workspace/add_users_via_csv?workspace_id=${workspaceId}`
 
     formData.append('file', file)
