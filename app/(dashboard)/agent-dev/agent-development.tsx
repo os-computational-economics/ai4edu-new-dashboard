@@ -75,6 +75,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
   }
 
   const handleModelChange = (keys: Selection) => {
+    console.log('Selected model:', keys)
     const selectedModel = Array.from(keys)[0] as string
     setLocalAgentModel(selectedModel)
     handleChange('model', selectedModel)
@@ -209,7 +210,6 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
               <div className="flex justify-between items-center">
                 <span>Enable Voice Input</span>
                 <Switch
-                  isDisabled
                   isSelected={voiceInput}
                   onValueChange={(checked) => {
                     setVoiceInput(checked)
@@ -219,11 +219,17 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
               </div>
               <div className="flex justify-between items-center">
                 <span>Enable Model Selection</span>
-                <Switch isDisabled isSelected={modelSelection} onValueChange={setModelSelection} />
+                <Switch
+                  isSelected={modelSelection}
+                  onValueChange={(checked) => {
+                    setModelSelection(checked)
+                    handleChange('allow_model_choice', checked)
+                  }}
+                />
               </div>
               <div className="flex justify-between items-center">
                 <span>Agent Model</span>
-                <Dropdown isDisabled>
+                <Dropdown isDisabled={!modelSelection}>
                   <DropdownTrigger>
                     <Button variant="ghost" className="capitalize">
                       {getModelDisplayName(localAgentModel)}
