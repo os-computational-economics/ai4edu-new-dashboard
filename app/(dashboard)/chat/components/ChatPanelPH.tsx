@@ -84,6 +84,9 @@ const ChatPanel = ({ agent }) => {
         </ScrollShadow>
         <footer className="flex-shrink-0">
           <InputMessage placeholder="Preview mode coming soon!" message={message} setMessage={setMessage} />
+          <div className="flex justify-center	text-gray-500 text-xs">
+            AI can make errors. Please verify important information.
+          </div>
         </footer>
       </div>
     </Card>

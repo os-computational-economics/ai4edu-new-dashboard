@@ -273,6 +273,9 @@ const ChatPanel = ({ agent, setSelectedDocument }) => {
             setMessage={setMessage}
             sendMessage={sendMessage}
           />
+          <div className="flex justify-center	text-gray-500 text-xs">
+            AI can make errors. Please verify important information.
+          </div>
         </footer>
       </div>
     </Card>
