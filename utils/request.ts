@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === "development") {
   console.log("Unknown environment");
 }
 
-const apiUrl = `${baseURL}/${apiVersion}/${environment}/${role}`;
+export const apiUrl = `${baseURL}/${apiVersion}/${environment}`;
 console.log("****", apiUrl);
 
 const instance = axios.create({
@@ -72,7 +72,7 @@ instance.interceptors.request.use(
     ) {
       // if access token is not present but refresh token is present, do a token refresh
       try {
-        const response = await axios.get(`${apiUrl}/generate_access_token`, {
+        const response = await axios.get(`${apiUrl}/admin/generate_access_token`, {
           headers: {
             Authorization: `Bearer refresh=${refresh_token}`,
           },

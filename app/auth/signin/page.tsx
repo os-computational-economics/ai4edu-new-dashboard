@@ -43,7 +43,13 @@ const SigninPage: React.FC = () => {
 
   const handleSSOLogin = () => {
     const currentUrl = window.location.href;
-    const ssoVerifyUrl = "https://ai4edu-api.jerryang.org/v1/prod/user/sso";
+    let ssoVerifyUrl = "https://ai4edu-api.jerryang.org/v1/prod/user/sso";
+    if (
+      process.env.NODE_ENV === "development" ||
+      process.env.NEXT_PUBLIC_CURRENT_ENV === "development"
+    ) {
+      ssoVerifyUrl = "https://ai4edu-api.jerryang.org/v1/dev/user/sso";
+    }
     window.location.href = `https://login.case.edu/cas/login?service=${ssoVerifyUrl}?came_from=${currentUrl}`;
   };
 

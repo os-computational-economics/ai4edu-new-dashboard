@@ -6,6 +6,7 @@ export interface User {
   first_name: string;
   last_name: string;
   student_id: string;
+  workspace_role: { [key: string]: string }
   role: Array<{
     student: boolean;
     teacher: boolean;
@@ -20,10 +21,11 @@ export interface UserList {
 
 // API paths
 const path = "access";
+const role = "admin"
 
 const api = {
-  getUserList: path + "/get_user_list",
-  grantAccess: path + "/grant_access",
+  getUserList: role + `/${path}` + "/get_user_list",
+  grantAccess: role + `/${path}` + "/grant_access",
 };
 
 // add agent
