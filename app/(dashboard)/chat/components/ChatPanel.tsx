@@ -174,7 +174,19 @@ const ChatPanel = ({ agent }) => {
               if (line.startsWith('data: ')) {
                 try {
                   const data = JSON.parse(line.slice(6))
-                  responseMessage = data.response
+                  let sourceList = ''
+
+                  if (data.source && Array.isArray(data.source) && data.source.length > 0) {
+                    console.log(data.source)
+                    const sources = data.source.map((src, index) => {
+                      const parsedSrc = JSON.parse(src.replace(/'/g, '"'))
+                      console.log('index', index)
+                      return `${index + 1}. ${parsedSrc.file_name} page ${parsedSrc.page + 1}`
+                    })
+                    sourceList = `Extracting information from:\n${sources.join(',\n')}\n\n\n`
+                  }
+
+                  responseMessage = sourceList + '\n\n\n' + data.response
                   updateLastMessage(responseMessage)
                 } catch (e) {
                   console.error('Error parsing JSON:', e, line)
