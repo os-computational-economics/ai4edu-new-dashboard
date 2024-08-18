@@ -174,7 +174,7 @@ const Tables = () => {
 
   const renderActions = (agent) => {
     if (typeof window === 'undefined') return null
-    const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
+    const storedSelectedCourse = JSON.parse(localStorage.getItem('workspace') || '{}')
 
     if (storedSelectedCourse.role === 'student') {
       return (

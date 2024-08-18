@@ -59,12 +59,12 @@ export const UserDropdown = () => {
         </DropdownTrigger>
       </NavbarItem>
       <DropdownMenu aria-label="User menu actions" onAction={(actionKey) => console.log({ actionKey })}>
-        <DropdownItem key="profile" className="flex flex-col justify-start w-full items-start">
+        <DropdownItem isReadOnly key="profile" className="flex flex-col justify-start w-full items-start">
           <p>{fullName}</p>
           <p>{email}</p>
         </DropdownItem>
-        <DropdownItem key="settings">My Settings</DropdownItem>
-        <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+        {/* <DropdownItem key="settings">My Settings</DropdownItem>
+        <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem> */}
         <DropdownItem
           key="logout"
           color="danger"

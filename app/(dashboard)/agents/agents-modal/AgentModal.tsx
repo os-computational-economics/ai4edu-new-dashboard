@@ -10,6 +10,7 @@ import AgentDevelopment from '../../agent-dev/agent-development'
 
 const AgentModal = ({ isOpen, onClose, status, agent }) => {
   const [currentAgent, setCurrentAgent] = useState(agent)
+  const [isLoading, setIsLoading] = useState(false)
   const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
 
   useEffect(() => {
@@ -27,23 +28,29 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
       workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
     }
 
+    setIsLoading(true)
+
     if (status === 1) {
       addAgent(adjustedData)
         .then((res) => {
           console.log('Agent added successfully:', res)
+          setIsLoading(false)
           onClose(true)
         })
         .catch((err) => {
           console.error('Error adding agent:', err)
+          setIsLoading(false)
         })
     } else {
       updateAgent(adjustedData)
         .then((res) => {
           console.log('Agent updated successfully:', res)
+          setIsLoading(false)
           onClose(true)
         })
         .catch((err) => {
           console.error('Error updating agent:', err)
+          setIsLoading(false)
         })
     }
   }
@@ -82,8 +89,8 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
                   <h2 className="text-2xl font-bold">Agent Development Mode</h2>
                 </div>
                 <div>
-                  <Button className="bg-blue-500 text-white" onClick={handleUpdate}>
-                    Publish Agent
+                  <Button className="bg-blue-500 text-white" isLoading={isLoading} onClick={handleUpdate}>
+                    {isLoading ? 'Publishing...' : 'Publish Agent'}
                   </Button>
                 </div>
               </header>
