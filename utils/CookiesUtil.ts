@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import { ToastContainer, toast } from "react-toastify";
 import logout from './logout'
 import "react-toastify/dist/ReactToastify.css";
+import { ping } from '@/api/auth/auth'
 
 const decodeToken = () => { 
     const access_token = Cookies.get('access_token')
@@ -40,13 +41,17 @@ const isAdmin = () => {
 }
 
 const checkExpired = () => {
-    // check if expired
-    const exp = decodeToken()?.exp
-    const now = Math.floor(Date.now() / 1000)
-    console.log('exp', exp, 'now', now)
-
-    if (!exp || now > exp) {
-        logout()
+    // check if there is no access token but there is a refresh token
+    if (!Cookies.get('access_token') && Cookies.get('refresh_token')) {
+        // call the refresh token endpoint
+        ping()
+            .then((res) => {
+                // if the refresh token is valid, set the new access token
+                window.location.reload()
+            })
+            .catch((err) => {
+                window.location.href = '/auth/signin';
+            })
     }
 }
 
