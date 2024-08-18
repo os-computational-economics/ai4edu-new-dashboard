@@ -50,7 +50,7 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
   const tabs = ['All', 'Documents']
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-999">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Knowledge Base</h2>
@@ -142,7 +142,7 @@ export const AgentResourcesPopup = ({ isOpen, onClose }) => {
   const tabs = ['All', 'Documents', 'Tables', 'Photos']
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-999">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Agent Resources</h2>

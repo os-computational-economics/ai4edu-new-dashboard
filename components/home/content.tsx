@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation'
 import { formatedCourses, isAdmin, checkExpired } from '@/utils/CookiesUtil'
 import { WorkspaceContext } from '@/components/layout/layout'
 import AgentJoinModal from '@/components/home/agent-join-modal'
+import cwru_logo from '@/static/cwru_logo.jpg'
 
 interface Course {
   id: string
@@ -56,7 +57,7 @@ const CourseCard = ({ course }) => {
         <Image
           alt="Card background"
           className="object-cover rounded-xl"
-          src="https://picsum.photos/300/200"
+          src="/cwru_logo_blue.png"
           width={300}
           height={200}
         />
