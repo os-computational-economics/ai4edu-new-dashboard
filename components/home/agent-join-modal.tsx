@@ -22,8 +22,8 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
     const param = { workspace_id: workspaceID, password: workspacePassword }
     studentJoinWorkspace(param)
       .then((response) => {
-        toast.success('Users added successfully, please logout and login again to see the changes')
-        onClose()
+        toast.success('Join successful, please logout and login again to see the changes')
+        handleCloseModal()
         console.log('response', response)
       })
       .catch((error) => {
