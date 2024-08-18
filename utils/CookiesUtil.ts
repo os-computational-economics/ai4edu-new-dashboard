@@ -1,5 +1,8 @@
 import Cookies from "js-cookie";
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import { ToastContainer, toast } from "react-toastify";
+import logout from './logout'
+import "react-toastify/dist/ReactToastify.css";
 
 const decodeToken = () => { 
     const access_token = Cookies.get('access_token')
@@ -28,4 +31,15 @@ const isAdmin = () => {
     // return true
 }
 
-export { formatedCourses, isAdmin }
+const checkExpired = () => {
+    // check if expired
+    const exp = decodeToken()?.exp
+    const now = Math.floor(Date.now() / 1000)
+    console.log('exp', exp, 'now', now)
+    if (exp && now > exp) {
+        logout()
+    }
+
+}
+
+export { formatedCourses, isAdmin, checkExpired }

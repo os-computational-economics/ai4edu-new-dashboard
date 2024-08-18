@@ -127,14 +127,14 @@ export const SidebarWrapper = () => {
         title="Access Control"
         icon={<AgentsIcon />}
         href="access-control"
-      />,
-      <SidebarItem
-        key="chat-history-admin"
-        isActive={pathname === '/chat-history'}
-        title="Chat History Admin"
-        icon={<ChatsIcon />}
-        href="chat-history"
       />
+      // <SidebarItem
+      //   key="chat-history-admin"
+      //   isActive={pathname === '/chat-history'}
+      //   title="Chat History Admin"
+      //   icon={<ChatsIcon />}
+      //   href="chat-history"
+      // />
     )
 
     return adminItems
