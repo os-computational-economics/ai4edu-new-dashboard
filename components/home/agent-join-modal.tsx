@@ -4,6 +4,8 @@ import { deleteAgent } from '@/api/agent/agent'
 import { WorkspaceContext } from '@/components/layout/layout'
 import { studentJoinWorkspace } from '@/api/workspace/workspace'
 import { MdInfoOutline } from 'react-icons/md'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const AgentJoinModal = ({ isOpen, onClose }) => {
   const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
@@ -20,6 +22,8 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
     const param = { workspace_id: workspaceID, password: workspacePassword }
     studentJoinWorkspace(param)
       .then((response) => {
+        toast.success('Users added successfully, please logout and login again to see the changes')
+        onClose()
         console.log('response', response)
       })
       .catch((error) => {
@@ -29,6 +33,7 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
 
   return (
     <div>
+      <ToastContainer />
       <Modal isOpen={isOpen} onClose={() => handleCloseModal()}>
         <ModalContent>
           <ModalHeader>Join Workspace</ModalHeader>
