@@ -35,7 +35,6 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
           .catch((err) => {
             window.location.href = '/auth/signin'
           })
-
         console.log('response', response)
       })
       .catch((error) => {
