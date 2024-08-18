@@ -16,6 +16,10 @@ const decodeToken = () => {
     }
 }
 
+const getCurrentUser = () => { 
+    return decodeToken()?.student_id
+}
+
 const formatedCourses = () => { 
     const roles = decodeToken()?.workspace_role || {}
     const formattedCourses = Object.entries(roles).map(([id, role]) => ({
@@ -42,4 +46,4 @@ const checkExpired = () => {
 
 }
 
-export { formatedCourses, isAdmin, checkExpired }
+export { formatedCourses, isAdmin, checkExpired, getCurrentUser }

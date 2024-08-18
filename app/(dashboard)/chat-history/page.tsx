@@ -5,6 +5,7 @@ import HistoryPanel from './components/HistoryPanel'
 import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 import { WorkspaceContext } from '@/components/layout/layout'
+import { getCurrentUser } from '@/utils/CookiesUtil'
 
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
@@ -27,7 +28,7 @@ export default function App() {
     const params = {
       page,
       page_size: pageSize,
-      student_id: creatorId || localStorage.getItem('user_id') || 'rxy216',
+      student_id: getCurrentUser(),
       workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
     }
 
