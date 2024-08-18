@@ -6,6 +6,8 @@ import { studentJoinWorkspace } from '@/api/workspace/workspace'
 import { MdInfoOutline } from 'react-icons/md'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Cookies from 'js-cookie'
+import { ping } from '@/api/auth/auth'
 
 const AgentJoinModal = ({ isOpen, onClose }) => {
   const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
@@ -24,6 +26,15 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
       .then((response) => {
         toast.success('Join successful, please logout and login again to see the changes')
         handleCloseModal()
+        Cookies.remove('access_token')
+        ping()
+          .then((res) => {
+            // if the refresh token is valid, set the new access token
+            window.location.reload()
+          })
+          .catch((err) => {
+            window.location.href = '/auth/signin'
+          })
         console.log('response', response)
       })
       .catch((error) => {
