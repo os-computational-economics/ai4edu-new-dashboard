@@ -17,6 +17,10 @@ const decodeToken = () => {
     }
 }
 
+const getWorkspaceRole = () => { 
+    return decodeToken()?.workspace_role
+}
+
 const getCurrentUser = () => { 
     return decodeToken()?.student_id
 }
@@ -51,4 +55,4 @@ const checkExpired = () => {
     }
 }
 
-export { formatedCourses, isAdmin, checkExpired, getCurrentUser }
+export { formatedCourses, isAdmin, checkExpired, getCurrentUser, getWorkspaceRole }

@@ -5,7 +5,7 @@ import HistoryPanel from './components/HistoryPanel'
 import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 import { WorkspaceContext } from '@/components/layout/layout'
-import { getCurrentUser } from '@/utils/CookiesUtil'
+import { getCurrentUser, getWorkspaceRole } from '@/utils/CookiesUtil'
 
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
@@ -25,11 +25,14 @@ export default function App() {
   })
 
   const fetchLists = (page, pageSize) => {
+    const workspace_id = currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
+    const roleList = getWorkspaceRole()
+
     const params = {
       page,
       page_size: pageSize,
-      student_id: getCurrentUser(),
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
+      student_id: roleList[workspace_id] === 'teacher' ? 'all' : getCurrentUser(),
+      workspace_id: workspace_id
     }
 
     getThreadsList(params)
