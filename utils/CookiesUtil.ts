@@ -40,10 +40,10 @@ const checkExpired = () => {
     const exp = decodeToken()?.exp
     const now = Math.floor(Date.now() / 1000)
     console.log('exp', exp, 'now', now)
-    if (exp && now > exp) {
+
+    if (!exp || now > exp) {
         logout()
     }
-
 }
 
 export { formatedCourses, isAdmin, checkExpired, getCurrentUser }
