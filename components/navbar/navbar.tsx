@@ -42,7 +42,7 @@ export const NavbarWrapper = ({ children }: Props) => {
           <BurguerButton />
         </NavbarContent>
         <NavbarContent justify="end" className="w-fit data-[justify=end]:flex-grow-0 absolute right-5">
-          <NotificationsDropdown />
+          {/* <NotificationsDropdown /> */}
           <NavbarContent>
             <UserDropdown />
           </NavbarContent>
