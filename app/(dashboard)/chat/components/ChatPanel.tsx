@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 
 import { Card, Textarea, ScrollShadow, Button } from '@nextui-org/react'
-import { MdAttachFile } from 'react-icons/md'
+import { MdAttachFile, MdExpandLess, MdExpandMore } from 'react-icons/md'
 import { IoSend } from 'react-icons/io5'
 
 import Cookies from 'js-cookie'
@@ -19,9 +19,12 @@ import { FileUploadForm } from './FileUpload'
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/atom-one-dark.min.css'
 
-function Message({ content, align }: { content: string; align: string }) {
-  const className = align === 'end' ? 'bg-black text-white font-medium self-end max-w-3/4' : 'bg-neutral-200 max-w-3/4'
-  const additionalClasses = 'rounded-2xl px-4 py-2'
+function Message({ content, align, sources }: { content: string; align: string; sources?: string[] }) {
+  const [showSources, setShowSources] = useState(false)
+
+  const className =
+    align === 'end' ? 'bg-black text-white font-medium self-end max-w-2/3' : 'bg-neutral-200 max-w-[90%]'
+  const additionalClasses = 'rounded-2xl px-4 py-2 text-md' // Added text-sm for smaller text
 
   return (
     <div className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}>
@@ -30,6 +33,29 @@ function Message({ content, align }: { content: string; align: string }) {
           {preprocessLaTeX(content)}
         </ReactMarkdown>
       </div>
+      {sources && sources.length > 0 && (
+        <div className="mt-2">
+          <Button
+            color="#F4F4F5"
+            size="sm"
+            variant="light"
+            radius="sm"
+            iconRight={showSources ? <MdExpandLess /> : <MdExpandMore />}
+            onClick={() => setShowSources(!showSources)}
+          >
+            {showSources ? 'Hide Sources' : 'Display Sources'}
+          </Button>
+          {showSources && (
+            <ul className="mt-2 bg-gray-100 p-2 rounded-lg">
+              {sources.map((source, index) => (
+                <li key={index} className="text-sm">
+                  {source}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -85,15 +111,16 @@ const ChatPanel = ({ agent }) => {
     console.log('$$$', agent)
   }, [agent])
 
-  const appendMessage = (content, align) => {
-    setMessages((prevMessages) => [...prevMessages, { content, align }])
+  const appendMessage = (content, align, sources = []) => {
+    setMessages((prevMessages) => [...prevMessages, { content, align, sources }])
   }
 
-  const updateLastMessage = (content) => {
+  const updateLastMessage = (content, sources) => {
     setMessages((prevMessages) => {
       const newMessages = [...prevMessages]
       if (newMessages.length > 0) {
         newMessages[newMessages.length - 1].content = content
+        newMessages[newMessages.length - 1].sources = sources
       }
       return newMessages
     })
@@ -162,9 +189,10 @@ const ChatPanel = ({ agent }) => {
       .then((response) => {
         const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
 
-        let responseMessage = ''
-
         const processStream = async () => {
+          let responseMessage = ''
+          let sources = [] // Initialize sources array here
+
           appendMessage('', 'start')
           while (true) {
             const { done, value } = await reader.read()
@@ -174,20 +202,16 @@ const ChatPanel = ({ agent }) => {
               if (line.startsWith('data: ')) {
                 try {
                   const data = JSON.parse(line.slice(6))
-                  let sourceList = ''
 
                   if (data.source && Array.isArray(data.source) && data.source.length > 0) {
-                    console.log(data.source)
-                    const sources = data.source.map((src, index) => {
+                    sources = data.source.map((src, index) => {
                       const parsedSrc = JSON.parse(src.replace(/'/g, '"'))
-                      console.log('index', index)
-                      return `${index + 1}. ${parsedSrc.file_name} page ${parsedSrc.page + 1}`
+                      return `${index + 1}. ${parsedSrc.file_name}, page ${parsedSrc.page + 1}`
                     })
-                    sourceList = `Extracting information from:\n${sources.join(',\n')}\n\n\n`
                   }
 
-                  responseMessage = sourceList + '\n\n\n' + data.response
-                  updateLastMessage(responseMessage)
+                  responseMessage = data.response
+                  updateLastMessage(responseMessage, sources)
                 } catch (e) {
                   console.error('Error parsing JSON:', e, line)
                 }
@@ -195,6 +219,7 @@ const ChatPanel = ({ agent }) => {
             }
           }
         }
+
         processStream()
       })
       .catch((err) => {
@@ -207,7 +232,7 @@ const ChatPanel = ({ agent }) => {
       <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full h-full">
         <ScrollShadow size={20} className="flex flex-col overflow-auto h-full pr-4">
           {messages.map((message, index) => (
-            <Message key={index} content={message.content} align={message.align} />
+            <Message key={index} content={message.content} align={message.align} sources={message.sources} />
           ))}
           <div ref={lastMessageRef}></div>
         </ScrollShadow>

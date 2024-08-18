@@ -78,7 +78,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ threadDetails }) => {
           {group.messages.map((message, idx) => (
             <div key={idx} className={`m-2 p-2 ${message.role === 'human' ? 'text-right' : 'text-left'}`}>
               <div
-                className={`inline-block max-w-[70%] rounded-lg p-2 ${
+                className={`inline-block max-w-[90%] rounded-lg p-2 ${
                   message.role === 'human' ? 'bg-green-50' : 'bg-amber-50'
                 }`}
                 style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
