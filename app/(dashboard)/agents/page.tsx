@@ -136,7 +136,7 @@ const Tables = () => {
 
   const topContent = React.useMemo(() => {
     if (typeof window === 'undefined') return null
-    const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
+    const storedSelectedCourse = JSON.parse(localStorage.getItem('workspace') || '{}')
     return (
       <div className="flex flex-col gap-4 mt-4">
         <div className="flex items-center justify-between">
