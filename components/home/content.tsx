@@ -15,10 +15,9 @@ import {
   ModalFooter
 } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
-import { formatedCourses, isAdmin, checkExpired } from '@/utils/CookiesUtil'
+import { formatedCourses } from '@/utils/CookiesUtil'
 import { WorkspaceContext } from '@/components/layout/layout'
 import AgentJoinModal from '@/components/home/agent-join-modal'
-import cwru_logo from '@/static/cwru_logo.jpg'
 
 interface Course {
   id: string
@@ -73,7 +72,6 @@ export const Content = () => {
   useEffect(() => {
     const courseList = formatedCourses()
     console.log('courseList', courseList)
-    checkExpired()
 
     setCourses(courseList)
   }, [])
