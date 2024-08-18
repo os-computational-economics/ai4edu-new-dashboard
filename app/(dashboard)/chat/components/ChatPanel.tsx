@@ -69,7 +69,7 @@ function Message({
             <ul className="mt-2 bg-gray-100 p-2 rounded-lg">
               {sources.map((source, index) => (
                 <li key={index} className="text-sm hover:cursor-pointer" onClick={() => onSourceClick(source.fileID)}>
-                  {source.index + 1}. {source.fileName}, page {source.page + 1}
+                  {source.index}. {source.fileName}, page {source.page}
                 </li>
               ))}
             </ul>
