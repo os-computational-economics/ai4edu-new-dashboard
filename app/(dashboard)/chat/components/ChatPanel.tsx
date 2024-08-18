@@ -73,7 +73,7 @@ function InputMessage({
 const ChatPanel = ({ agent }) => {
   const [messages, setMessages] = useState([])
   const [message, setMessage] = useState('')
-  const [threadId, setThreadId] = useState(localStorage.getItem('threadIdLocalStorageKey') || null)
+  const [threadId, setThreadId] = useState(null)
   const [studentId, setStudentId] = useState(Cookies.get('student_id') || null)
   const model = agent.model || 'openai'
   const voice = agent.voice

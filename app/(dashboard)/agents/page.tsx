@@ -138,7 +138,7 @@ const Tables = () => {
     if (typeof window === 'undefined') return null
     const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 mt-4">
         <div className="flex items-center justify-between">
           <div className={'w-full  sm:max-w-[44%]'}></div>
           <div className="flex gap-3">
