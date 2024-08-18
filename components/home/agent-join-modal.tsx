@@ -36,7 +36,9 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
           "Join successful, please logout and login again to see the changes"
         );
         handleCloseModal();
-        Cookies.remove("access_token");
+        const firstLevelDomain =
+          "." + window.location.hostname.split(".").slice(-2).join(".");
+        Cookies.remove("access_token", { domain: firstLevelDomain });
         setTimeout(() => {
           ping()
             .then((res) => {
