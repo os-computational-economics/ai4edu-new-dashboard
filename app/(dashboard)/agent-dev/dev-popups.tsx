@@ -1,13 +1,12 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
 // import { ChevronLeft, Plus, ChevronDown, Send, Search, X } from "lucide-react";
-import { MdArrowBackIosNew, MdAdd, MdDeleteForever } from 'react-icons/md'
+import { MdAdd, MdDeleteForever } from 'react-icons/md'
 import { CiSearch } from 'react-icons/ci'
 import { IoClose } from 'react-icons/io5'
 import Cookies from 'js-cookie'
 import Upload from '@/components/upload/upload'
-import { fileUploadURL } from '@/api/chat/chat'
-import { set } from 'react-hook-form'
+import { agentUploadFile } from '@/api/agent/agent'
 
 export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
   // files is a dict {file_id: file_name}, the actual file is stored in the backend, not in the frontend
@@ -26,18 +25,9 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
 
     const access_token = Cookies.get('access_token')
 
-    fetch(fileUploadURL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer access=${access_token}`
-      },
-      body: formData
-    })
-      .then((response) => {
-        return response.json()
-      })
+    agentUploadFile(formData)
       .then((data) => {
-        const newFiles = { ...files, [data.data.file_id]: file.name }
+        const newFiles = { ...files, [data.file_id]: file.name }
         setFiles(newFiles)
       })
       .catch((error) => {

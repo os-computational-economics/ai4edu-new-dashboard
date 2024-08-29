@@ -47,9 +47,14 @@ export interface DeleteAgent {
   status: number;
 }
 
+export interface AgentUploadFileResponse {
+  file_id: string;
+  file_name: string;
+}
+
 // API paths
 const path = "agents";
-const role = "admin"
+const role = "admin";
 
 const api = {
   addAgent: role + `/${path}` + "/add_agent",
@@ -57,6 +62,7 @@ const api = {
   updateAgent: role + `/${path}` + "/update_agent",
   getAgentbyID: role + `/${path}` + "",
   getAgents: role + `/${path}` + "/agents",
+  agentFileUpload: role + "/upload_file",
 };
 
 // add agent
@@ -92,5 +98,15 @@ export function getAgents(params): Promise<AgentsResponse> {
     url: api.getAgents,
     method: "get",
     params: params,
+  });
+}
+
+export function agentUploadFile(
+  formData: FormData
+): Promise<AgentUploadFileResponse> {
+  return request({
+    url: api.agentFileUpload,
+    method: "post",
+    data: formData,
   });
 }
