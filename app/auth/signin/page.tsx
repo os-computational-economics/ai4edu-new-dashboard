@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
 import { Button, Card, Image } from "@nextui-org/react";
 import { DarkModeSwitch } from "@/components/navbar/darkmodeswitch";
+import { localBackend } from "@/utils/request";
 
 const SigninPage: React.FC = () => {
   useEffect(() => {
@@ -43,12 +44,16 @@ const SigninPage: React.FC = () => {
 
   const handleSSOLogin = () => {
     const currentUrl = window.location.href;
-    let ssoVerifyUrl = "https://ai4edu-api.jerryang.org/v1/prod/user/sso";
+    const onlineBaseUrl = process.env.NEXT_PUBLIC_ONLINE_BASE_URL;
+    let ssoVerifyUrl = `${onlineBaseUrl}/v1/prod/user/sso`;
     if (
       process.env.NODE_ENV === "development" ||
       process.env.NEXT_PUBLIC_CURRENT_ENV === "development"
     ) {
-      ssoVerifyUrl = "https://ai4edu-api.jerryang.org/v1/dev/user/sso";
+      ssoVerifyUrl = `${onlineBaseUrl}/v1/dev/user/sso`;
+    }
+    if (localBackend) {
+      ssoVerifyUrl = `${process.env.NEXT_PUBLIC_LOCAL_BASE_URL}/v1/dev/user/sso`;
     }
     window.location.href = `https://login.case.edu/cas/login?service=${ssoVerifyUrl}?came_from=${currentUrl}`;
   };
