@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
 
-const localBackend =
+export const localBackend =
   process.env.NEXT_PUBLIC_LOCAL_BACKEND?.toUpperCase() === "TRUE";
 
 // default values of the environment variables
