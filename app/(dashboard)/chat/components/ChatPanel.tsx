@@ -1,15 +1,21 @@
+// @ts-nocheck
+'use client'
 import React, { useEffect, useState, useRef } from 'react'
+
 import { Card, Textarea, ScrollShadow, Button } from '@nextui-org/react'
 import { MdAttachFile, MdExpandLess, MdExpandMore } from 'react-icons/md'
 import { IoSend } from 'react-icons/io5'
+
 import Cookies from 'js-cookie'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
+
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import { steamChatURL, getNewThread } from '@/api/chat/chat'
-import { getThreadbyID } from '@/api/thread/thread'
+import { FileUploadForm } from './FileUpload'
+
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/atom-one-dark.min.css'
 
@@ -27,7 +33,7 @@ function Message({
 
   const className =
     align === 'end' ? 'bg-black text-white font-medium self-end max-w-2/3' : 'bg-neutral-200 max-w-[90%]'
-  const additionalClasses = 'rounded-2xl px-4 py-2 text-md'
+  const additionalClasses = 'rounded-2xl px-4 py-2 text-md' // Added text-sm for smaller text
 
   const onSourceClick = (sourceFileID) => {
     setSelectedDocument(sourceFileID)
@@ -99,6 +105,9 @@ function InputMessage({
           }
         }}
       />
+      {/* <Button isIconOnly variant="light" aria-label="Attach file" onClick={FileUploadForm}>
+        <MdAttachFile className="text-2xl" />
+      </Button> */}
       <Button isIconOnly color="primary" aria-label="Send message" onClick={sendMessage}>
         <IoSend className="text-xl" />
       </Button>
@@ -106,32 +115,20 @@ function InputMessage({
   )
 }
 
-const ChatPanel = ({ thread_id, setSelectedDocument }) => {
+const ChatPanel = ({ agent, setSelectedDocument }) => {
   const [messages, setMessages] = useState([])
   const [message, setMessage] = useState('')
-  const [threadId, setThreadId] = useState(thread_id)
+  const [threadId, setThreadId] = useState(null)
   const [studentId, setStudentId] = useState(Cookies.get('student_id') || null)
+  const model = agent.model || 'openai'
+  const voice = agent.voice
+  const agentID = agent.agent_id
+  const workspace_id = agent.workspace_id || JSON.parse(localStorage.getItem('workspace')!)?.id
   const lastMessageRef = useRef(null)
 
   useEffect(() => {
-    if (threadId) {
-      fetchChatHistory(threadId)
-    }
-  }, [threadId])
-
-  const fetchChatHistory = async (threadId) => {
-    try {
-      const response = await getThreadbyID({ thread_id: threadId })
-      const chatHistory = response.messages.map((msg) => ({
-        content: msg.content,
-        align: msg.role === 'human' ? 'end' : 'start',
-        sources: msg.sources || []
-      }))
-      setMessages(chatHistory)
-    } catch (error) {
-      console.error('Error fetching chat history:', error)
-    }
-  }
+    console.log('$$$', agent)
+  }, [agent])
 
   const appendMessage = (content, align, sources = []) => {
     setMessages((prevMessages) => [...prevMessages, { content, align, sources }])
@@ -149,12 +146,16 @@ const ChatPanel = ({ thread_id, setSelectedDocument }) => {
   }
 
   const getNewThreadID = async () => {
+    console.log(threadId)
     const params = {
-      user_id: studentId
+      agent_id: agentID,
+      user_id: studentId,
+      workspace_id: workspace_id
     }
 
     try {
       const res = await getNewThread(params)
+      console.log('res', res)
       setThreadId(res.thread_id)
       localStorage.setItem('threadIdLocalStorageKey', res.thread_id)
       return res.thread_id
@@ -184,7 +185,11 @@ const ChatPanel = ({ thread_id, setSelectedDocument }) => {
         [formattedMessages.length]: { role: 'user', content: message }
       },
       thread_id: currentThreadId,
-      user_id: studentId
+      workspace_id: workspace_id,
+      provider: model,
+      user_id: studentId,
+      agent_id: agentID,
+      voice: voice
     }
 
     appendMessage(message, 'end')
@@ -205,7 +210,7 @@ const ChatPanel = ({ thread_id, setSelectedDocument }) => {
 
         const processStream = async () => {
           let responseMessage = ''
-          let sources = []
+          let sources = [] // Initialize sources array here
 
           appendMessage('', 'start')
           while (true) {

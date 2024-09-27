@@ -21,7 +21,7 @@ import { MdCached, MdAdd, MdModeEditOutline, MdDeleteOutline, MdMessage } from '
 import useMount from '@/components/hooks/useMount'
 import AgentModal from './agents-modal/AgentModal'
 import ConfirmDeleteModal from './agents-modal/ConfirmDeleteModal'
-import { useRouter } from 'next/navigation'
+import ChatPage from '../chat/ChatPage'
 import { WorkspaceContext } from '@/components/layout/layout'
 
 import { ToastContainer, toast } from 'react-toastify'
@@ -48,8 +48,8 @@ const Tables = () => {
   const [isLoading, setisLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false)
   const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
-  const router = useRouter()
 
   const [status, setStatus] = useState(1) // 1 - new Agent, 2 - Edit Agent
   const [currentAgent, setCurrentAgent] = useState(null)
@@ -115,6 +115,13 @@ const Tables = () => {
   }
 
   const openModal = () => setIsModalOpen(true)
+
+  const openChatModal = () => {
+    console.log('123')
+    setIsChatModalOpen(true)
+  }
+
+  const closeChatModal = () => setIsChatModalOpen(false)
 
   const closeModal = (reload) => {
     console.log('close modal', reload)
@@ -182,7 +189,7 @@ const Tables = () => {
               onClick={() => {
                 console.log('agent', agent)
                 setCurrentAgent(agent)
-                router.push(`/chat/${agent.agent_id}`)
+                openChatModal()
               }}
             >
               <MdMessage />
@@ -202,7 +209,7 @@ const Tables = () => {
             isDisabled={!agent.status}
             onClick={() => {
               setCurrentAgent(agent)
-              router.push(`/chat/${agent.agent_id}`)
+              openChatModal()
             }}
           >
             <MdMessage />
@@ -249,6 +256,7 @@ const Tables = () => {
         agent={currentAgent}
       ></ConfirmDeleteModal>
       <AgentModal isOpen={isModalOpen} onClose={closeModal} status={status} agent={currentAgent} />
+      <ChatPage isOpen={isChatModalOpen} onClose={closeChatModal} status={status} agent={currentAgent}></ChatPage>
 
       <Table
         topContent={topContent}
@@ -267,6 +275,13 @@ const Tables = () => {
       >
         <TableHeader>
           <TableColumn key="agent_name">Agent Name</TableColumn>
+          {/* <TableColumn key="voice" align="center">
+            Voice
+          </TableColumn>
+          <TableColumn key="allow_model_choice" align="center">
+            Allow Model Choice
+          </TableColumn>
+          <TableColumn key="model">Model</TableColumn> */}
           <TableColumn key="status">Status</TableColumn>
           <TableColumn key="updated_at">Last Updated</TableColumn>
           <TableColumn key="actions" align="center" className="px-14">
@@ -288,8 +303,26 @@ const Tables = () => {
               <TableCell>
                 <div className="flex flex-col">
                   <span className="text-bold text-sm">{agent.agent_name}</span>
+                  {/* <span className="text-bold text-sm capitalize text-default-400">{agent.course_id}</span> */}
                 </div>
               </TableCell>
+              {/* <TableCell>
+                <Chip color={statusColorMap[agent.voice.toString()]} size="sm" variant="flat">
+                  {agent.voice ? 'Active' : 'Disabled'}
+                </Chip>
+              </TableCell>
+              <TableCell>
+                <Chip color={statusColorMap[agent.allow_model_choice.toString()]} size="sm" variant="flat">
+                  {agent.allow_model_choice ? 'Active' : 'Disabled'}
+                </Chip>
+              </TableCell>
+              <TableCell>
+                {modelList.map((model) => {
+                  if (model.value === agent.model) {
+                    return model.label
+                  }
+                })}
+              </TableCell> */}
               <TableCell>
                 <Chip color={statusColorMap[agent.status]} size="sm" variant="flat">
                   {agent.status ? 'Active' : 'Disabled'}
