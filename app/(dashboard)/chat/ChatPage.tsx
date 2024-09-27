@@ -7,6 +7,7 @@ import DocumentPanel from './components/DocumentPanel'
 
 const ChatPage = ({ thread_id }) => {
   const [selectedDocumentFileID, setSelectedDocumentFileID] = useState(null)
+  const router = useRouter()
 
   useEffect(() => {
     if (!thread_id) {
