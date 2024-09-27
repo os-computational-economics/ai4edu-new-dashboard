@@ -42,7 +42,6 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
     <Card className="m-1 h-full">
       <div className="h-full w-full">
         <div className="bg-white p-3 h-full">
-          {/* <h1 className="text-2xl font-bold mb-4">{selectedCourse?.id}</h1> */}
           <div className="text-wrap w-full h-full">
             {selectedDocument ? (
               <>
@@ -51,10 +50,8 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
             ) : (
               <div>
                 <h3 className="text-xl font-bold mb-4">
-                  {/* Your intructor uploaded some study material. */}
                   No document available.
                 </h3>
-                {/* <p>Select a document to view.</p> */}
               </div>
             )}
           </div>
