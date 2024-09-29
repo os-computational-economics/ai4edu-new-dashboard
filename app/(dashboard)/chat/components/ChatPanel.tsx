@@ -18,6 +18,8 @@ import { FileUploadForm } from './FileUpload'
 
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/atom-one-dark.min.css'
+import { getThreadbyID } from '@/api/thread/thread'
+import useMount from '@/components/hooks/useMount'
 
 function Message({
   content,
@@ -115,19 +117,26 @@ function InputMessage({
   )
 }
 
-const ChatPanel = ({ agent, setSelectedDocument }) => {
+const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
   const [messages, setMessages] = useState([])
   const [message, setMessage] = useState('')
-  const [threadId, setThreadId] = useState(null)
+  const [threadId, setThreadId] = useState(thread)
   const [studentId, setStudentId] = useState(Cookies.get('student_id') || null)
-  const model = agent.model || 'openai'
-  const voice = agent.voice
-  const agentID = agent.agent_id
-  const workspace_id = agent.workspace_id || JSON.parse(localStorage.getItem('workspace')!)?.id
+  const model = agent?.model || 'openai'
+  const voice = agent?.voice
+  const agentID = agent?.agent_id
+  const workspace_id = agent?.workspace_id || JSON.parse(localStorage.getItem('workspace')!)?.id
   const lastMessageRef = useRef(null)
 
-  useEffect(() => {
+  useMount(() => {
     console.log('$$$', agent)
+    const params = {thread_id: threadId}
+    if(threadId){
+      getThreadbyID(params).then((res) => {
+        setMessages(res.messages.map(message => ({...message, align: message.role === "human" ? "end" : "start"})))
+      })
+    }
+    
   }, [agent])
 
   const appendMessage = (content, align, sources = []) => {

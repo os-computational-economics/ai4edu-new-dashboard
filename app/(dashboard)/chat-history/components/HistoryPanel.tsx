@@ -9,6 +9,8 @@ import rehypeHighlight from 'rehype-highlight'
 import 'katex/dist/katex.min.css' // CSS for LaTeX rendering
 import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
+import Link from 'next/link'
+import { Thread } from '@/api/thread/thread'
 
 // Define a type for individual messages
 type Message = {
@@ -30,12 +32,13 @@ type GroupedMessages = {
 
 // Define props for the HistoryPanel component
 type HistoryPanelProps = {
+  thread: Thread
   threadDetails: {
     messages: Message[]
   }
 }
 
-const HistoryPanel: React.FC<HistoryPanelProps> = ({ threadDetails }) => {
+const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) => {
   console.log('Received thread details in HistoryPanel:', threadDetails)
 
   // Group messages by user_id
@@ -73,6 +76,11 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ threadDetails }) => {
                   Download Record
                 </Button>
               </CSVLink>
+              <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}`} >
+              <Button color="primary" variant="flat" className='ml-2'>
+                  Continue Chat
+                </Button>
+              </Link>
             </div>
           </div>
           {group.messages.map((message, idx) => (

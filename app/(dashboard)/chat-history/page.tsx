@@ -75,6 +75,7 @@ export default function App() {
   }
 
   const totalPages = Math.ceil(total / pageSize)
+  const matching_thread = threads.filter(e => e.thread_id == threadDetails?.thread_id)[0]
 
   return (
     <div className="flex h-[calc(100vh-80px)] w-98% gap-4 m-2">
@@ -94,7 +95,7 @@ export default function App() {
       </div>
       <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 shadow-sm">
         {threadDetails ? (
-          <HistoryPanel threadDetails={threadDetails} />
+          <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
         ) : (
           <div className="text-black-500 text-lg font-semibold">Please select a thread to view its details.</div>
         )}

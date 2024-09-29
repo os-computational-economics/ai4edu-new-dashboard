@@ -26,6 +26,8 @@ import { WorkspaceContext } from '@/components/layout/layout'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useRouter } from 'next/navigation'
+import { getNewThread } from '@/api/chat/chat'
 
 const statusColorMap = {
   true: 'success',
@@ -55,6 +57,8 @@ const Tables = () => {
   const [currentAgent, setCurrentAgent] = useState(null)
 
   const totalPage = Math.ceil(total / pageSize)
+
+  const router = useRouter()
 
   useMount(() => {
     fetchAgents(currentPage, pageSize)
@@ -116,10 +120,19 @@ const Tables = () => {
 
   const openModal = () => setIsModalOpen(true)
 
-  const openChatModal = () => {
+  const openChatPage = async (agent) => {
     console.log('123')
-    setIsChatModalOpen(true)
+    const params = {
+      agent_id: agent.agent_id,
+      user_id: creatorId,
+      workspace_id: agent.workspace_id
+    }
+    const res = await getNewThread(params)
+    console.log(res)
+    router.push(`/agents/${agent.agent_id}/${res.thread_id}`)
   }
+
+  
 
   const closeChatModal = () => setIsChatModalOpen(false)
 
@@ -189,7 +202,7 @@ const Tables = () => {
               onClick={() => {
                 console.log('agent', agent)
                 setCurrentAgent(agent)
-                openChatModal()
+                openChatPage(agent)
               }}
             >
               <MdMessage />
@@ -209,7 +222,7 @@ const Tables = () => {
             isDisabled={!agent.status}
             onClick={() => {
               setCurrentAgent(agent)
-              openChatModal()
+              openChatPage(agent)
             }}
           >
             <MdMessage />
@@ -256,7 +269,6 @@ const Tables = () => {
         agent={currentAgent}
       ></ConfirmDeleteModal>
       <AgentModal isOpen={isModalOpen} onClose={closeModal} status={status} agent={currentAgent} />
-      <ChatPage isOpen={isChatModalOpen} onClose={closeChatModal} status={status} agent={currentAgent}></ChatPage>
 
       <Table
         topContent={topContent}
