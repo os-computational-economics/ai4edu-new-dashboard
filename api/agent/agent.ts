@@ -2,15 +2,16 @@ import request from "@/utils/request";
 
 export interface Agent {
   agent_id: string;
-  student_id: string;
   allow_model_choice: boolean;
   model: string;
   created_at: string;
-  course_id: string;
+  workspace_id: string;
   agent_name: string;
   updated_at: string;
   voice: boolean;
   status: number;
+  agent_files?: Array<{}> | null;
+  system_prompt?: string;
 }
 
 export interface AgentsResponse {
@@ -60,7 +61,7 @@ const api = {
   addAgent: role + `/${path}` + "/add_agent",
   deleteAgent: role + `/${path}` + "/delete_agent",
   updateAgent: role + `/${path}` + "/update_agent",
-  getAgentbyID: role + `/${path}` + "",
+  getAgentbyID: role + `/${path}` + "/agent/",
   getAgents: role + `/${path}` + "/agents",
   agentFileUpload: role + "/upload_file",
 };
@@ -98,6 +99,14 @@ export function getAgents(params): Promise<AgentsResponse> {
     url: api.getAgents,
     method: "get",
     params: params,
+  });
+}
+
+// get agent by id
+export function getAgentByID(data): Promise<Agent> {
+  return request({
+    url: api.getAgentbyID + data.agent_id,
+    method: "get",
   });
 }
 
