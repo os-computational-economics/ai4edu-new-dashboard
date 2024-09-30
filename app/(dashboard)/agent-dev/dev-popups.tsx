@@ -14,24 +14,28 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [isFileUploadModalVisible, setIsFileUploadModalVisible] = useState(false)
 
-  const handleFileUpload = (file) => {
-    uploadFile(file)
-  }
+  const handleFileUpload = async (file) => {
+    try {
+      await uploadFile(file);
+      console.log('File uploaded successfully');
+    } catch (error) {
+      console.error('Error in file upload:', error);
+    }
+  };
 
-  const uploadFile = (file) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('file_name', file.file)
-
-    agentUploadFile(formData)
-      .then((data) => {
-        const newFiles = { ...files, [data.file_id]: file.name }
-        setFiles(newFiles)
-      })
-      .catch((error) => {
-        console.error('Error uploading file:', error)
-      })
-  }
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('file_name', file.file);
+  
+    try {
+      const data = await agentUploadFile(formData);
+      const newFiles = { ...files, [data.file_id]: file.name };
+      setFiles(newFiles);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
 
   if (!isOpen) return null
 
