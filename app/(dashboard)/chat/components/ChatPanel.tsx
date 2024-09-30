@@ -290,7 +290,13 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
                   responseMessage = data.response;
                   updateLastMessage(responseMessage, sources);
                 } catch (e) {
-                  console.error("Error parsing JSON:", e, line);
+                  if (e instanceof SyntaxError) {
+                    console.warn(
+                      "Incomplete JSON received, waiting for the next chunk."
+                    );
+                  } else {
+                    console.error("Error parsing JSON:", e, line);
+                  }
                 }
               }
             }
