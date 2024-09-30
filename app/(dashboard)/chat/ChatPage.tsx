@@ -18,7 +18,7 @@ const documents: Document[] = [
   // { id: 4, title: 'Document 4' }
 ]
 
-const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
+const ChatPage = ({ isOpen, onClose, status, agent, thread, newThread }) => {
   const [selectedDocumentFileID, setSelectedDocumentFileID] = useState<Document | string | null>(null)
   const [isChatModalOpen, setIsChatModalOpen] = useState(true)
 
@@ -62,7 +62,12 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                   </Panel>
                   <PanelResizeHandle />
                   <Panel defaultSize={65} maxSize={80} minSize={30}>
-                    <ChatPanel agent={agent} thread={thread} setSelectedDocument={setSelectedDocumentFileID}  />
+                    <ChatPanel
+                      agent={agent}
+                      thread={thread}
+                      setSelectedDocument={setSelectedDocumentFileID}
+                      newThread={newThread}
+                    />
                   </Panel>
                 </PanelGroup>
               </div>
