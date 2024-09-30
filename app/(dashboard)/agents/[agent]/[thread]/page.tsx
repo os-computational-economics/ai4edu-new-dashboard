@@ -59,7 +59,8 @@ const Tables = ({ params }: { params: { agent: string; thread: string } }) => {
       });
   };
   const closeChatModal = () => {
-    router.push("/agents");
+    // go back to previous page
+    router.back();
   };
 
   return (
