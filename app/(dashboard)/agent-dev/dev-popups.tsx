@@ -23,8 +23,6 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
     formData.append('file', file)
     formData.append('file_name', file.file)
 
-    const access_token = Cookies.get('access_token')
-
     agentUploadFile(formData)
       .then((data) => {
         const newFiles = { ...files, [data.file_id]: file.name }
@@ -87,10 +85,11 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
         <Upload
           isOpen={isFileUploadModalVisible}
           modalTitle="Add Knowledge"
-          customMessage="Upload a PDF file to create a new knowledge."
+          customMessage="Upload a PDF file to create a new knowledge. Maximum file size is 10MB."
           onClose={() => setIsFileUploadModalVisible(false)}
           onFileUpload={handleFileUpload}
           acceptFileTypes={'.pdf'}
+          maxFileSizeMB={10}
         />
 
         <div className="flex-grow p-4 overflow-y-auto">
