@@ -51,7 +51,7 @@ console.log("****", apiUrl);
 
 const instance = axios.create({
   baseURL: apiUrl,
-  timeout: 10000, // 10s
+  timeout: 100000, // 100s
 });
 
 // Request interceptor
