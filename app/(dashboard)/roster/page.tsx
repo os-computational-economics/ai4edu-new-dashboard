@@ -142,6 +142,7 @@ const Tables = () => {
         onClose={() => setIsModalVisible(false)}
         onFileUpload={handleFileUpload}
         acceptFileTypes={'.csv'}
+        maxFileSizeMB={1}
       />
 
       <ToastContainer />

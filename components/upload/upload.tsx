@@ -1,11 +1,11 @@
 'use client'
 import React, { useState } from 'react'
 import { Tooltip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from '@nextui-org/react'
-import { MdInfoOutline } from 'react-icons/md'
 
-const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acceptFileTypes }) => {
+const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acceptFileTypes, maxFileSizeMB }) => {
   const [fileName, setFileName] = useState('')
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0]
@@ -30,9 +30,16 @@ const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acce
     event.preventDefault()
   }
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (file) {
-      onFileUpload(file)
+      const fileSizeMB = file.size / 1024 / 1024
+      if (fileSizeMB > maxFileSizeMB) {
+        alert(`File size exceeds the maximum limit of ${maxFileSizeMB} MB`)
+        return
+      }
+      setIsUploading(true)
+      await onFileUpload(file)
+      setIsUploading(false)
       handleRemoveFile()
       onClose()
     } else {
@@ -79,8 +86,8 @@ const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acce
                 </div>
               )}
             </div>
-            <Button onClick={handleUpload} className="mt-4">
-              Confirm Upload
+            <Button onClick={handleUpload} className="mt-4" disabled={isUploading}>
+              {isUploading ? 'Uploading...' : 'Confirm Upload'}
             </Button>
           </ModalBody>
         </ModalContent>

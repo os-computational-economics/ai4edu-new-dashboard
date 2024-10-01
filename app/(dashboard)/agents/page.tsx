@@ -1,5 +1,5 @@
-'use client'
-import React, { useState, useEffect, useContext } from 'react'
+"use client";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Table,
   TableHeader,
@@ -12,135 +12,149 @@ import {
   Spinner,
   Pagination,
   Tooltip,
-  Modal,
-  ModalContent,
-  ModalHeader
-} from '@nextui-org/react'
-import { getAgents, Agent } from '@/api/agent/agent'
-import { MdCached, MdAdd, MdModeEditOutline, MdDeleteOutline, MdMessage } from 'react-icons/md'
-import useMount from '@/components/hooks/useMount'
-import AgentModal from './agents-modal/AgentModal'
-import ConfirmDeleteModal from './agents-modal/ConfirmDeleteModal'
-import ChatPage from '../chat/ChatPage'
-import { WorkspaceContext } from '@/components/layout/layout'
+} from "@nextui-org/react";
+import { getAgents, Agent } from "@/api/agent/agent";
+import {
+  MdCached,
+  MdAdd,
+  MdModeEditOutline,
+  MdDeleteOutline,
+  MdMessage,
+} from "react-icons/md";
+import useMount from "@/components/hooks/useMount";
+import AgentModal from "./agents-modal/AgentModal";
+import ConfirmDeleteModal from "./agents-modal/ConfirmDeleteModal";
+import { WorkspaceContext } from "@/components/layout/layout";
 
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+import { getNewThread } from "@/api/chat/chat";
 
 const statusColorMap = {
-  true: 'success',
-  false: 'danger',
-  1: 'success', // Active
-  2: 'danger' // Inactive
-}
+  true: "success",
+  false: "danger",
+  1: "success", // Active
+  2: "danger", // Inactive
+};
 
 const modelList = [
-  { value: 'openai', label: 'OpenAI - ChatGPT' },
-  { value: 'anthropic', label: 'Anthropic - Claude AI' }
-]
+  { value: "openai", label: "OpenAI - ChatGPT" },
+  { value: "anthropic", label: "Anthropic - Claude AI" },
+];
 
 const Tables = () => {
-  const [agents, setAgents] = useState<Agent[]>([])
-  const [total, setTotal] = useState(0)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [creatorId, setCreatorId] = useState('')
-  const [isLoading, setisLoading] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [isChatModalOpen, setIsChatModalOpen] = useState(false)
-  const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [creatorId, setCreatorId] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const { currentWorkspace, setCurrentWorkspace } =
+    useContext(WorkspaceContext);
 
-  const [status, setStatus] = useState(1) // 1 - new Agent, 2 - Edit Agent
-  const [currentAgent, setCurrentAgent] = useState(null)
+  const [status, setStatus] = useState(1); // 1 - new Agent, 2 - Edit Agent
+  const [currentAgent, setCurrentAgent] = useState(null);
 
-  const totalPage = Math.ceil(total / pageSize)
+  const totalPage = Math.ceil(total / pageSize);
+
+  const router = useRouter();
 
   useMount(() => {
-    fetchAgents(currentPage, pageSize)
-  })
+    fetchAgents(currentPage, pageSize);
+  });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCreatorId(localStorage.getItem('user_id') || 'test001')
+    if (typeof window !== "undefined") {
+      setCreatorId(localStorage.getItem("user_id") || "test001");
     }
-  }, [])
+  }, []);
 
   const generateShareUrl = (agent) => {
-    const baseUrl = 'https://chat.ai4edu.io'
-    const url = `${baseUrl}/agent/${agent.agent_id}`
-    return url
-  }
+    const baseUrl = "https://chat.ai4edu.io";
+    const url = `${baseUrl}/agent/${agent.agent_id}`;
+    return url;
+  };
 
   const CopyToClipboard = (agent) => {
-    navigator.clipboard.writeText(generateShareUrl(agent))
-    toast.success('Copied to clipboard!', {
+    navigator.clipboard.writeText(generateShareUrl(agent));
+    toast.success("Copied to clipboard!", {
       hideProgressBar: true,
-      autoClose: 2000
-    })
-  }
+      autoClose: 2000,
+    });
+  };
 
   const fetchAgents = (page, pageSize) => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
-    }
+      workspace_id:
+        currentWorkspace?.id ||
+        JSON.parse(localStorage.getItem("workspace")!)?.id,
+    };
 
     getAgents(params)
       .then((res) => {
-        setisLoading(false)
-        setAgents(res.agents)
-        setTotal(res.total)
+        setisLoading(false);
+        setAgents(res.agents);
+        setTotal(res.total);
       })
       .catch((error) => {
-        setisLoading(false)
-        console.error('Error fetching agents:', error)
-      })
-  }
+        setisLoading(false);
+        console.error("Error fetching agents:", error);
+      });
+  };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-    setisLoading(true)
-    fetchAgents(page, pageSize)
-  }
+    setCurrentPage(page);
+    setisLoading(true);
+    fetchAgents(page, pageSize);
+  };
 
   const handleSearch = (reload) => {
     if (reload) {
-      setisLoading(true)
-      setCurrentPage(1) // Reset to first page for new search
+      setisLoading(true);
+      setCurrentPage(1); // Reset to first page for new search
 
-      fetchAgents(1, pageSize)
+      fetchAgents(1, pageSize);
     }
-  }
+  };
 
-  const openModal = () => setIsModalOpen(true)
+  const openModal = () => setIsModalOpen(true);
 
-  const openChatModal = () => {
-    console.log('123')
-    setIsChatModalOpen(true)
-  }
-
-  const closeChatModal = () => setIsChatModalOpen(false)
+  const openChatPage = async (agent) => {
+    const params = {
+      agent_id: agent.agent_id,
+      user_id: creatorId,
+      workspace_id: agent.workspace_id,
+    };
+    const res = await getNewThread(params);
+    router.push(`/agents/${agent.agent_id}/${res.thread_id}?new_thread=true`);
+  };
 
   const closeModal = (reload) => {
-    console.log('close modal', reload)
-    handleSearch(reload)
-    setIsModalOpen(false)
-  }
+    console.log("close modal", reload);
+    handleSearch(reload);
+    setIsModalOpen(false);
+  };
 
   const closeDeleteModal = (reload) => {
-    handleSearch(reload)
-    setIsDeleteModalOpen(false)
-  }
+    handleSearch(reload);
+    setIsDeleteModalOpen(false);
+  };
 
   const topContent = React.useMemo(() => {
-    if (typeof window === 'undefined') return null
-    const storedSelectedCourse = JSON.parse(localStorage.getItem('workspace') || '{}')
+    if (typeof window === "undefined") return null;
+    const storedSelectedCourse = JSON.parse(
+      localStorage.getItem("workspace") || "{}"
+    );
     return (
       <div className="flex flex-col gap-4 mt-4">
         <div className="flex items-center justify-between">
-          <div className={'w-full  sm:max-w-[44%]'}></div>
+          <div className={"w-full  sm:max-w-[44%]"}></div>
           <div className="flex gap-3">
             <Button
               variant="bordered"
@@ -152,12 +166,12 @@ const Tables = () => {
             >
               Reload List
             </Button>
-            {storedSelectedCourse.role !== 'student' && (
+            {storedSelectedCourse.role !== "student" && (
               <Button
                 onClick={() => {
-                  setStatus(1)
-                  setCurrentAgent(null)
-                  openModal()
+                  setStatus(1);
+                  setCurrentAgent(null);
+                  openModal();
                 }}
                 className="bg-foreground text-background"
                 endContent={<MdAdd />}
@@ -169,47 +183,49 @@ const Tables = () => {
           </div>
         </div>
       </div>
-    )
-  }, [creatorId, isLoading])
+    );
+  }, [creatorId, isLoading]);
 
   const renderActions = (agent) => {
-    if (typeof window === 'undefined') return null
-    const storedSelectedCourse = JSON.parse(localStorage.getItem('workspace') || '{}')
+    if (typeof window === "undefined") return null;
+    const storedSelectedCourse = JSON.parse(
+      localStorage.getItem("workspace") || "{}"
+    );
 
-    if (storedSelectedCourse.role === 'student') {
+    if (storedSelectedCourse.role === "student") {
       return (
         <div className="relative flex items-center justify-center gap-2">
-          <Tooltip content="Chat with agent" isDisabled={!agent.status}>
+          <Tooltip content="Start a new chat" isDisabled={!agent.status}>
             <Button
               isIconOnly
               size="md"
               variant="flat"
-              color={agent.status ? 'primary' : 'default'}
+              color={agent.status ? "primary" : "default"}
               isDisabled={!agent.status}
               onClick={() => {
-                console.log('agent', agent)
-                setCurrentAgent(agent)
-                openChatModal()
+                console.log("agent", agent);
+                setCurrentAgent(agent);
+                openChatPage(agent);
               }}
             >
               <MdMessage />
             </Button>
           </Tooltip>
         </div>
-      )
+      );
     }
     return (
       <div className="relative flex items-center gap-2">
-        <Tooltip content="Chat with agent" isDisabled={!agent.status}>
+        <Tooltip content="Start a new chat" isDisabled={!agent.status}>
           <Button
             isIconOnly
             size="md"
             variant="flat"
-            color={agent.status ? 'primary' : 'default'}
+            color={agent.status ? "primary" : "default"}
             isDisabled={!agent.status}
             onClick={() => {
-              setCurrentAgent(agent)
-              openChatModal()
+              setCurrentAgent(agent);
+              openChatPage(agent);
             }}
           >
             <MdMessage />
@@ -221,9 +237,9 @@ const Tables = () => {
             size="md"
             variant="flat"
             onClick={() => {
-              setStatus(2) // Set status to edit
-              setCurrentAgent(agent) // Set the current agent being edited
-              openModal()
+              setStatus(2); // Set status to edit
+              setCurrentAgent(agent); // Set the current agent being edited
+              openModal();
             }}
           >
             <MdModeEditOutline></MdModeEditOutline>
@@ -236,16 +252,16 @@ const Tables = () => {
             variant="flat"
             color="danger"
             onClick={() => {
-              setCurrentAgent(agent)
-              setIsDeleteModalOpen(true)
+              setCurrentAgent(agent);
+              setIsDeleteModalOpen(true);
             }}
           >
             <MdDeleteOutline color="red"></MdDeleteOutline>
           </Button>
         </Tooltip>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="mx-6 ">
@@ -255,8 +271,12 @@ const Tables = () => {
         onClose={closeDeleteModal}
         agent={currentAgent}
       ></ConfirmDeleteModal>
-      <AgentModal isOpen={isModalOpen} onClose={closeModal} status={status} agent={currentAgent} />
-      <ChatPage isOpen={isChatModalOpen} onClose={closeChatModal} status={status} agent={currentAgent}></ChatPage>
+      <AgentModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        status={status}
+        agent={currentAgent}
+      />
 
       <Table
         topContent={topContent}
@@ -266,8 +286,16 @@ const Tables = () => {
           totalPage > 0 && (
             <div>
               <div className="flex h-full w-full items-center justify-center">
-                <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
-                <div className="ml-8 text-small text-default-600"> Total {total} agents</div>
+                <Pagination
+                  isDisabled={isLoading}
+                  page={currentPage}
+                  total={totalPage}
+                  onChange={handlePageChange}
+                />
+                <div className="ml-8 text-small text-default-600">
+                  {" "}
+                  Total {total} agents
+                </div>
               </div>
             </div>
           )
@@ -324,18 +352,24 @@ const Tables = () => {
                 })}
               </TableCell> */}
               <TableCell>
-                <Chip color={statusColorMap[agent.status]} size="sm" variant="flat">
-                  {agent.status ? 'Active' : 'Disabled'}
+                <Chip
+                  color={statusColorMap[agent.status]}
+                  size="sm"
+                  variant="flat"
+                >
+                  {agent.status ? "Active" : "Disabled"}
                 </Chip>
               </TableCell>
-              <TableCell>{new Date(`${agent.updated_at}Z`).toLocaleString()}</TableCell>
+              <TableCell>
+                {new Date(`${agent.updated_at}Z`).toLocaleString()}
+              </TableCell>
               <TableCell>{renderActions(agent)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
-  )
-}
+  );
+};
 
-export default Tables
+export default Tables;
