@@ -11,6 +11,7 @@ import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import Link from 'next/link'
 import { Thread } from '@/api/thread/thread'
+import { getCurrentUser } from '@/utils/CookiesUtil'
 
 // Define a type for individual messages
 type Message = {
@@ -40,6 +41,7 @@ type HistoryPanelProps = {
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) => {
   console.log('Received thread details in HistoryPanel:', threadDetails)
+  const currentUserId = getCurrentUser()
 
   // Group messages by user_id
   const groupedMessages = threadDetails.messages.reduce<GroupedMessages>((acc, message) => {
@@ -76,11 +78,15 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
                   Download Record
                 </Button>
               </CSVLink>
-              <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}`} >
-              <Button color="primary" variant="flat" className='ml-2'>
-                  Continue Chat
-                </Button>
-              </Link>
+              {currentUserId === group.userId && (
+                <div>
+                  <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}`}>
+                    <Button color="primary" variant="flat" className="ml-2">
+                      Continue Chat
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
           {group.messages.map((message, idx) => (
