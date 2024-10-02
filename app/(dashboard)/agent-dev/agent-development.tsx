@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import { Textarea } from '@nextui-org/react'
 
 import { MdArrowBackIosNew, MdKeyboardArrowDown, MdAdd } from 'react-icons/md'
 
@@ -127,10 +128,10 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
 
       <span className="font-bold flex flex-col space-y-1.5 pt-2 pl-4 pb-4 text-2xl">Persona & Prompt</span>
       <div className="mb-4 px-4">
-        <textarea
-          className="w-full h-24 p-2 rounded-xl bg-gray-100 resize-none focus:outline-none"
+        <Textarea
           placeholder="Design the bot's persona, features and workflows using natural language."
           value={persona}
+          maxRows={10}
           onChange={(e) => {
             setPersona(e.target.value)
             handleChange('system_prompt', e.target.value)
