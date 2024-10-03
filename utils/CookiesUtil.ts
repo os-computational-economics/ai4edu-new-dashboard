@@ -1,11 +1,10 @@
 import Cookies from "js-cookie";
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { ToastContainer, toast } from "react-toastify";
 import logout from './logout'
 import "react-toastify/dist/ReactToastify.css";
 import { ping } from '@/api/auth/auth'
 
-const decodeToken = () => { 
+const decodeToken = () => {
     const access_token = Cookies.get('access_token')
     const refresh_token = Cookies.get('refresh_token')
     
@@ -37,21 +36,21 @@ const formatedCourses = () => {
 
 const isAdmin = () => { 
     return decodeToken()?.system_admin
-    // return true
 }
 
 const checkExpired = () => {
     // check if there is no access token but there is a refresh token
     if (!Cookies.get('access_token') && Cookies.get('refresh_token')) {
-        // call the refresh token endpoint
         ping()
             .then((res) => {
                 // if the refresh token is valid, set the new access token
                 window.location.reload()
             })
             .catch((err) => {
-                window.location.href = '/auth/signin';
+                logout()
             })
+    } else if (!Cookies.get('access_token') && !Cookies.get('refresh_token')) {
+        logout()
     }
 }
 

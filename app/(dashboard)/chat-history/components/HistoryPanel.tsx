@@ -11,6 +11,7 @@ import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import Link from 'next/link'
 import { Thread } from '@/api/thread/thread'
+import { getCurrentUser } from '@/utils/CookiesUtil'
 
 // Define a type for individual messages
 type Message = {
@@ -40,6 +41,7 @@ type HistoryPanelProps = {
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) => {
   console.log('Received thread details in HistoryPanel:', threadDetails)
+  const currentUserId = getCurrentUser()
 
   // Group messages by user_id
   const groupedMessages = threadDetails.messages.reduce<GroupedMessages>((acc, message) => {
@@ -56,7 +58,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
   return (
     <div className="h-full w-full overflow-auto">
       {Object.values(groupedMessages).map((group, index) => (
-        <div key={index} className="mb-4">
+        <div key={index} className="mb-4 overflow-scroll">
           <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white pb-2 pl-4 pt-2 text-left shadow">
             <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3>
             <div className="inline-flex items-center">
@@ -76,11 +78,15 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
                   Download Record
                 </Button>
               </CSVLink>
-              <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}`} >
-              <Button color="primary" variant="flat" className='ml-2'>
-                  Continue Chat
-                </Button>
-              </Link>
+              {currentUserId === group.userId && (
+                <div>
+                  <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}`}>
+                    <Button color="primary" variant="flat" className="ml-2">
+                      Continue Chat
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
           {group.messages.map((message, idx) => (

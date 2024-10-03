@@ -3,17 +3,15 @@ import { Sidebar } from './sidebar.styles'
 import { Avatar, Tooltip, Image } from '@nextui-org/react'
 import CourseDropdown from './course-dropdown'
 import { HomeIcon } from '../icons/sidebar/home-icon'
-import { AgentsIcon } from '../icons/sidebar/agents-icon'
-import { AccountsIcon } from '../icons/sidebar/accounts-icon'
-import { SettingsIcon } from '../icons/sidebar/settings-icon'
-import { ChatsIcon } from '../icons/sidebar/chats-icon'
 import { SidebarItem } from './sidebar-item'
 import { SidebarMenu } from './sidebar-menu'
 import { useSidebarContext } from '../layout/layout-context'
 import { usePathname } from 'next/navigation'
+import { CustomersIcon } from '../icons/sidebar/customers-icon'
 import { CollapseItems } from './collapse-items'
 import { isAdmin, formatedCourses } from '@/utils/CookiesUtil'
 import { useRouter } from 'next/navigation'
+import { Users, BotMessageSquare, History, Settings, KeySquare } from 'lucide-react'
 
 interface SelectedCourse {
   id: string
@@ -68,21 +66,21 @@ export const SidebarWrapper = () => {
           key="roster"
           isActive={pathname === '/roster'}
           title="Roster"
-          icon={<AccountsIcon />}
+          icon={<Users />}
           href="roster"
         />,
         <SidebarItem
           key="agents"
           isActive={pathname === '/agents'}
           title="Agents"
-          icon={<AgentsIcon />}
+          icon={<BotMessageSquare />}
           href="agents"
         />,
         <SidebarItem
           key="chat-history"
           isActive={pathname === '/chat-history'}
           title="Chat History"
-          icon={<ChatsIcon />}
+          icon={<History />}
           href="chat-history"
         />
       )
@@ -94,14 +92,14 @@ export const SidebarWrapper = () => {
           key="agents"
           isActive={pathname === '/agents'}
           title="Agents"
-          icon={<AgentsIcon />}
+          icon={<BotMessageSquare />}
           href="agents"
         />,
         <SidebarItem
           key="chat-history"
           isActive={pathname === '/chat-history'}
           title="Chat History"
-          icon={<ChatsIcon />}
+          icon={<History />}
           href="chat-history"
         />
       )
@@ -118,14 +116,14 @@ export const SidebarWrapper = () => {
         key="workspace"
         isActive={pathname === '/workspace'}
         title="Workspace Management"
-        icon={<SettingsIcon />}
+        icon={<Settings size={32} />}
         href="workspace"
       />,
       <SidebarItem
         key="access-control"
         isActive={pathname === '/access-control'}
         title="Access Control"
-        icon={<AgentsIcon />}
+        icon={<KeySquare />}
         href="access-control"
       />
       // <SidebarItem
