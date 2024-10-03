@@ -24,9 +24,9 @@ export default function App() {
     fetchLists(currentPage, pageSize)
   })
 
-  const fetchLists = (page, pageSize) => {
+  const fetchLists = async (page, pageSize) => {
     const workspace_id = currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
-    checkExpired()
+    await checkExpired()
     const roleList = getWorkspaceRole()
 
     const params = {
