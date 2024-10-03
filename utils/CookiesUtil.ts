@@ -1,12 +1,10 @@
 import Cookies from "js-cookie";
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { ToastContainer, toast } from "react-toastify";
 import logout from './logout'
 import "react-toastify/dist/ReactToastify.css";
 import { ping } from '@/api/auth/auth'
 
-const decodeToken = () => { 
-    checkExpired()
+const decodeToken = () => {
     const access_token = Cookies.get('access_token')
     const refresh_token = Cookies.get('refresh_token')
     
@@ -14,6 +12,7 @@ const decodeToken = () => {
         const decodedToken = jwt.decode(access_token) as JwtPayload
         return decodedToken
     } else if (refresh_token) {
+        checkExpired()
         return null
     }
 }
