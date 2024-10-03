@@ -131,7 +131,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
         <Textarea
           placeholder="Design the bot's persona, features and workflows using natural language."
           value={persona}
-          maxRows={10}
+          maxRows={20}
           onChange={(e) => {
             setPersona(e.target.value)
             handleChange('system_prompt', e.target.value)
