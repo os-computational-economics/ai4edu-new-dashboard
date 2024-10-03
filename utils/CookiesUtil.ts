@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ping } from '@/api/auth/auth'
 
 const decodeToken = () => { 
+    checkExpired()
     const access_token = Cookies.get('access_token')
     const refresh_token = Cookies.get('refresh_token')
     
