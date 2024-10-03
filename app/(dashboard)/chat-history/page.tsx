@@ -5,7 +5,7 @@ import HistoryPanel from './components/HistoryPanel'
 import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 import { WorkspaceContext } from '@/components/layout/layout'
-import { getCurrentUser, getWorkspaceRole } from '@/utils/CookiesUtil'
+import { getCurrentUser, getWorkspaceRole, checkExpired } from '@/utils/CookiesUtil'
 
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
@@ -26,6 +26,7 @@ export default function App() {
 
   const fetchLists = (page, pageSize) => {
     const workspace_id = currentWorkspace?.id || JSON.parse(localStorage.getItem('workspace')!)?.id
+    checkExpired()
     const roleList = getWorkspaceRole()
 
     const params = {

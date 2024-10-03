@@ -12,7 +12,6 @@ const decodeToken = () => {
         const decodedToken = jwt.decode(access_token) as JwtPayload
         return decodedToken
     } else if (refresh_token) {
-        checkExpired()
         return null
     }
 }
