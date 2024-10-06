@@ -129,7 +129,7 @@ const Tables = () => {
     }
     const res = await getNewThread(params)
     console.log(res)
-    router.push(`/agents/${agent.agent_id}/${res.thread_id}`)
+    router.push(`/agents/${agent.agent_id}/new`)
   }
 
   

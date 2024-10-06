@@ -20,6 +20,7 @@ import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/atom-one-dark.min.css'
 import { getThreadbyID } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
+import { useRouter } from 'next/navigation'
 
 function Message({
   content,
@@ -127,7 +128,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
   const agentID = agent?.agent_id
   const workspace_id = agent?.workspace_id || JSON.parse(localStorage.getItem('workspace')!)?.id
   const lastMessageRef = useRef(null)
-
+  const router = useRouter()
   useMount(() => {
     console.log('$$$', agent)
     const params = {thread_id: threadId}
@@ -178,6 +179,8 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     let currentThreadId = threadId
     if (!currentThreadId) {
       currentThreadId = await getNewThreadID()
+      const newUrl = `/agents/${agentID}/${currentThreadId}`
+      window.history.replaceState({...window.history.state, as: newUrl, url: newUrl}, '', newUrl)
     }
 
     if (!currentThreadId || message.trim() === '') return
