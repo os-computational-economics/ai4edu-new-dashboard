@@ -122,13 +122,6 @@ const Tables = () => {
 
   const openChatPage = async (agent) => {
     console.log('123')
-    const params = {
-      agent_id: agent.agent_id,
-      user_id: creatorId,
-      workspace_id: agent.workspace_id
-    }
-    const res = await getNewThread(params)
-    console.log(res)
     router.push(`/agents/${agent.agent_id}/new`)
   }
 
