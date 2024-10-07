@@ -153,7 +153,7 @@ const Workspace = () => {
           <TableHeader>
             <TableColumn key="school_id">School ID</TableColumn>
             <TableColumn key="workspace_id">Workspace ID</TableColumn>
-            <TableColumn key="workspace_name">Woekspace Name</TableColumn>
+            <TableColumn key="workspace_name">Workspace Name</TableColumn>
           </TableHeader>
           <TableBody
             items={workspaceList}
