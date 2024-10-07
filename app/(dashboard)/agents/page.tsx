@@ -287,6 +287,7 @@ const Tables = () => {
                   onChange={handlePageChange}
                 />
                 <div className="ml-8 text-small text-default-600">
+                  {" "}
                   {` Total ${total} agent${total === 1 ? `` : `s`}`}
                 </div>
               </div>
