@@ -89,7 +89,7 @@ export default function App() {
           {total > 0 && (
             <>
               <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
-              <div className="mt-2 text-small text-default-600">Total {total} threads</div>
+              <div className="mt-2 text-small text-default-600">{`Total ${total} thread${total === 1 ? `` : `s`}`}</div>
             </>
           )}
         </div>
