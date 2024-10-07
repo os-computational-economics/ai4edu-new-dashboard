@@ -152,15 +152,11 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     const params = { thread_id: threadId };
     // if query param new_thread=true, don't fetch messages, and remove the query param
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("new_thread")) {
-      urlParams.delete("new_thread");
-      window.history.replaceState(
-        {},
-        "",
-        `${window.location.pathname}?${urlParams}`
-      );
-      return;
-    } else if (threadId) {
+    // check if threadId is a UUID
+    const threadIdIsUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      threadId
+    );
+    if (threadIdIsUUID) {
       getThreadbyID(params).then((res) => {
         setMessages(
           res.messages.map((message) => ({
@@ -169,6 +165,11 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
           }))
         );
       });
+    } else if (threadId === "new") {
+      // nothing to do for now
+    } else {
+      // invalid url, redirect to home
+      window.location.href = "/";
     }
   }, [agent]);
 
@@ -194,7 +195,6 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     console.log(threadId);
     const params = {
       agent_id: agentID,
-      user_id: studentId,
       workspace_id: workspace_id,
     };
 
@@ -212,8 +212,11 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
 
   const sendMessage = async () => {
     let currentThreadId = threadId;
-    if (!currentThreadId) {
+    if (currentThreadId === "new") {
       currentThreadId = await getNewThreadID();
+      setThreadId(currentThreadId);
+      const newUrl = `/agents/${agentID}/${currentThreadId}`;
+      window.history.replaceState({...window.history.state, as: newUrl, url: newUrl}, '', newUrl);
     }
 
     if (!currentThreadId || message.trim() === "") return;

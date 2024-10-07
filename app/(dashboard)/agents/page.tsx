@@ -126,13 +126,7 @@ const Tables = () => {
   const openModal = () => setIsModalOpen(true);
 
   const openChatPage = async (agent) => {
-    const params = {
-      agent_id: agent.agent_id,
-      user_id: creatorId,
-      workspace_id: agent.workspace_id,
-    };
-    const res = await getNewThread(params);
-    router.push(`/agents/${agent.agent_id}/${res.thread_id}?new_thread=true`);
+    router.push(`/agents/${agent.agent_id}/new`);
   };
 
   const closeModal = (reload) => {
