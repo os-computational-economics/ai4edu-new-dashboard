@@ -11,7 +11,7 @@ import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import Link from 'next/link'
 import { Thread } from '@/api/thread/thread'
-import { getCurrentUser } from '@/utils/CookiesUtil'
+import { getCurrentUserStudentID } from '@/utils/CookiesUtil'
 
 // Define a type for individual messages
 type Message = {
@@ -41,7 +41,7 @@ type HistoryPanelProps = {
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) => {
   console.log('Received thread details in HistoryPanel:', threadDetails)
-  const currentUserId = getCurrentUser()
+  const currentUserId = getCurrentUserStudentID()
 
   // Group messages by user_id
   const groupedMessages = threadDetails.messages.reduce<GroupedMessages>((acc, message) => {
