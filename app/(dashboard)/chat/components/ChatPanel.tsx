@@ -13,6 +13,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
+import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
 import { FileUploadForm } from "./FileUpload";
 
@@ -100,6 +101,7 @@ function InputMessage({
   setMessage,
   sendMessage,
   FileUploadForm,
+  inputDisabled,
 }: {
   placeholder: string;
   message: string;
@@ -119,6 +121,7 @@ function InputMessage({
             sendMessage();
           }
         }}
+        disabled={inputDisabled}
       />
       {/* <Button isIconOnly variant="light" aria-label="Attach file" onClick={FileUploadForm}>
         <MdAttachFile className="text-2xl" />
@@ -128,6 +131,7 @@ function InputMessage({
         color="primary"
         aria-label="Send message"
         onClick={sendMessage}
+        disabled={inputDisabled}
       >
         <IoSend className="text-xl" />
       </Button>
@@ -140,6 +144,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
   const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
+  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState(true);
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
@@ -170,6 +175,19 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     } else {
       // invalid url, redirect to home
       window.location.href = "/";
+    }
+  }, [agent]);
+
+  useEffect(() => {
+    if (agent?.status === 1) {
+      const firstMessage = messages[0];
+      const currentUserID = getCurrentUserStudentID();
+      setHasWriteAccessToThread(
+        firstMessage.user_id === currentUserID
+      );
+    } else {
+      // if agent is not active or deleted, user can't write to the thread anyway, so no need to check
+      setHasWriteAccessToThread(false);
     }
   }, [agent]);
 
@@ -333,10 +351,11 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
         </ScrollShadow>
         <footer className="flex-shrink-0">
           <InputMessage
-            placeholder="Enter your message"
+            placeholder={hasWriteAccessToThread? "Enter your message": "You cannot chat with this thread. This could be because the professor disabled the agent or you are viewing a thread that is not yours."}
             message={message}
             setMessage={setMessage}
             sendMessage={sendMessage}
+            inputDisabled={!hasWriteAccessToThread}
           />
           <div className="flex justify-center	text-gray-500 text-xs">
             AI can make errors. Please verify important information.

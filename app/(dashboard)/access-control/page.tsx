@@ -236,7 +236,7 @@ const Tables = () => {
             <div>
               <div className="flex h-full w-full items-center justify-center">
                 <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
-                <div className="ml-8 text-small text-default-600">{`Total ${total} thread${total === 1 ? `` : `s`}`}</div>
+                <div className="ml-8 text-small text-default-600">{`Total ${total} user${total === 1 ? `` : `s`}`}</div>
               </div>
             </div>
           )
