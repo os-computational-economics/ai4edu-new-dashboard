@@ -50,18 +50,17 @@ export const UserDropdown = () => {
     <Dropdown>
       
       <NavbarItem>
-        {/* boring avatars service is down
+        
         <DropdownTrigger>
-          
+          {
           <Avatar
             as="button"
             color="secondary"
             size="md"
-            src="https://source.boringavatars.com/beam/120/Mari?colors=ADEADA,BDEADB,CDEADC,DDEADD,B9E1F0"
           />
           }
         </DropdownTrigger>
-        */}
+        
       </NavbarItem>
         
       <DropdownMenu aria-label="User menu actions" onAction={(actionKey) => console.log({ actionKey })}>
