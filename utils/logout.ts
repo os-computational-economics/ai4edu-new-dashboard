@@ -3,7 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
 
 const logout = () => {
-toast.error("Your session has expired.", {
+/* toast.error("Your session has expired.", {
     position: "top-right",
     autoClose: 3000,
     hideProgressBar: false,
@@ -11,6 +11,8 @@ toast.error("Your session has expired.", {
     pauseOnHover: true,
     progress: undefined,
   });
+  we don't need to show users this
+  */
   Cookies.remove("access_token")
   Cookies.remove("refresh_token")
   localStorage.clear()

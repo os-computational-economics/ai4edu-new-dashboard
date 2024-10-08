@@ -115,6 +115,7 @@ instance.interceptors.response.use(
   (error) => {
     console.log("error", error);
     if (error.response && error.response.status) {
+      /* would show code errors to users
       toast.error(error.response.data.message, {
         position: "top-right",
         autoClose: 3000,
@@ -122,7 +123,7 @@ instance.interceptors.response.use(
         closeOnClick: true,
         pauseOnHover: true,
         progress: undefined,
-      });
+      });*/
       if (error.response.status === 401) {
         // authorization error, logout
         Cookies.remove("access_token");
@@ -133,6 +134,7 @@ instance.interceptors.response.use(
         }, 3000);
       } else if (error.response.status === 500) {
         // server error
+        /* not an informative error message, should replace
         toast.error("please try again later", {
           position: "top-right",
           autoClose: 3000,
@@ -141,6 +143,7 @@ instance.interceptors.response.use(
           pauseOnHover: true,
           progress: undefined,
         });
+        */
       } else {
       }
     }
