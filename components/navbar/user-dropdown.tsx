@@ -48,16 +48,22 @@ export const UserDropdown = () => {
 
   return (
     <Dropdown>
+      
       <NavbarItem>
+        {/* boring avatars service is down
         <DropdownTrigger>
+          
           <Avatar
             as="button"
             color="secondary"
             size="md"
             src="https://source.boringavatars.com/beam/120/Mari?colors=ADEADA,BDEADB,CDEADC,DDEADD,B9E1F0"
           />
+          }
         </DropdownTrigger>
+        */}
       </NavbarItem>
+        
       <DropdownMenu aria-label="User menu actions" onAction={(actionKey) => console.log({ actionKey })}>
         <DropdownItem isReadOnly key="profile" className="flex flex-col justify-start w-full items-start">
           <p>{fullName}</p>
