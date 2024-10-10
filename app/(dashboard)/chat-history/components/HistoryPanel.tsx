@@ -56,9 +56,9 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
   }, {})
 
   return (
-    <div className="h-full w-full overflow-auto">
+    <div className="h-full w-full overflow-y-scroll">
       {Object.values(groupedMessages).map((group, index) => (
-        <div key={index} className="mb-4">
+        <div key={index} className="mb-4 relative">
           <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white pb-2 pl-4 pt-2 text-left shadow">
             <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3>
             <div className="inline-flex items-center">

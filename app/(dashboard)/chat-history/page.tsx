@@ -94,7 +94,7 @@ export default function App() {
           )}
         </div>
       </div>
-      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 shadow-sm">
+      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 shadow-sm pr-1">
         {threadDetails ? (
           <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
         ) : (

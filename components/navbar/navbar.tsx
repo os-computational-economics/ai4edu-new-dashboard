@@ -48,7 +48,7 @@ export const NavbarWrapper = ({ children }: Props) => {
           </NavbarContent>
         </NavbarContent>
       </Navbar>
-      <div className="flex-1 overflow-y-auto">{children}</div>
+      <div className="flex-1">{children}</div>
     </div>
   )
 }
