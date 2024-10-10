@@ -154,6 +154,9 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
 
   useEffect(() => {
     if (hasWriteAccessToThread !== null || !agent || messages.length === 0) {
+      if (thread === "new") {
+        setHasWriteAccessToThread(true);
+      }
       return;
     }
     if (agent?.status === 1) {
