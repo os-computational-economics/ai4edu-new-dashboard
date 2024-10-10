@@ -1,6 +1,6 @@
 // request.ts
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-
+import https from "https";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
@@ -13,6 +13,7 @@ const apiVersion = process.env.NEXT_PUBLIC_API_VERSION;
 const role = process.env.NEXT_PUBLIC_ROLE;
 let baseURL = process.env.NEXT_PUBLIC_ONLINE_BASE_URL;
 let environment = process.env.NEXT_PUBLIC_DEV_ENVIRONMENT;
+let httpsAgent = new https.Agent({ rejectUnauthorized: process.env.NODE_ENV !== "development" });
 
 if (process.env.NODE_ENV === "development") {
   /*
@@ -52,6 +53,7 @@ console.log("****", apiUrl);
 const instance = axios.create({
   baseURL: apiUrl,
   timeout: 100000, // 100s
+  httpsAgent: httpsAgent
 });
 
 // Request interceptor
