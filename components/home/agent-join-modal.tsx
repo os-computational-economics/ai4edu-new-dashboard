@@ -65,10 +65,10 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-lg">
               <MdInfoOutline size={24} />
               <span className="text-black-100 text-xs">
-                To join new workspace, enter{" "}
+                To join a new workspace, enter the{" "}
                 <span className="font-semibold">Workspace ID</span> and
                 <span className="font-semibold"> Workspace Password</span>{" "}
-                provided from your instructor.
+                provided by your instructor.
               </span>
             </div>
 

@@ -5,7 +5,7 @@ import HistoryPanel from './components/HistoryPanel'
 import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 import { WorkspaceContext } from '@/components/layout/layout'
-import { getCurrentUser, getWorkspaceRole, checkExpired } from '@/utils/CookiesUtil'
+import { getCurrentUserStudentID, getWorkspaceRole, checkExpired } from '@/utils/CookiesUtil'
 
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
@@ -32,7 +32,7 @@ export default function App() {
     const params = {
       page,
       page_size: pageSize,
-      student_id: roleList[workspace_id] === 'teacher' ? 'all' : getCurrentUser(),
+      student_id: roleList[workspace_id] === 'teacher' ? 'all' : getCurrentUserStudentID(),
       workspace_id: workspace_id
     }
 
@@ -89,12 +89,12 @@ export default function App() {
           {total > 0 && (
             <>
               <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
-              <div className="mt-2 text-small text-default-600">Total {total} threads</div>
+              <div className="mt-2 text-small text-default-600">{`Total ${total} thread${total === 1 ? `` : `s`}`}</div>
             </>
           )}
         </div>
       </div>
-      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 shadow-sm">
+      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 shadow-sm pr-1">
         {threadDetails ? (
           <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
         ) : (

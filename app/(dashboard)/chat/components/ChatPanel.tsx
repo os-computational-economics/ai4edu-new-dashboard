@@ -13,6 +13,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
+import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
 import { FileUploadForm } from "./FileUpload";
 
@@ -100,6 +101,7 @@ function InputMessage({
   setMessage,
   sendMessage,
   FileUploadForm,
+  inputDisabled,
 }: {
   placeholder: string;
   message: string;
@@ -119,6 +121,7 @@ function InputMessage({
             sendMessage();
           }
         }}
+        disabled={inputDisabled}
       />
       {/* <Button isIconOnly variant="light" aria-label="Attach file" onClick={FileUploadForm}>
         <MdAttachFile className="text-2xl" />
@@ -128,6 +131,7 @@ function InputMessage({
         color="primary"
         aria-label="Send message"
         onClick={sendMessage}
+        disabled={inputDisabled}
       >
         <IoSend className="text-xl" />
       </Button>
@@ -140,6 +144,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
   const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
+  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState(null);
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
@@ -147,20 +152,34 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     agent?.workspace_id || JSON.parse(localStorage.getItem("workspace")!)?.id;
   const lastMessageRef = useRef(null);
 
+  useEffect(() => {
+    if (hasWriteAccessToThread !== null || !agent || messages.length === 0) {
+      if (thread === "new") {
+        setHasWriteAccessToThread(true);
+      }
+      return;
+    }
+    if (agent?.status === 1) {
+      const firstMessage = messages[0];
+      const currentUserID = getCurrentUserStudentID();
+      setHasWriteAccessToThread(
+        firstMessage.user_id === currentUserID
+      );
+    } else {
+      // if agent is not active or deleted, user can't write to the thread anyway, so no need to check
+      setHasWriteAccessToThread(false);
+    }
+  }, [messages, agent, hasWriteAccessToThread]);
+
   useMount(() => {
-    console.log("$$$", agent);
     const params = { thread_id: threadId };
     // if query param new_thread=true, don't fetch messages, and remove the query param
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("new_thread")) {
-      urlParams.delete("new_thread");
-      window.history.replaceState(
-        {},
-        "",
-        `${window.location.pathname}?${urlParams}`
-      );
-      return;
-    } else if (threadId) {
+    // check if threadId is a UUID
+    const threadIdIsUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      threadId
+    );
+    if (threadIdIsUUID) {
       getThreadbyID(params).then((res) => {
         setMessages(
           res.messages.map((message) => ({
@@ -169,6 +188,11 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
           }))
         );
       });
+    } else if (threadId === "new") {
+      // nothing to do for now
+    } else {
+      // invalid url, redirect to home
+      window.location.href = "/";
     }
   }, [agent]);
 
@@ -194,7 +218,6 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     console.log(threadId);
     const params = {
       agent_id: agentID,
-      user_id: studentId,
       workspace_id: workspace_id,
     };
 
@@ -212,8 +235,11 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
 
   const sendMessage = async () => {
     let currentThreadId = threadId;
-    if (!currentThreadId) {
+    if (currentThreadId === "new") {
       currentThreadId = await getNewThreadID();
+      setThreadId(currentThreadId);
+      const newUrl = `/agents/${agentID}/${currentThreadId}`;
+      window.history.replaceState({...window.history.state, as: newUrl, url: newUrl}, '', newUrl);
     }
 
     if (!currentThreadId || message.trim() === "") return;
@@ -277,7 +303,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
                     data.source.length > 0
                   ) {
                     sources = data.source.map((src, index) => {
-                      const parsedSrc = JSON.parse(src.replace(/'/g, '"'));
+                      const parsedSrc = src;
                       return {
                         index: index + 1,
                         fileName: parsedSrc.file_name,
@@ -330,10 +356,11 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
         </ScrollShadow>
         <footer className="flex-shrink-0">
           <InputMessage
-            placeholder="Enter your message"
+            placeholder={hasWriteAccessToThread? "Enter your message": "You cannot chat with this thread. This could be because the professor disabled the agent or you are viewing a thread that is not yours."}
             message={message}
             setMessage={setMessage}
             sendMessage={sendMessage}
+            inputDisabled={!hasWriteAccessToThread}
           />
           <div className="flex justify-center	text-gray-500 text-xs">
             AI can make errors. Please verify important information.

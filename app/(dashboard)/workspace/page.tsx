@@ -144,7 +144,7 @@ const Workspace = () => {
               <div>
                 <div className="flex h-full w-full items-center justify-center">
                   <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
-                  <div className="ml-8 text-small text-default-600">Total {total} users</div>
+                  <div className="ml-8 text-small text-default-600">{`Total ${total} user${total === 1 ? `` : `s`}`}</div>
                 </div>
               </div>
             )
@@ -153,7 +153,7 @@ const Workspace = () => {
           <TableHeader>
             <TableColumn key="school_id">School ID</TableColumn>
             <TableColumn key="workspace_id">Workspace ID</TableColumn>
-            <TableColumn key="workspace_name">Woekspace Name</TableColumn>
+            <TableColumn key="workspace_name">Workspace Name</TableColumn>
           </TableHeader>
           <TableBody
             items={workspaceList}
