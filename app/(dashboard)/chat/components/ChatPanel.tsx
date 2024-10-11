@@ -303,7 +303,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
                     data.source.length > 0
                   ) {
                     sources = data.source.map((src, index) => {
-                      const parsedSrc = JSON.parse(src.replace(/'/g, '"'));
+                      const parsedSrc = src;
                       return {
                         index: index + 1,
                         fileName: parsedSrc.file_name,
