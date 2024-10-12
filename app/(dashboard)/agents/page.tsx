@@ -146,8 +146,9 @@ const Tables = () => {
       localStorage.getItem("workspace") || "{}"
     );
     return (
-      <div className="flex flex-col gap-4 mt-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between my-1">
+        <h1 className="text-2xl font-bold">Agents</h1>
           <div className={"w-full  sm:max-w-[44%]"}></div>
           <div className="flex gap-3">
             <Button
@@ -175,8 +176,8 @@ const Tables = () => {
               </Button>
             )}
           </div>
+          </div>
         </div>
-      </div>
     );
   }, [creatorId, isLoading]);
 
@@ -258,7 +259,7 @@ const Tables = () => {
   };
 
   return (
-    <div className="mx-6 ">
+    <div className="m-6 ">
       <ToastContainer />
       <ConfirmDeleteModal
         isOpen={isDeleteModalOpen}
