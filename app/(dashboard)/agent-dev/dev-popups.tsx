@@ -43,7 +43,7 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
+      <div className=" rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Knowledge Base</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -136,7 +136,7 @@ export const AgentResourcesPopup = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
+      <div className=" rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Agent Resources</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -200,7 +200,7 @@ export const WorkflowPopup = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
+      <div className=" rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Workflow</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">

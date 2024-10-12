@@ -41,7 +41,7 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
   return (
     <Card className="m-1 h-full">
       <div className="h-full w-full">
-        <div className="bg-white p-3 h-full">
+        <div className=" p-3 h-full">
           {/* <h1 className="text-2xl font-bold mb-4">{selectedCourse?.id}</h1> */}
           <div className="text-wrap w-full h-full">
             {selectedDocument ? (

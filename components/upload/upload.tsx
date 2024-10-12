@@ -73,7 +73,7 @@ const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acce
               <input id="files" type="file" accept={acceptFileTypes} onChange={handleFileChange} style={{ display: 'none' }} />
               <label
                 htmlFor="files"
-                className="w-full h-24 flex items-center justify-center bg-white hover:bg-gray-100 cursor-pointer"
+                className="w-full h-24 flex items-center justify-center hover:bg-gray-100 cursor-pointer"
               >
                 {fileName ? fileName : 'Click or drag a file to upload'}
               </label>

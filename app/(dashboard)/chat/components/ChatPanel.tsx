@@ -109,7 +109,7 @@ function InputMessage({
   sendMessage: () => void;
 }) {
   return (
-    <div className="flex gap-2 px-4 py-2 inset-x-0 bottom-0 bg-white rounded-xl">
+    <div className="flex gap-2 px-4 py-2 inset-x-0 bottom-0 rounded-xl">
       <Textarea
         placeholder={placeholder}
         className="flex-grow"
@@ -338,7 +338,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
 
   return (
     <Card className="mt-1 mb-1 h-full rounded-xl">
-      <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full h-full">
+      <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 max-md:px-5 max-md:max-w-full h-full">
         <ScrollShadow
           size={20}
           className="flex flex-col overflow-auto h-full pr-4"

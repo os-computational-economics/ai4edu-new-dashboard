@@ -59,7 +59,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
     <div className="h-full w-full overflow-y-scroll">
       {Object.values(groupedMessages).map((group, index) => (
         <div key={index} className="mb-4 relative">
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white pb-2 pl-4 pt-2 text-left shadow">
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b pb-2 pl-4 pt-2 text-left shadow">
             <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3>
             <div className="inline-flex items-center">
               <CSVLink
@@ -93,7 +93,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
             <div key={idx} className={`m-2 p-2 ${message.role === 'human' ? 'text-right' : 'text-left'}`}>
               <div
                 className={`inline-block max-w-[90%] rounded-lg p-2 ${
-                  message.role === 'human' ? 'bg-green-50' : 'bg-amber-50'
+                  message.role === 'human' ? 'bg-green-600' : 'bg-amber-600'
                 }`}
                 style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
               >
