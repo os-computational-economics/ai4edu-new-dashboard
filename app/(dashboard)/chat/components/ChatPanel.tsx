@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { Card, Textarea, ScrollShadow, Button } from "@nextui-org/react";
-import { MdAttachFile, MdExpandLess, MdExpandMore } from "react-icons/md";
+import { MdAttachFile, MdExpandLess, MdExpandMore, MdPerson, MdAndroid } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 
 import Cookies from "js-cookie";
@@ -49,12 +49,19 @@ function Message({
       className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}
     >
       <div className={`${className} ${additionalClasses}`}>
+      {align === 'end' ? (
+              
+              <MdPerson className="mr-2 inline-block text-4xl text-green-700" />
+            ) : (
+              <MdAndroid className="mr-2 inline-block text-4xl text-amber-700" />
+            )}
         <ReactMarkdown
           remarkPlugins={[remarkMath]}
           rehypePlugins={[rehypeKatex, rehypeHighlight]}
         >
           {preprocessLaTeX(content)}
         </ReactMarkdown>
+        
       </div>
       {sources && sources.length > 0 && (
         <div className="mt-2">
@@ -351,7 +358,8 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
               sources={message.sources}
               setSelectedDocument={setSelectedDocument}
             />
-          ))}
+          ))
+          }
           <div ref={lastMessageRef}></div>
         </ScrollShadow>
         <footer className="flex-shrink-0">
