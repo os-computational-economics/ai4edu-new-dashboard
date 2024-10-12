@@ -81,7 +81,7 @@ export default function App() {
   return (
     <div className="flex h-[calc(100vh-80px)] w-98% gap-4 m-2">
       <ToastContainer />
-      <div className="flex w-2/5 flex-col bg-white">
+      <div className="flex w-2/5 flex-col">
         <div className="flex-grow overflow-auto">
           <CardList threads={threads} onSelect={handleSelectThread} />
         </div>
