@@ -10,7 +10,7 @@ export const SidebarMenu = ({ title, children }: Props) => {
   return (
     <div className="flex gap-2 flex-col pl-6">
       <span className="text-xs font-normal ">
-        <Chip className="bg-slate-500" variant="flat" size="md">
+        <Chip variant="flat" size="md">
           {title}
         </Chip>
       </span>
