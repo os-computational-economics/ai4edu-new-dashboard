@@ -81,7 +81,7 @@ export default function App() {
   return (
     <div className='flex flex-col'>
       <div className='m-6'>
-        <h1 className="text-2xl font-bold my-1">Course Roster</h1>
+        <h1 className="text-2xl font-bold my-1">Chat History</h1>
       </div>
     <div className="flex h-[calc(100vh-80px)] w-98% ">
       <ToastContainer />
