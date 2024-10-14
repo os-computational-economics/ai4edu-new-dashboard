@@ -58,4 +58,26 @@ const checkExpired = () => {
     }
 }
 
-export { formatedCourses, isAdmin, checkExpired, getCurrentUserStudentID, getWorkspaceRole, getCurrentUserID }
+const checkToken = () => {
+    return new Promise((resolve, reject) => {
+      if (!Cookies.get('access_token') && Cookies.get('refresh_token')) {
+        ping()
+          .then((res) => {
+            // window.location.reload();  // Reload to get new access token
+            resolve();  // Token refreshed successfully
+          })
+          .catch((err) => {
+            logout();  // Logout user if refresh fails
+            reject('Token refresh failed.');
+          });
+      } else if (!Cookies.get('access_token') && !Cookies.get('refresh_token')) {
+        logout();
+        reject('No access token and no refresh token available.');
+      } else {
+        resolve();  // Token is still valid
+      }
+    });
+  };
+  
+
+export { formatedCourses, isAdmin, checkExpired, getCurrentUserStudentID, getWorkspaceRole, getCurrentUserID, checkToken }
