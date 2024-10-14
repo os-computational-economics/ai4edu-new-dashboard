@@ -23,7 +23,7 @@ const ThreadCard = ({ thread, onSelect }) => (
 )
 
 const CardList = ({ threads, onSelect }) => (
-  <div className="grid grid-cols-1 gap-4 p-4">
+  <div className="grid grid-cols-1 gap-4 px-6">
     {threads.map((thread) => (
       <ThreadCard key={thread.thread_id} thread={thread} onSelect={onSelect} />
     ))}

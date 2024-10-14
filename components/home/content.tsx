@@ -90,7 +90,7 @@ export const Content = () => {
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-bold">My Workspaces</h1>
               <div className="flex gap-2 items-center">
-                <Button onPress={() => setIsJoinModalOpen(true)}>Join a Workspace</Button>
+                <Button color='primary' onPress={() => setIsJoinModalOpen(true)}>Join a Workspace</Button>
               </div>
             </div>
             <div className="grid md:grid-cols-3 grid-cols-1 2xl:grid-cols-4 gap-5 justify-center w-full">

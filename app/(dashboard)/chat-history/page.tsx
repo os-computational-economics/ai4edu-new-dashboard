@@ -79,13 +79,17 @@ export default function App() {
   const matching_thread = threads.filter(e => e.thread_id == threadDetails?.thread_id)[0]
 
   return (
-    <div className="flex h-[calc(100vh-80px)] w-98% gap-4 m-2">
+    <div className='flex flex-col'>
+      <div className='m-6'>
+        <h1 className="text-2xl font-bold my-1">Course Roster</h1>
+      </div>
+    <div className="flex h-[calc(100vh-80px)] w-98% ">
       <ToastContainer />
       <div className="flex w-2/5 flex-col">
         <div className="flex-grow overflow-auto">
           <CardList threads={threads} onSelect={handleSelectThread} />
         </div>
-        <div className="flex flex-shrink-0 flex-col items-center justify-center p-4">
+        <div className="flex flex-shrink-0 flex-col items-center justify-center ">
           {total > 0 && (
             <>
               <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
@@ -101,6 +105,7 @@ export default function App() {
           <div className="text-black-500 text-lg font-semibold">Please select a thread to view its details.</div>
         )}
       </div>
+    </div>
     </div>
   )
 }

@@ -86,7 +86,7 @@ const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acce
                 </div>
               )}
             </div>
-            <Button onClick={handleUpload} className="mt-4" disabled={isUploading}>
+            <Button onClick={handleUpload} className="mt-4" color='primary' disabled={isUploading}>
               {isUploading ? 'Uploading...' : 'Confirm Upload'}
             </Button>
           </ModalBody>

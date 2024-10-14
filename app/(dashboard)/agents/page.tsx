@@ -231,6 +231,7 @@ const Tables = () => {
             isIconOnly
             size="md"
             variant="flat"
+            color="secondary"
             onClick={() => {
               setStatus(2); // Set status to edit
               setCurrentAgent(agent); // Set the current agent being edited
