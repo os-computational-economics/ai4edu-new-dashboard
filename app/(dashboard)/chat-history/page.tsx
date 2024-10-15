@@ -89,7 +89,7 @@ export default function App() {
         <div className="flex-grow overflow-auto">
           <CardList threads={threads} onSelect={handleSelectThread} />
         </div>
-        <div className="flex flex-shrink-0 flex-col items-center justify-center ">
+        <div className="flex flex-shrink-0 flex-col items-center justify-center mt-4">
           {total > 0 && (
             <>
               <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
@@ -98,7 +98,7 @@ export default function App() {
           )}
         </div>
       </div>
-      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 shadow-sm pr-1">
+      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 mx-6 mb-6 shadow-sm pr-1">
         {threadDetails ? (
           <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
         ) : (

@@ -12,6 +12,7 @@ import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import Link from 'next/link'
 import { Thread } from '@/api/thread/thread'
 import { getCurrentUserStudentID } from '@/utils/CookiesUtil'
+import { useTheme as useNextTheme } from "next-themes";
 
 // Define a type for individual messages
 type Message = {
@@ -54,14 +55,13 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
     acc[message.user_id].messages.push(message)
     return acc
   }, {})
-
   return (
     <div className="h-full w-full overflow-y-scroll">
       {Object.values(groupedMessages).map((group, index) => (
         <div key={index} className="mb-4 relative">
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b pb-2 pl-4 pt-2 text-left shadow">
+          <div className="sticky bg-white dark:bg-black top-0 z-10 flex lg:flex-row flex-col items-center justify-between border-b pb-2 pl-4 pt-2 text-left shadow">
             <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3>
-            <div className="inline-flex items-center">
+            <div className="inline-flex lg:flex-row flex-col items-center">
               <CSVLink
                 data={group.messages.map(({ thread_id, created_at, msg_id, user_id, role, content }) => ({
                   ThreadID: thread_id,
