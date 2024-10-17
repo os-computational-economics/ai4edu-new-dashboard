@@ -59,7 +59,7 @@ const checkExpired = () => {
 }
 
 const checkToken = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!Cookies.get('access_token') && Cookies.get('refresh_token')) {
         ping()
           .then((res) => {
