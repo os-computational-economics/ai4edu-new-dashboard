@@ -179,7 +179,7 @@ const Tables = () => {
           </div>
         </div>
     );
-  }, [isLoading, handleSearch]);
+  }, [creatorId, isLoading]);
 
   const renderActions = (agent) => {
     if (typeof window === "undefined") return null;
