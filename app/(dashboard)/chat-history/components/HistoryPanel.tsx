@@ -92,7 +92,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
             <div key={idx} className={`m-2 p-2 ${message.role === 'human' ? 'text-right' : 'text-left'}`}>
               <div
                 className={`inline-block max-w-[90%] rounded-lg p-2 ${
-                  message.role === 'human' ? 'bg-gray-100 dark:bg-black dark:text-white' : 'bg-slate-300 dark:bg-gray-800 dark:text-white'
+                  message.role === 'human' ? 'bg-slate-200 dark:bg-black dark:text-white' : 'bg-orange-50 dark:bg-slate-800 dark:text-white'
                 }`}
                 style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
               >

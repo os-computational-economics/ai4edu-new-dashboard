@@ -51,8 +51,8 @@ function Message({
 
   const className =
     align === "end"
-      ? "bg-black text-white font-medium max-w-[90%]"
-      : "bg-neutral-200 max-w-[90%] dark:bg-gray-800 dark:text-white";
+      ? "bg-slate-200 dark:bg-black dark:text-white font-medium max-w-[90%]"
+      : "bg-orange-50 dark:bg-slate-800 dark:text-white max-w-[90%]";
   const additionalClasses = "rounded-2xl px-4 py-2"; // Added text-sm for smaller text
 
   const onSourceClick = (sourceFileID) => {
@@ -66,7 +66,7 @@ function Message({
       <div className={`${className} ${additionalClasses}`}>
         {align === "end" ? (
           <div className="text-right w-full">
-            <User className="inline-block size-6 text-green-300" />
+            <User className="inline-block size-6 text-green-600" />
           </div>
         ) : (
           <Bot className="size-7 text-sky-600" />
