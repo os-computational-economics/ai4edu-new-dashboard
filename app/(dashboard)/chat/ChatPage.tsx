@@ -1,10 +1,10 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import Objectives from './components/Objectives'
 import DocumentPanel from './components/DocumentPanel'
 import ChatPanel from './components/ChatPanel'
 import { Modal, ModalContent, ModalHeader } from '@nextui-org/react'
+import { GripVertical } from 'lucide-react'
 
 type Document = {
   id: number
@@ -43,6 +43,7 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
         size="full"
+        className='dark:bg-black'
       >
         <ModalContent>
           {(onClose) => (
@@ -60,7 +61,14 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                   <Panel defaultSize={25} maxSize={70} minSize={20}>
                     <DocumentPanel selectedDocument={selectedDocumentFileID} />
                   </Panel>
-                  <PanelResizeHandle />
+                  <PanelResizeHandle children={
+                    <div 
+                    className={`flex flex-col rounded-lg h-full items-center my-2 justify-center w-2 bg-gray-200 hover:bg-gray-300 dark:bg-[#191919] dark:hover:bg-[#1d1d1d] transition-colors cursor-col-resize`}
+                    style={{ height: 'calc(100% - 1rem)' }}
+                  >
+                    <GripVertical className="w-4 h-4 text-gray-400" />
+                  </div>
+                  } />
                   <Panel defaultSize={65} maxSize={80} minSize={30}>
                     <ChatPanel agent={agent} thread={thread} setSelectedDocument={setSelectedDocumentFileID}  />
                   </Panel>

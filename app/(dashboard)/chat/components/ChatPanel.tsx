@@ -372,7 +372,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
   };
 
   return (
-    <Card className="mt-1 mb-1 h-full rounded-xl">
+    <Card className="m-2 ml-1" style={{ height: 'calc(100% - 1rem)' }}>
       <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 max-md:px-5 max-md:max-w-full h-full">
         <ScrollShadow
           size={20}

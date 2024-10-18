@@ -39,7 +39,7 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
   }, [selectedDocument])
 
   return (
-    <Card className="m-1 h-full">
+    <Card className="m-2 mr-1" style={{ height: 'calc(100% - 1rem)' }}>
       <div className="h-full w-full">
         <div className=" p-3 h-full">
           {/* <h1 className="text-2xl font-bold mb-4">{selectedCourse?.id}</h1> */}
