@@ -3,9 +3,6 @@ import React, { useEffect, useState, useRef } from "react";
 
 import { Card, Textarea, ScrollShadow, Button } from "@nextui-org/react";
 import {
-  MdAttachFile,
-  MdExpandLess,
-  MdExpandMore,
   MdPerson,
   MdAndroid,
 } from "react-icons/md";
@@ -21,7 +18,7 @@ import { checkToken } from "@/utils/CookiesUtil";
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
-import { FileUploadForm } from "./FileUpload";
+// import { FileUploadForm } from "./FileUpload";
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/atom-one-dark.min.css";
