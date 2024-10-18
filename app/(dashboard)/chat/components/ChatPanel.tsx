@@ -1,9 +1,11 @@
-// @ts-nocheck
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 
 import { Card, Textarea, ScrollShadow, Button } from "@nextui-org/react";
-import { MdAttachFile, MdExpandLess, MdExpandMore, MdPerson, MdAndroid } from "react-icons/md";
+import {
+  MdPerson,
+  MdAndroid,
+} from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 
 import Cookies from "js-cookie";
@@ -12,15 +14,30 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 
+import { checkToken } from "@/utils/CookiesUtil";
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
-import { FileUploadForm } from "./FileUpload";
+// import { FileUploadForm } from "./FileUpload";
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/atom-one-dark.min.css";
 import { getThreadbyID } from "@/api/thread/thread";
 import useMount from "@/components/hooks/useMount";
+
+interface Source {
+  index: number;
+  fileName: string;
+  page: number;
+  fileID: string;
+}
+
+interface Message {
+  content: string;
+  align: string;
+  sources?: Source[];
+  user_id?: string;
+}
 
 function Message({
   content,
@@ -30,7 +47,8 @@ function Message({
 }: {
   content: string;
   align: string;
-  sources?: string[];
+  sources?: Source[];
+  setSelectedDocument: (fileID: string) => void;
 }) {
   const [showSources, setShowSources] = useState(false);
 
@@ -49,28 +67,25 @@ function Message({
       className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}
     >
       <div className={`${className} ${additionalClasses}`}>
-      {align === 'end' ? (
-              
-              <MdPerson className="mr-2 inline-block text-4xl text-green-700" />
-            ) : (
-              <MdAndroid className="mr-2 inline-block text-4xl text-amber-700" />
-            )}
+        {align === "end" ? (
+          <MdPerson className="mr-2 inline-block text-4xl text-green-700" />
+        ) : (
+          <MdAndroid className="mr-2 inline-block text-4xl text-amber-700" />
+        )}
         <ReactMarkdown
           remarkPlugins={[remarkMath]}
           rehypePlugins={[rehypeKatex, rehypeHighlight]}
         >
           {preprocessLaTeX(content)}
         </ReactMarkdown>
-        
       </div>
       {sources && sources.length > 0 && (
         <div className="mt-2">
           <Button
-            color="#F4F4F5"
+            color="secondary"
             size="sm"
             variant="light"
             radius="sm"
-            iconRight={showSources ? <MdExpandLess /> : <MdExpandMore />}
             onClick={() => setShowSources(!showSources)}
           >
             {showSources ? "Hide Sources" : "Display Sources"}
@@ -107,13 +122,15 @@ function InputMessage({
   message,
   setMessage,
   sendMessage,
-  FileUploadForm,
   inputDisabled,
+  FileUploadForm,
 }: {
   placeholder: string;
   message: string;
   setMessage: (value: string) => void;
   sendMessage: () => void;
+  inputDisabled: boolean;
+  FileUploadForm?: () => void;
 }) {
   return (
     <div className="flex gap-2 px-4 py-2 inset-x-0 bottom-0 rounded-xl">
@@ -147,11 +164,13 @@ function InputMessage({
 }
 
 const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
   const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
-  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState(null);
+  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState<
+    boolean | null
+  >(null);
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
@@ -169,9 +188,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     if (agent?.status === 1) {
       const firstMessage = messages[0];
       const currentUserID = getCurrentUserStudentID();
-      setHasWriteAccessToThread(
-        firstMessage.user_id === currentUserID
-      );
+      setHasWriteAccessToThread(firstMessage.user_id === currentUserID);
     } else {
       // if agent is not active or deleted, user can't write to the thread anyway, so no need to check
       setHasWriteAccessToThread(false);
@@ -183,14 +200,16 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     // if query param new_thread=true, don't fetch messages, and remove the query param
     const urlParams = new URLSearchParams(window.location.search);
     // check if threadId is a UUID
-    const threadIdIsUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      threadId
-    );
+    const threadIdIsUUID =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        threadId
+      );
     if (threadIdIsUUID) {
       getThreadbyID(params).then((res) => {
         setMessages(
           res.messages.map((message) => ({
-            ...message,
+            content: message.content,
+            user_id: message.user_id,
             align: message.role === "human" ? "end" : "start",
           }))
         );
@@ -201,7 +220,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
       // invalid url, redirect to home
       window.location.href = "/";
     }
-  }, [agent]);
+  });
 
   const appendMessage = (content, align, sources = []) => {
     setMessages((prevMessages) => [
@@ -241,12 +260,18 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
   };
 
   const sendMessage = async () => {
+    await checkToken();
+
     let currentThreadId = threadId;
     if (currentThreadId === "new") {
       currentThreadId = await getNewThreadID();
       setThreadId(currentThreadId);
       const newUrl = `/agents/${agentID}/${currentThreadId}`;
-      window.history.replaceState({...window.history.state, as: newUrl, url: newUrl}, '', newUrl);
+      window.history.replaceState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        "",
+        newUrl
+      );
     }
 
     if (!currentThreadId || message.trim() === "") return;
@@ -284,6 +309,9 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
       body: JSON.stringify(chatMessage),
     })
       .then((response) => {
+        if (!response.body) {
+          throw new Error("Response body is null");
+        }
         const reader = response.body
           .pipeThrough(new TextDecoderStream())
           .getReader();
@@ -358,13 +386,16 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
               sources={message.sources}
               setSelectedDocument={setSelectedDocument}
             />
-          ))
-          }
+          ))}
           <div ref={lastMessageRef}></div>
         </ScrollShadow>
         <footer className="flex-shrink-0">
           <InputMessage
-            placeholder={hasWriteAccessToThread? "Enter your message": "You cannot chat with this thread. This could be because the professor disabled the agent or you are viewing a thread that is not yours."}
+            placeholder={
+              hasWriteAccessToThread
+                ? "Enter your message"
+                : "You cannot chat with this thread. This could be because the professor disabled the agent or you are viewing a thread that is not yours."
+            }
             message={message}
             setMessage={setMessage}
             sendMessage={sendMessage}
