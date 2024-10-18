@@ -12,7 +12,7 @@ export const DarkModeSwitch = () => {
       thumbIcon={({ isSelected }) => (isSelected ? <MoonIcon /> : <SunIcon />)}
       onValueChange={(e) => setTheme(e ? "dark" : "light")}
       color="default"
-      size="lg"
+      size="md"
     />
   );
 };
