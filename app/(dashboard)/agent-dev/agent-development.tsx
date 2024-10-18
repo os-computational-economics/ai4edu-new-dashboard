@@ -294,16 +294,12 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
         </div>
       )}
       {isKnowledgeBasePopupOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <KnowledgebasePopup
               isOpen={isKnowledgeBasePopupOpen}
               onClose={() => setIsKnowledgeBasePopupOpen(false)}
               files={files}
               setFiles={handleFilesChange}
             />
-          </div>
-        </div>
       )}
       {isAgentResourcesPopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
