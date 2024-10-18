@@ -23,9 +23,9 @@ const SigninPage: React.FC = () => {
           expires: 15,
           domain: firstLevelDomain,
         });
-        // access token valid for 30 minutes
+        // access token valid for 30 minutes, but we set it to 29 minutes to be safe
         Cookies.set("access_token", access, {
-          expires: 1 / 48,
+          expires: 29 / (24 * 60),
           domain: firstLevelDomain,
         });
 
