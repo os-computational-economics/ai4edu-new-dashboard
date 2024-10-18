@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import DocumentPanel from './components/DocumentPanel'
 import ChatPanel from './components/ChatPanel'
-import { Modal, ModalContent, ModalHeader } from '@nextui-org/react'
+import { Modal, ModalContent, ModalHeader, Button, RadioGroup, Radio } from '@nextui-org/react'
 import { GripVertical } from 'lucide-react'
 
 type Document = {
@@ -11,17 +11,12 @@ type Document = {
   title: string
 }
 
-const documents: Document[] = [
-  // { id: 1, title: 'Document 1' },
-  // { id: 2, title: 'Document 2' },
-  // { id: 3, title: 'Document 3' },
-  // { id: 4, title: 'Document 4' }
-]
-
 const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
   const [selectedDocumentFileID, setSelectedDocumentFileID] = useState<Document | string | null>(null)
   const [selectedDocumentPage, setSelectedDocumentPage] = useState<number>(1)
   const [isChatModalOpen, setIsChatModalOpen] = useState(true)
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
+  const [rating, setRating] = useState(null)
 
   const handleDocumentClick = (document: Document) => {
     setSelectedDocumentFileID(document)
@@ -33,6 +28,13 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
 
   const handleModalClose = () => {
     setSelectedDocumentFileID(null)
+    setIsRatingModalOpen(true)
+    // onClose()
+  }
+
+  const handleRating = (rating) => {
+    console.log('Rating:', rating)
+    setIsRatingModalOpen(false)
     onClose()
   }
 
@@ -44,7 +46,7 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
         size="full"
-        className='dark:bg-black'
+        className="dark:bg-black"
       >
         <ModalContent>
           {(onClose) => (
@@ -60,10 +62,13 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                 </aside>*/}
                 <PanelGroup autoSaveId="chat-interface" direction="horizontal" className="w-full">
                   <Panel defaultSize={25} maxSize={70} minSize={20}>
-                    <DocumentPanel selectedDocument={selectedDocumentFileID} selectedDocumentPage={selectedDocumentPage} />
+                    <DocumentPanel
+                      selectedDocument={selectedDocumentFileID}
+                      selectedDocumentPage={selectedDocumentPage}
+                    />
                   </Panel>
                   <PanelResizeHandle>
-                    <div 
+                    <div
                       className={`flex flex-col rounded-lg h-full items-center my-2 justify-center w-2 bg-gray-200 hover:bg-gray-300 dark:bg-[#191919] dark:hover:bg-[#1d1d1d] transition-colors cursor-col-resize`}
                       style={{ height: 'calc(100% - 1rem)' }}
                     >
@@ -71,12 +76,35 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                     </div>
                   </PanelResizeHandle>
                   <Panel defaultSize={65} maxSize={80} minSize={30}>
-                    <ChatPanel agent={agent} thread={thread} setSelectedDocument={setSelectedDocumentFileID} setSelectedDocumentPage={setSelectedDocumentPage} />
+                    <ChatPanel
+                      agent={agent}
+                      thread={thread}
+                      setSelectedDocument={setSelectedDocumentFileID}
+                      setSelectedDocumentPage={setSelectedDocumentPage}
+                    />
                   </Panel>
                 </PanelGroup>
               </div>
             </>
           )}
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isRatingModalOpen} onClose={() => onClose()} size="md">
+        <ModalContent>
+          <ModalHeader>Is this conversation helpful?</ModalHeader>
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <span>Not helpful</span>
+              <span>Very helpful</span>
+            </div>
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((value) => (
+                <Button key={value} variant="light" onClick={() => handleRating(value)}>
+                  {value}
+                </Button>
+              ))}
+            </div>
+          </div>
         </ModalContent>
       </Modal>
     </div>
