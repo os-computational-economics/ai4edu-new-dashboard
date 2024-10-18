@@ -113,7 +113,7 @@ const Tables = () => {
   return (
     <div className="m-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Course Roster</h1>
+        <h1 className="text-2xl font-bold my-1">Course Roster</h1>
         <div className="flex gap-2 items-center">
           {/* <Tooltip content="Upload student roster from SIS">
             <MdInfoOutline />
@@ -131,7 +131,7 @@ const Tables = () => {
               template
             </a>
           </p>
-          <Button onClick={() => openModal()}>Add Student</Button>
+          <Button color='primary' onClick={() => openModal()}>Add Student</Button>
         </div>
       </div>
 

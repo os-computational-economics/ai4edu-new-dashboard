@@ -1,5 +1,4 @@
 import React from 'react'
-import { MdPerson, MdAndroid } from 'react-icons/md' // Importing icons from 'react-icons'
 import { Button } from '@nextui-org/react'
 import { CSVLink } from 'react-csv'
 import ReactMarkdown from 'react-markdown'
@@ -12,6 +11,7 @@ import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import Link from 'next/link'
 import { Thread } from '@/api/thread/thread'
 import { getCurrentUserStudentID } from '@/utils/CookiesUtil'
+import { Bot, User } from 'lucide-react'
 
 // Define a type for individual messages
 type Message = {
@@ -54,14 +54,13 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
     acc[message.user_id].messages.push(message)
     return acc
   }, {})
-
   return (
     <div className="h-full w-full overflow-y-scroll">
       {Object.values(groupedMessages).map((group, index) => (
         <div key={index} className="mb-4 relative">
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white pb-2 pl-4 pt-2 text-left shadow">
+          <div className="sticky bg-gray-50 backdrop-blur-md bg-opacity-50 dark:bg-black dark:backdrop-blur-md dark:bg-opacity-50 rounded-xl top-0 z-10 flex lg:flex-row flex-col items-center justify-between border dark:border-gray-500 pb-2 px-4 pt-2 text-left">
             <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3>
-            <div className="inline-flex items-center">
+            <div className="inline-flex sm:flex-row flex-col items-center gap-1">
               <CSVLink
                 data={group.messages.map(({ thread_id, created_at, msg_id, user_id, role, content }) => ({
                   ThreadID: thread_id,
@@ -93,18 +92,18 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
             <div key={idx} className={`m-2 p-2 ${message.role === 'human' ? 'text-right' : 'text-left'}`}>
               <div
                 className={`inline-block max-w-[90%] rounded-lg p-2 ${
-                  message.role === 'human' ? 'bg-green-50' : 'bg-amber-50'
+                  message.role === 'human' ? 'bg-slate-200 dark:bg-black dark:text-white' : 'bg-orange-50 dark:bg-slate-800 dark:text-white'
                 }`}
                 style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
               >
                 {/* Icon rendering based on role */}
                 {message.role === 'human' ? (
-                  <MdPerson className="mr-2 inline-block text-lg text-green-700" />
+                  <User className="mr-2 inline-block text-green-600" />
                 ) : (
-                  <MdAndroid className="mr-2 inline-block text-lg text-amber-700" />
+                  <Bot className="mr-2 inline-block text-sky-600" />
                 )}
 
-                <p className="text-sm">
+                <p className="text-sm text-left overflow-x-auto">
                   <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex, rehypeHighlight]}>
                     {preprocessLaTeX(message.content)}
                   </ReactMarkdown>

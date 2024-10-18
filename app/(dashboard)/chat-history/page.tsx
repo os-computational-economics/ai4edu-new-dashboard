@@ -6,7 +6,7 @@ import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 import { WorkspaceContext } from '@/components/layout/layout'
 import { getCurrentUserStudentID, getWorkspaceRole, checkExpired } from '@/utils/CookiesUtil'
-
+import { Card, ScrollShadow } from '@nextui-org/react'
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
 
@@ -76,30 +76,39 @@ export default function App() {
   }
 
   const totalPages = Math.ceil(total / pageSize)
-  const matching_thread = threads.filter(e => e.thread_id == threadDetails?.thread_id)[0]
+  const matching_thread = threads.filter((e) => e.thread_id == threadDetails?.thread_id)[0]
 
   return (
-    <div className="flex h-[calc(100vh-80px)] w-98% gap-4 m-2">
-      <ToastContainer />
-      <div className="flex w-2/5 flex-col bg-white">
-        <div className="flex-grow overflow-auto">
-          <CardList threads={threads} onSelect={handleSelectThread} />
-        </div>
-        <div className="flex flex-shrink-0 flex-col items-center justify-center p-4">
-          {total > 0 && (
-            <>
-              <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
-              <div className="mt-2 text-small text-default-600">{`Total ${total} thread${total === 1 ? `` : `s`}`}</div>
-            </>
-          )}
-        </div>
+    <div className="flex flex-col">
+      <div className="m-1 mx-4">
+        <h1 className="text-xl font-bold my-1">Chat History</h1>
       </div>
-      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 shadow-sm pr-1">
-        {threadDetails ? (
-          <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
-        ) : (
-          <div className="text-black-500 text-lg font-semibold">Please select a thread to view its details.</div>
-        )}
+      <div className="flex h-[calc(100vh-85px)] w-98%">
+        <ToastContainer />
+        <div className="flex w-2/5 flex-col">
+          <div className="flex-grow overflow-auto">
+            <ScrollShadow size={20} className="w-full h-full">
+              <CardList threads={threads} onSelect={handleSelectThread} />
+            </ScrollShadow>
+          </div>
+          <div className="flex flex-shrink-0 flex-col items-center justify-center mt-4 z-0">
+            {total > 0 && (
+              <>
+                <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
+                <div className="mt-2 text-small text-default-600">{`Total ${total} thread${
+                  total === 1 ? `` : `s`
+                }`}</div>
+              </>
+            )}
+          </div>
+        </div>
+        <Card className="flex w-3/5 flex-col items-center justify-center border p-2 mx-3 mb-6 dark:border-gray-500">
+          {threadDetails ? (
+            <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
+          ) : (
+            <div className="text-black-500 text-lg font-semibold">Please select a thread to view its details.</div>
+          )}
+        </Card>
       </div>
     </div>
   )

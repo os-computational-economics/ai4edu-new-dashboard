@@ -1,9 +1,7 @@
-// @ts-nocheck
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 
 import { Card, Textarea, ScrollShadow, Button } from "@nextui-org/react";
-import { MdAttachFile, MdExpandLess, MdExpandMore } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 
 import Cookies from "js-cookie";
@@ -12,36 +10,56 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 
+import { checkToken } from "@/utils/CookiesUtil";
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
-import { FileUploadForm } from "./FileUpload";
+// import { FileUploadForm } from "./FileUpload";
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/atom-one-dark.min.css";
 import { getThreadbyID } from "@/api/thread/thread";
 import useMount from "@/components/hooks/useMount";
+import { Bot, User } from "lucide-react";
+
+interface Source {
+  index: number;
+  fileName: string;
+  page: number;
+  fileID: string;
+}
+
+interface Message {
+  content: string;
+  align: string;
+  sources?: Source[];
+  user_id?: string;
+}
 
 function Message({
   content,
   align,
   sources,
   setSelectedDocument,
+  setSelectedDocumentPage,
 }: {
   content: string;
   align: string;
-  sources?: string[];
+  sources?: Source[];
+  setSelectedDocument: (fileID: string) => void;
+  setSelectedDocumentPage: (page: number) => void;
 }) {
   const [showSources, setShowSources] = useState(false);
 
   const className =
     align === "end"
-      ? "bg-black text-white font-medium self-end max-w-2/3"
-      : "bg-neutral-200 max-w-[90%]";
-  const additionalClasses = "rounded-2xl px-4 py-2 text-md"; // Added text-sm for smaller text
+      ? "bg-slate-200 dark:bg-black dark:text-white font-medium max-w-[90%]"
+      : "bg-orange-50 dark:bg-slate-800 dark:text-white max-w-[90%]";
+  const additionalClasses = "rounded-2xl px-4 py-2"; // Added text-sm for smaller text
 
-  const onSourceClick = (sourceFileID) => {
+  const onSourceClick = (sourceFileID: string, sourcePage: number) => {
     setSelectedDocument(sourceFileID);
+    setSelectedDocumentPage(sourcePage);
   };
 
   return (
@@ -49,36 +67,44 @@ function Message({
       className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}
     >
       <div className={`${className} ${additionalClasses}`}>
-        <ReactMarkdown
-          remarkPlugins={[remarkMath]}
-          rehypePlugins={[rehypeKatex, rehypeHighlight]}
-        >
-          {preprocessLaTeX(content)}
-        </ReactMarkdown>
+        {align === "end" ? (
+          <div className="text-right w-full">
+            <User className="inline-block size-6 text-green-600" />
+          </div>
+        ) : (
+          <Bot className="size-7 text-sky-600" />
+        )}
+        <p className="overflow-x-auto">
+          <ReactMarkdown
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+          >
+            {preprocessLaTeX(content)}
+          </ReactMarkdown>
+        </p>
       </div>
       {sources && sources.length > 0 && (
         <div className="mt-2">
           <Button
-            color="#F4F4F5"
+            color="secondary"
             size="sm"
             variant="light"
             radius="sm"
-            iconRight={showSources ? <MdExpandLess /> : <MdExpandMore />}
             onClick={() => setShowSources(!showSources)}
           >
             {showSources ? "Hide Sources" : "Display Sources"}
           </Button>
           {showSources && (
-            <ul className="mt-2 bg-gray-100 p-2 rounded-lg">
+            <ul className="mt-2 bg-gray-100 dark:bg-neutral-800 p-2 rounded-lg">
               {sources.map((source, index) => (
                 <li
                   key={index}
                   className="text-sm hover:cursor-pointer"
-                  onClick={() => onSourceClick(source.fileID)}
+                  onClick={() => onSourceClick(source.fileID, source.page)}
                 >
                   <div>
-                    <span>{source.index}.</span>{" "}
-                    <span className="text-blue-800">
+                    <span className="dark:text-white">{source.index}.</span>{" "}
+                    <span className="text-blue-800 dark:text-blue-200">
                       {source.fileName}, page {source.page}
                     </span>
                   </div>
@@ -100,28 +126,39 @@ function InputMessage({
   message,
   setMessage,
   sendMessage,
-  FileUploadForm,
   inputDisabled,
+  FileUploadForm,
 }: {
   placeholder: string;
   message: string;
   setMessage: (value: string) => void;
   sendMessage: () => void;
+  inputDisabled: boolean;
+  FileUploadForm?: () => void;
 }) {
   return (
-    <div className="flex gap-2 px-4 py-2 inset-x-0 bottom-0 bg-white rounded-xl">
+    <div className="flex gap-2 px-1 py-1 inset-x-0 bottom-0 rounded-xl">
       <Textarea
         placeholder={placeholder}
         className="flex-grow"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
         onKeyUp={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
+            e.stopPropagation();
             sendMessage();
           }
         }}
         disabled={inputDisabled}
+        minRows={1}
+        maxRows={10}
       />
       {/* <Button isIconOnly variant="light" aria-label="Attach file" onClick={FileUploadForm}>
         <MdAttachFile className="text-2xl" />
@@ -139,18 +176,27 @@ function InputMessage({
   );
 }
 
-const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
-  const [messages, setMessages] = useState([]);
+const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage }) => {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
   const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
-  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState(null);
+  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState<
+    boolean | null
+  >(null);
+  const [isResponseStreaming, setIsResponseStreaming] = useState(false);
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
   const workspace_id =
     agent?.workspace_id || JSON.parse(localStorage.getItem("workspace")!)?.id;
-  const lastMessageRef = useRef(null);
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: isResponseStreaming ? "auto" : "smooth", block: 'end' });
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (hasWriteAccessToThread !== null || !agent || messages.length === 0) {
@@ -162,9 +208,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     if (agent?.status === 1) {
       const firstMessage = messages[0];
       const currentUserID = getCurrentUserStudentID();
-      setHasWriteAccessToThread(
-        firstMessage.user_id === currentUserID
-      );
+      setHasWriteAccessToThread(firstMessage.user_id === currentUserID);
     } else {
       // if agent is not active or deleted, user can't write to the thread anyway, so no need to check
       setHasWriteAccessToThread(false);
@@ -176,14 +220,16 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     // if query param new_thread=true, don't fetch messages, and remove the query param
     const urlParams = new URLSearchParams(window.location.search);
     // check if threadId is a UUID
-    const threadIdIsUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      threadId
-    );
+    const threadIdIsUUID =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        threadId
+      );
     if (threadIdIsUUID) {
       getThreadbyID(params).then((res) => {
         setMessages(
           res.messages.map((message) => ({
-            ...message,
+            content: message.content,
+            user_id: message.user_id,
             align: message.role === "human" ? "end" : "start",
           }))
         );
@@ -194,7 +240,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
       // invalid url, redirect to home
       window.location.href = "/";
     }
-  }, [agent]);
+  });
 
   const appendMessage = (content, align, sources = []) => {
     setMessages((prevMessages) => [
@@ -233,13 +279,28 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
     }
   };
 
+  const revertLastMessage = (sentMessage) => {
+    setMessages((prevMessages) => {
+      const newMessages = [...prevMessages];
+      newMessages.pop(); // Remove the last message
+      return newMessages;
+    });
+    setMessage(sentMessage); // Restore the message content
+  };
+
   const sendMessage = async () => {
+    await checkToken();
+
     let currentThreadId = threadId;
     if (currentThreadId === "new") {
       currentThreadId = await getNewThreadID();
       setThreadId(currentThreadId);
       const newUrl = `/agents/${agentID}/${currentThreadId}`;
-      window.history.replaceState({...window.history.state, as: newUrl, url: newUrl}, '', newUrl);
+      window.history.replaceState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        "",
+        newUrl
+      );
     }
 
     if (!currentThreadId || message.trim() === "") return;
@@ -277,6 +338,10 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
       body: JSON.stringify(chatMessage),
     })
       .then((response) => {
+        if (!response.body) {
+          throw new Error("Response body is null");
+        }
+        setIsResponseStreaming(true);
         const reader = response.body
           .pipeThrough(new TextDecoderStream())
           .getReader();
@@ -327,18 +392,21 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
               }
             }
           }
+          setIsResponseStreaming(false);
         };
 
         processStream();
       })
       .catch((err) => {
         console.error(err);
+        setIsResponseStreaming(false);
+        revertLastMessage(message); // Revert the message on error
       });
   };
 
   return (
-    <Card className="mt-1 mb-1 h-full rounded-xl">
-      <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full h-full">
+    <Card className="m-2 ml-1" style={{ height: 'calc(100% - 1rem)' }}>
+      <div className="flex flex-col grow px-4 pt-5 pb-2 w-full text-base leading-6 max-md:px-5 max-md:max-w-full h-full">
         <ScrollShadow
           size={20}
           className="flex flex-col overflow-auto h-full pr-4"
@@ -350,13 +418,18 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
               align={message.align}
               sources={message.sources}
               setSelectedDocument={setSelectedDocument}
+              setSelectedDocumentPage={setSelectedDocumentPage}
             />
           ))}
-          <div ref={lastMessageRef}></div>
+          <div ref={lastMessageRef} className="min-h-3"></div>
         </ScrollShadow>
         <footer className="flex-shrink-0">
           <InputMessage
-            placeholder={hasWriteAccessToThread? "Enter your message": "You cannot chat with this thread. This could be because the professor disabled the agent or you are viewing a thread that is not yours."}
+            placeholder={
+              hasWriteAccessToThread
+                ? "Enter your message"
+                : "You cannot chat with this thread. This could be because the professor disabled the agent or you are viewing a thread that is not yours."
+            }
             message={message}
             setMessage={setMessage}
             sendMessage={sendMessage}

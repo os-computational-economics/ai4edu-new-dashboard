@@ -30,6 +30,7 @@ export const NavbarWrapper = ({ children }: Props) => {
         classNames={{
           wrapper: 'w-full max-w-full'
         }}
+        height={"40px"}
       >
         {/* {currentWorkspace ? (
           <NavbarContent justify="start">
@@ -48,7 +49,7 @@ export const NavbarWrapper = ({ children }: Props) => {
           </NavbarContent>
         </NavbarContent>
       </Navbar>
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 dark:bg-[#121212]">{children}</div>
     </div>
   )
 }

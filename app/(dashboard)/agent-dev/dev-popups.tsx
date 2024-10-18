@@ -42,16 +42,16 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
   const tabs = ['All', 'Documents']
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
-        <div className="flex justify-between items-center p-4 border-b">
+    <dialog className="inset-0 bg-black bg-opacity-60 flex items-center justify-center w-full h-full z-50">
+      <div className="bg-white dark:bg-[#141414] rounded-xl w-3/4 h-3/4 flex flex-col">
+        <div className="flex justify-between items-center p-4 border-b dark:border-gray-500">
           <h2 className="text-2xl font-bold">Knowledge Base</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <IoClose size={24} />
           </button>
         </div>
 
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b dark:border-gray-500">
           <div className="flex space-x-4">
             {tabs.map((tab) => (
               <button
@@ -70,7 +70,7 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
               <input
                 type="text"
                 placeholder="Search..."
-                className="pl-8 pr-4 py-2 border rounded-md"
+                className="pl-8 pr-4 py-2 border rounded-md dark:border-gray-500"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -98,9 +98,9 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
 
         <div className="flex-grow p-4 overflow-y-auto">
           {Object.keys(files).length > 0 ? (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {Object.entries(files).map(([fileId, fileName]) => (
-                <div key={fileId} className="border p-4 rounded-lg shadow-sm flex justify-between items-center">
+                <div key={fileId} className="border p-4 rounded-lg shadow-sm flex justify-between items-center dark:bg-[#1c1c1c] dark:border-gray-500">
                   <h3 className="text-lg font-medium">{fileName as string}</h3>
                   <button
                     className="text-red-500 hover:text-red-700"
@@ -122,7 +122,7 @@ export const KnowledgebasePopup = ({ isOpen, onClose, files, setFiles }) => {
           )}
         </div>
       </div>
-    </div>
+    </dialog>
   )
 }
 
@@ -136,7 +136,7 @@ export const AgentResourcesPopup = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
+      <div className=" rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Agent Resources</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -200,7 +200,7 @@ export const WorkflowPopup = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-3/4 h-3/4 flex flex-col">
+      <div className=" rounded-lg w-3/4 h-3/4 flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-2xl font-bold">Workflow</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">

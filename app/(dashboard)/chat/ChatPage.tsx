@@ -1,10 +1,10 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import Objectives from './components/Objectives'
 import DocumentPanel from './components/DocumentPanel'
 import ChatPanel from './components/ChatPanel'
 import { Modal, ModalContent, ModalHeader } from '@nextui-org/react'
+import { GripVertical } from 'lucide-react'
 
 type Document = {
   id: number
@@ -20,6 +20,7 @@ const documents: Document[] = [
 
 const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
   const [selectedDocumentFileID, setSelectedDocumentFileID] = useState<Document | string | null>(null)
+  const [selectedDocumentPage, setSelectedDocumentPage] = useState<number>(1)
   const [isChatModalOpen, setIsChatModalOpen] = useState(true)
 
   const handleDocumentClick = (document: Document) => {
@@ -43,11 +44,12 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
         size="full"
+        className='dark:bg-black'
       >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 bg-white">
+              <ModalHeader className="flex flex-col gap-1">
                 {agent?.workspace_id} - {agent?.agent_name}
               </ModalHeader>
               <div className="flex h-[calc(100vh-62px)]">
@@ -58,11 +60,18 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                 </aside>*/}
                 <PanelGroup autoSaveId="chat-interface" direction="horizontal" className="w-full">
                   <Panel defaultSize={25} maxSize={70} minSize={20}>
-                    <DocumentPanel selectedDocument={selectedDocumentFileID} />
+                    <DocumentPanel selectedDocument={selectedDocumentFileID} selectedDocumentPage={selectedDocumentPage} />
                   </Panel>
-                  <PanelResizeHandle />
+                  <PanelResizeHandle>
+                    <div 
+                      className={`flex flex-col rounded-lg h-full items-center my-2 justify-center w-2 bg-gray-200 hover:bg-gray-300 dark:bg-[#191919] dark:hover:bg-[#1d1d1d] transition-colors cursor-col-resize`}
+                      style={{ height: 'calc(100% - 1rem)' }}
+                    >
+                      <GripVertical className="w-4 h-4 text-gray-400" />
+                    </div>
+                  </PanelResizeHandle>
                   <Panel defaultSize={65} maxSize={80} minSize={30}>
-                    <ChatPanel agent={agent} thread={thread} setSelectedDocument={setSelectedDocumentFileID}  />
+                    <ChatPanel agent={agent} thread={thread} setSelectedDocument={setSelectedDocumentFileID} setSelectedDocumentPage={setSelectedDocumentPage} />
                   </Panel>
                 </PanelGroup>
               </div>

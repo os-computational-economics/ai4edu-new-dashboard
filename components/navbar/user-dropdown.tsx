@@ -6,6 +6,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 
 export const UserDropdown = () => {
   const [fullName, setFullName] = useState('')
+  const [nameInitials, setNameInitials] = useState('')
   const [email, setEmail] = useState('')
 
   const Logout = () => {
@@ -25,24 +26,29 @@ export const UserDropdown = () => {
 
     if (access_token) {
       const decodedToken = jwt.decode(access_token) as JwtPayload
-      console.log('decodedToken', decodedToken)
       setEmail(decodedToken.email || '-')
       setFullName(`${decodedToken.first_name} ${decodedToken.last_name}` || '-')
+      setNameInitials(`${decodedToken.first_name?.charAt(0)}${decodedToken.last_name?.charAt(0)}`)
       // cache full name and email into cookies for 15 days,
       // so that when access token expires but refresh token is still valid,
       // we can still show user's name and email
+      Cookies.set('name_initials', `${decodedToken.first_name?.charAt(0)}${decodedToken.last_name?.charAt(0)}`, {
+        expires: 15,
+        domain: firstLevelDomain
+      });
       Cookies.set('full_name', `${decodedToken.first_name} ${decodedToken.last_name}`, {
         expires: 15,
         domain: firstLevelDomain
-      })
+      });
       Cookies.set('email', decodedToken.email, {
         expires: 15,
         domain: firstLevelDomain
-      })
+      });
       Cookies.set('student_id', decodedToken.student_id, { expires: 15, domain: firstLevelDomain })
     } else if (refresh_token) {
       setFullName(Cookies.get('full_name') || '-')
       setEmail(Cookies.get('email') || '-')
+      setNameInitials(Cookies.get('name_initials') || '')
     }
   }, [])
 
@@ -53,10 +59,13 @@ export const UserDropdown = () => {
         
         <DropdownTrigger>
           {
+            // use first letter of first name and last name
           <Avatar
             as="button"
-            color="secondary"
-            size="md"
+            color="default"
+            size="sm"
+            radius='md'
+            name={`${nameInitials}`}
           />
           }
         </DropdownTrigger>

@@ -62,7 +62,7 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
         <ModalContent>
           <ModalHeader>Join Workspace</ModalHeader>
           <ModalBody>
-            <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-lg">
+            <div className="flex items-center gap-2 p-3 rounded-lg">
               <MdInfoOutline size={24} />
               <span className="text-black-100 text-xs">
                 To join a new workspace, enter the{" "}

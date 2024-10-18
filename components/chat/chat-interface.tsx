@@ -61,7 +61,7 @@ const ChatUser: React.FC<ChatUserProps> = ({ name, status }) => (
 const ChatDate: React.FC<ChatDateProps> = ({ date }) => <time className="mt-9 text-center text-zinc-500">{date}</time>
 
 const InputMessage: React.FC<InputMessageProps> = ({ placeholder }) => (
-  <form className="flex gap-2 px-4 py-2 mt-10 inset-x-0 bottom-0 bg-white rounded-xl border border-solid border-neutral-200 text-zinc-500">
+  <form className="flex gap-2 px-4 py-2 mt-10 inset-x-0 bottom-0 rounded-xl border border-solid border-neutral-200 text-zinc-500">
     <Textarea placeholder={placeholder} className="flex-grow" />
     <img
       loading="lazy"
@@ -106,7 +106,7 @@ export const Chat = () => {
   return (
     <div className="flex h-[90vh]">
       <aside className="z-[20] h-full">
-        <div className="flex flex-col grow pb-20 w-full bg-white">
+        <div className="flex flex-col grow pb-20 w-full">
           <header className="flex flex-col justify-center text-center mx-4 max-md:mx-2.5">
             <section className="flex flex-col justify-center">
               <h2 className="justify-center px-4 py-2 mt-6 text-base font-medium text-white bg-black rounded-lg max-md:px-5">
@@ -253,8 +253,8 @@ export const Chat = () => {
         <PanelResizeHandle />
         <Panel defaultSize={75} maxSize={80} minSize={30}>
           <Card className="m-1">
-            <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 bg-white max-md:px-5 max-md:max-w-full">
-              <header className="flex z-10 gap-5 justify-center items-start px-6 w-full bg-white border-b border-solid border-neutral-200 max-md:flex-wrap max-md:px-5 max-md:max-w-full">
+            <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 max-md:px-5 max-md:max-w-full">
+              <header className="flex z-10 gap-5 justify-center items-start px-6 w-full border-b border-solid border-neutral-200 max-md:flex-wrap max-md:px-5 max-md:max-w-full">
                 <ChatUser name="Agent Name" status="Powered by ChatGPT" />
               </header>
               <main className="flex flex-col mt-9 h-full">
