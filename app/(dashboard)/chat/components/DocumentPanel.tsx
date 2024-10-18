@@ -17,11 +17,13 @@ interface SelectedCourse {
 
 interface DocumentPanelProps {
   selectedDocument: Document | string | null
+  selectedDocumentPage: number
 }
 
-export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) {
+export default function DocumentPanel({ selectedDocument, selectedDocumentPage }: DocumentPanelProps) {
   const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(null)
   const [documentUrl, setDocumentUrl] = useState<string | null>(null)
+  const [documentPage, setDocumentPage] = useState<number | null>(null)
 
   useEffect(() => {
     const storedSelectedCourse = JSON.parse(localStorage.getItem('selectedCourse') || '{}')
@@ -31,12 +33,15 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
   }, [])
 
   useEffect(() => {
-    if (selectedDocument) {
+    if (!documentUrl?.includes(selectedDocument as string) || documentPage !== selectedDocumentPage) {
       getPresignedURLForFile({ fileID: selectedDocument as string }).then((response) => {
-        if (response.url) setDocumentUrl(response.url)
+        if (response.url) {
+          setDocumentUrl(response.url+`#page=${selectedDocumentPage}`);
+          setDocumentPage(selectedDocumentPage);
+        }
       })
     }
-  }, [selectedDocument])
+  }, [selectedDocument, selectedDocumentPage])
 
   return (
     <Card className="m-2 mr-1" style={{ height: 'calc(100% - 1rem)' }}>
@@ -46,7 +51,7 @@ export default function DocumentPanel({ selectedDocument }: DocumentPanelProps) 
           <div className="text-wrap w-full h-full">
             {selectedDocument ? (
               <>
-                <iframe src={documentUrl as string} title="Document" className="w-full h-full" />
+                <iframe src={documentUrl as string} title="Document" className="w-full h-full rounded-xl" />
               </>
             ) : (
               <div>

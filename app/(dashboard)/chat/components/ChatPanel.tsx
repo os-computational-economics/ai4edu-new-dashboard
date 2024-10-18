@@ -41,11 +41,13 @@ function Message({
   align,
   sources,
   setSelectedDocument,
+  setSelectedDocumentPage,
 }: {
   content: string;
   align: string;
   sources?: Source[];
   setSelectedDocument: (fileID: string) => void;
+  setSelectedDocumentPage: (page: number) => void;
 }) {
   const [showSources, setShowSources] = useState(false);
 
@@ -55,8 +57,9 @@ function Message({
       : "bg-orange-50 dark:bg-slate-800 dark:text-white max-w-[90%]";
   const additionalClasses = "rounded-2xl px-4 py-2"; // Added text-sm for smaller text
 
-  const onSourceClick = (sourceFileID) => {
+  const onSourceClick = (sourceFileID: string, sourcePage: number) => {
     setSelectedDocument(sourceFileID);
+    setSelectedDocumentPage(sourcePage);
   };
 
   return (
@@ -97,7 +100,7 @@ function Message({
                 <li
                   key={index}
                   className="text-sm hover:cursor-pointer"
-                  onClick={() => onSourceClick(source.fileID)}
+                  onClick={() => onSourceClick(source.fileID, source.page)}
                 >
                   <div>
                     <span className="dark:text-white">{source.index}.</span>{" "}
@@ -173,7 +176,7 @@ function InputMessage({
   );
 }
 
-const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
+const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
@@ -405,6 +408,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
               align={message.align}
               sources={message.sources}
               setSelectedDocument={setSelectedDocument}
+              setSelectedDocumentPage={setSelectedDocumentPage}
             />
           ))}
           <div ref={lastMessageRef} className="min-h-3"></div>
