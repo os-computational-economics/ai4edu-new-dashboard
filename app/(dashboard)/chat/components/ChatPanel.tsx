@@ -279,6 +279,15 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
     }
   };
 
+  const revertLastMessage = (sentMessage) => {
+    setMessages((prevMessages) => {
+      const newMessages = [...prevMessages];
+      newMessages.pop(); // Remove the last message
+      return newMessages;
+    });
+    setMessage(sentMessage); // Restore the message content
+  };
+
   const sendMessage = async () => {
     await checkToken();
 
@@ -391,6 +400,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
       .catch((err) => {
         console.error(err);
         setIsResponseStreaming(false);
+        revertLastMessage(message); // Revert the message on error
       });
   };
 
