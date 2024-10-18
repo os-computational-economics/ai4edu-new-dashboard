@@ -80,10 +80,10 @@ export default function App() {
 
   return (
     <div className="flex flex-col">
-      <div className="m-4">
-        <h1 className="text-2xl font-bold my-1">Chat History</h1>
+      <div className="m-1 mx-4">
+        <h1 className="text-xl font-bold my-1">Chat History</h1>
       </div>
-      <div className="flex h-[calc(100vh-80px-70px)] w-98% ">
+      <div className="flex h-[calc(100vh-85px)] w-98%">
         <ToastContainer />
         <div className="flex w-2/5 flex-col">
           <div className="flex-grow overflow-auto">

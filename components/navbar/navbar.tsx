@@ -30,6 +30,7 @@ export const NavbarWrapper = ({ children }: Props) => {
         classNames={{
           wrapper: 'w-full max-w-full'
         }}
+        height={"40px"}
       >
         {/* {currentWorkspace ? (
           <NavbarContent justify="start">
