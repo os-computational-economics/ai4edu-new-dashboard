@@ -103,7 +103,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
                   <Bot className="mr-2 inline-block text-sky-600" />
                 )}
 
-                <p className="text-sm">
+                <p className="text-sm text-left">
                   <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex, rehypeHighlight]}>
                     {preprocessLaTeX(message.content)}
                   </ReactMarkdown>

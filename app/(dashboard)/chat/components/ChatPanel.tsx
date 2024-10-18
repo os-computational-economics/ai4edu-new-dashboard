@@ -51,7 +51,7 @@ function Message({
 
   const className =
     align === "end"
-      ? "bg-black text-white font-medium self-end max-w-2/3"
+      ? "bg-black text-white font-medium max-w-[90%]"
       : "bg-neutral-200 max-w-[90%] dark:bg-gray-800 dark:text-white";
   const additionalClasses = "rounded-2xl px-4 py-2"; // Added text-sm for smaller text
 
@@ -65,9 +65,11 @@ function Message({
     >
       <div className={`${className} ${additionalClasses}`}>
         {align === "end" ? (
-          <User className="mr-2 size-6 text-green-300" />
+          <div className="text-right w-full">
+            <User className="inline-block size-6 text-green-300" />
+          </div>
         ) : (
-          <Bot className="mr-2 size-7 text-sky-600" />
+          <Bot className="size-7 text-sky-600" />
         )}
         <ReactMarkdown
           remarkPlugins={[remarkMath]}
@@ -88,7 +90,7 @@ function Message({
             {showSources ? "Hide Sources" : "Display Sources"}
           </Button>
           {showSources && (
-            <ul className="mt-2 bg-gray-100 p-2 rounded-lg">
+            <ul className="mt-2 bg-gray-100 dark:bg-neutral-800 p-2 rounded-lg">
               {sources.map((source, index) => (
                 <li
                   key={index}
@@ -96,8 +98,8 @@ function Message({
                   onClick={() => onSourceClick(source.fileID)}
                 >
                   <div>
-                    <span>{source.index}.</span>{" "}
-                    <span className="text-blue-800">
+                    <span className="dark:text-white">{source.index}.</span>{" "}
+                    <span className="text-blue-800 dark:text-blue-200">
                       {source.fileName}, page {source.page}
                     </span>
                   </div>
@@ -130,19 +132,28 @@ function InputMessage({
   FileUploadForm?: () => void;
 }) {
   return (
-    <div className="flex gap-2 px-4 py-2 inset-x-0 bottom-0 rounded-xl">
+    <div className="flex gap-2 px-1 py-1 inset-x-0 bottom-0 rounded-xl">
       <Textarea
         placeholder={placeholder}
         className="flex-grow"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
         onKeyUp={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
+            e.stopPropagation();
             sendMessage();
           }
         }}
         disabled={inputDisabled}
+        minRows={1}
+        maxRows={10}
       />
       {/* <Button isIconOnly variant="light" aria-label="Attach file" onClick={FileUploadForm}>
         <MdAttachFile className="text-2xl" />
@@ -370,7 +381,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
 
   return (
     <Card className="m-2 ml-1" style={{ height: 'calc(100% - 1rem)' }}>
-      <div className="flex flex-col grow px-6 py-4 w-full text-base leading-6 max-md:px-5 max-md:max-w-full h-full">
+      <div className="flex flex-col grow px-4 pt-5 pb-2 w-full text-base leading-6 max-md:px-5 max-md:max-w-full h-full">
         <ScrollShadow
           size={20}
           className="flex flex-col overflow-auto h-full pr-4"
