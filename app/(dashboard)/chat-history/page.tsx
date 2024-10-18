@@ -102,7 +102,7 @@ export default function App() {
             )}
           </div>
         </div>
-        <Card className="flex w-3/5 flex-col items-center justify-center border p-4 mx-3 mb-6 pr-1 dark:border-gray-500">
+        <Card className="flex w-3/5 flex-col items-center justify-center border p-2 mx-3 mb-6 dark:border-gray-500">
           {threadDetails ? (
             <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
           ) : (

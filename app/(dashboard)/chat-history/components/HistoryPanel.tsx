@@ -58,7 +58,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
     <div className="h-full w-full overflow-y-scroll">
       {Object.values(groupedMessages).map((group, index) => (
         <div key={index} className="mb-4 relative">
-          <div className="sticky bg-white dark:bg-black rounded-xl top-0 z-10 flex lg:flex-row flex-col items-center justify-between border dark:border-gray-500 pb-2 px-4 pt-2 text-left">
+          <div className="sticky bg-gray-50 backdrop-blur-md bg-opacity-50 dark:bg-black dark:backdrop-blur-md dark:bg-opacity-50 rounded-xl top-0 z-10 flex lg:flex-row flex-col items-center justify-between border dark:border-gray-500 pb-2 px-4 pt-2 text-left">
             <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3>
             <div className="inline-flex sm:flex-row flex-col items-center gap-1">
               <CSVLink
