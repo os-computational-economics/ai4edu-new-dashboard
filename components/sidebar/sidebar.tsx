@@ -11,7 +11,7 @@ import { CustomersIcon } from '../icons/sidebar/customers-icon'
 import { CollapseItems } from './collapse-items'
 import { isAdmin, formatedCourses } from '@/utils/CookiesUtil'
 import { useRouter } from 'next/navigation'
-import { Users, BotMessageSquare, History, Settings, KeySquare } from 'lucide-react'
+import { Users, BotMessageSquare, History, Settings, KeySquare, LayoutDashboard } from 'lucide-react'
 
 interface SelectedCourse {
   id: string
@@ -54,7 +54,7 @@ export const SidebarWrapper = () => {
   }, [])
 
   const renderCommonItems = (): React.ReactNode[] => {
-    return [<SidebarItem key="dashboard" title="Dashboard" icon={<HomeIcon />} isActive={pathname === '/'} href="/" />]
+    return [<SidebarItem key="dashboard" title="Dashboard" icon={<LayoutDashboard />} isActive={pathname === '/'} href="/" />]
   }
 
   const renderSidebarItems = (role: string): React.ReactNode[] => {
