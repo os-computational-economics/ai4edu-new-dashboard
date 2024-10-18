@@ -8,11 +8,11 @@ const ThreadCard = ({ thread, onSelect }) => (
     <CardHeader className="justify-between mb-0 pb-0">
       <div className="flex gap-1">
         <h2 className="text-large font-semibold text-default-600">{thread.agent_name}</h2>
-        <Chip size='sm' className='rounded-lg'>{thread.workspace_id}</Chip>
       </div>
     </CardHeader>
     <CardFooter>
       <div className="flex justify-between w-full">
+      <Chip size='sm' className='rounded-lg'>{thread.workspace_id}</Chip>
         <p className="text-small font-semibold text-default-600">
           {new Date(`${thread.created_at}Z`).toLocaleString()}
         </p>

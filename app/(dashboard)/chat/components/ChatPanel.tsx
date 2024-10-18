@@ -2,10 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { Card, Textarea, ScrollShadow, Button } from "@nextui-org/react";
-import {
-  MdPerson,
-  MdAndroid,
-} from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 
 import Cookies from "js-cookie";
@@ -24,6 +20,7 @@ import "katex/dist/katex.min.css";
 import "highlight.js/styles/atom-one-dark.min.css";
 import { getThreadbyID } from "@/api/thread/thread";
 import useMount from "@/components/hooks/useMount";
+import { Bot, User } from "lucide-react";
 
 interface Source {
   index: number;
@@ -55,8 +52,8 @@ function Message({
   const className =
     align === "end"
       ? "bg-black text-white font-medium self-end max-w-2/3"
-      : "bg-neutral-200 max-w-[90%]";
-  const additionalClasses = "rounded-2xl px-4 py-2 text-md"; // Added text-sm for smaller text
+      : "bg-neutral-200 max-w-[90%] dark:bg-gray-800 dark:text-white";
+  const additionalClasses = "rounded-2xl px-4 py-2"; // Added text-sm for smaller text
 
   const onSourceClick = (sourceFileID) => {
     setSelectedDocument(sourceFileID);
@@ -68,9 +65,9 @@ function Message({
     >
       <div className={`${className} ${additionalClasses}`}>
         {align === "end" ? (
-          <MdPerson className="mr-2 inline-block text-4xl text-green-700" />
+          <User className="mr-2 size-6 text-green-300" />
         ) : (
-          <MdAndroid className="mr-2 inline-block text-4xl text-amber-700" />
+          <Bot className="mr-2 size-7 text-sky-600" />
         )}
         <ReactMarkdown
           remarkPlugins={[remarkMath]}

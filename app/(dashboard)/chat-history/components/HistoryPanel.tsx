@@ -1,5 +1,4 @@
 import React from 'react'
-import { MdPerson, MdAndroid } from 'react-icons/md' // Importing icons from 'react-icons'
 import { Button } from '@nextui-org/react'
 import { CSVLink } from 'react-csv'
 import ReactMarkdown from 'react-markdown'
@@ -12,7 +11,7 @@ import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import Link from 'next/link'
 import { Thread } from '@/api/thread/thread'
 import { getCurrentUserStudentID } from '@/utils/CookiesUtil'
-import { useTheme as useNextTheme } from "next-themes";
+import { Bot, User } from 'lucide-react'
 
 // Define a type for individual messages
 type Message = {
@@ -93,15 +92,15 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
             <div key={idx} className={`m-2 p-2 ${message.role === 'human' ? 'text-right' : 'text-left'}`}>
               <div
                 className={`inline-block max-w-[90%] rounded-lg p-2 ${
-                  message.role === 'human' ? 'bg-green-600' : 'bg-amber-600'
+                  message.role === 'human' ? 'bg-gray-100 dark:bg-black dark:text-white' : 'bg-slate-300 dark:bg-gray-800 dark:text-white'
                 }`}
                 style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
               >
                 {/* Icon rendering based on role */}
                 {message.role === 'human' ? (
-                  <MdPerson className="mr-2 inline-block text-lg text-green-700" />
+                  <User className="mr-2 inline-block text-green-600" />
                 ) : (
-                  <MdAndroid className="mr-2 inline-block text-lg text-amber-700" />
+                  <Bot className="mr-2 inline-block text-sky-600" />
                 )}
 
                 <p className="text-sm">
