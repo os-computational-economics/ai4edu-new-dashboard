@@ -47,12 +47,12 @@ const CourseCard = ({ course }) => {
   }
 
   return (
-    <Card className="py-4 w-[300px]" isPressable onPress={handleCourseClick}>
-      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-        <p className="text-tiny uppercase font-bold truncate w-full">{course.name}</p>
-        <small className="text-default-500 truncate w-full">{course.id}</small>
+    <Card className="py-3 w-full max-w-80" isPressable onPress={handleCourseClick}>
+      <CardHeader className="pb-2 pt-0 px-4 flex-col items-start">
+        <p className="text-medium font-bold truncate w-full">{course.name}</p>
+        <small className="text-default-500 truncate w-full uppercase">{course.id}</small>
       </CardHeader>
-      <CardBody className="overflow-visible py-2">
+      <CardBody className="overflow-visible py-0 px-3">
         <Image
           alt="Card background"
           className="object-cover rounded-xl"
@@ -93,7 +93,7 @@ export const Content = () => {
                 <Button color='primary' onPress={() => setIsJoinModalOpen(true)}>Join a Workspace</Button>
               </div>
             </div>
-            <div className="grid md:grid-cols-3 grid-cols-1 2xl:grid-cols-4 gap-5 justify-center w-full">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 justify-center w-full">
               {courses.length > 0 ? (
                 courses.map((course) => <CourseCard key={course.id} course={course} />)
               ) : (
