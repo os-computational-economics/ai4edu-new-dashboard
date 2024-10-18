@@ -7,7 +7,7 @@ const ThreadCard = ({ thread, onSelect }) => (
   <Card isPressable onPress={() => onSelect(thread.thread_id)}>
     <CardHeader className="justify-between mb-0 pb-0">
       <div className="flex gap-1">
-        <h2 className="text-large font-semibold text-default-600">{thread.agent_name}</h2>
+        <h2 className="text-medium font-bold text-default-700">{thread.agent_name}</h2>
       </div>
     </CardHeader>
     <CardFooter>
