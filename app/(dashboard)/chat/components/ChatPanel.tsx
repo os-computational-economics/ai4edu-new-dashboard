@@ -179,12 +179,19 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
   const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState<
     boolean | null
   >(null);
+  const [isResponseStreaming, setIsResponseStreaming] = useState(false);
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
   const workspace_id =
     agent?.workspace_id || JSON.parse(localStorage.getItem("workspace")!)?.id;
-  const lastMessageRef = useRef(null);
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: isResponseStreaming ? "auto" : "smooth" });
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (hasWriteAccessToThread !== null || !agent || messages.length === 0) {
@@ -320,6 +327,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
         if (!response.body) {
           throw new Error("Response body is null");
         }
+        setIsResponseStreaming(true);
         const reader = response.body
           .pipeThrough(new TextDecoderStream())
           .getReader();
@@ -370,12 +378,14 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
               }
             }
           }
+          setIsResponseStreaming(false);
         };
 
         processStream();
       })
       .catch((err) => {
         console.error(err);
+        setIsResponseStreaming(false);
       });
   };
 
@@ -395,7 +405,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
               setSelectedDocument={setSelectedDocument}
             />
           ))}
-          <div ref={lastMessageRef}></div>
+          <div ref={lastMessageRef} className="min-h-3"></div>
         </ScrollShadow>
         <footer className="flex-shrink-0">
           <InputMessage
