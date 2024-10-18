@@ -71,12 +71,14 @@ function Message({
         ) : (
           <Bot className="size-7 text-sky-600" />
         )}
-        <ReactMarkdown
-          remarkPlugins={[remarkMath]}
-          rehypePlugins={[rehypeKatex, rehypeHighlight]}
-        >
-          {preprocessLaTeX(content)}
-        </ReactMarkdown>
+        <p className="overflow-x-auto">
+          <ReactMarkdown
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+          >
+            {preprocessLaTeX(content)}
+          </ReactMarkdown>
+        </p>
       </div>
       {sources && sources.length > 0 && (
         <div className="mt-2">
@@ -189,7 +191,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
 
   useEffect(() => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: isResponseStreaming ? "auto" : "smooth" });
+      lastMessageRef.current.scrollIntoView({ behavior: isResponseStreaming ? "auto" : "smooth", block: 'end' });
     }
   }, [messages]);
 
