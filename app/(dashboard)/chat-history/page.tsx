@@ -6,7 +6,7 @@ import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 import { WorkspaceContext } from '@/components/layout/layout'
 import { getCurrentUserStudentID, getWorkspaceRole, checkExpired } from '@/utils/CookiesUtil'
-
+import { Card } from '@nextui-org/react'
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
 
@@ -89,7 +89,7 @@ export default function App() {
         <div className="flex-grow overflow-auto">
           <CardList threads={threads} onSelect={handleSelectThread} />
         </div>
-        <div className="flex flex-shrink-0 flex-col items-center justify-center mt-4">
+        <div className="flex flex-shrink-0 flex-col items-center justify-center mt-4 z-0">
           {total > 0 && (
             <>
               <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
@@ -98,13 +98,13 @@ export default function App() {
           )}
         </div>
       </div>
-      <div className="flex w-3/5 flex-col items-center justify-center rounded-md border border-gray-300 p-4 mx-6 mb-6 shadow-sm pr-1">
+      <Card className="flex w-3/5 flex-col items-center justify-center border p-4 mx-3 mb-6 pr-1 dark:border-gray-500">
         {threadDetails ? (
           <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
         ) : (
           <div className="text-black-500 text-lg font-semibold">Please select a thread to view its details.</div>
         )}
-      </div>
+      </Card>
     </div>
     </div>
   )
