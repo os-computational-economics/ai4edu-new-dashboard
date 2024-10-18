@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 
@@ -29,6 +28,20 @@ import "highlight.js/styles/atom-one-dark.min.css";
 import { getThreadbyID } from "@/api/thread/thread";
 import useMount from "@/components/hooks/useMount";
 
+interface Source {
+  index: number;
+  fileName: string;
+  page: number;
+  fileID: string;
+}
+
+interface Message {
+  content: string;
+  align: string;
+  sources?: Source[];
+  user_id?: string;
+}
+
 function Message({
   content,
   align,
@@ -37,7 +50,8 @@ function Message({
 }: {
   content: string;
   align: string;
-  sources?: string[];
+  sources?: Source[];
+  setSelectedDocument: (fileID: string) => void;
 }) {
   const [showSources, setShowSources] = useState(false);
 
@@ -71,11 +85,10 @@ function Message({
       {sources && sources.length > 0 && (
         <div className="mt-2">
           <Button
-            color="#F4F4F5"
+            color="secondary"
             size="sm"
             variant="light"
             radius="sm"
-            iconRight={showSources ? <MdExpandLess /> : <MdExpandMore />}
             onClick={() => setShowSources(!showSources)}
           >
             {showSources ? "Hide Sources" : "Display Sources"}
@@ -112,13 +125,15 @@ function InputMessage({
   message,
   setMessage,
   sendMessage,
-  FileUploadForm,
   inputDisabled,
+  FileUploadForm,
 }: {
   placeholder: string;
   message: string;
   setMessage: (value: string) => void;
   sendMessage: () => void;
+  inputDisabled: boolean;
+  FileUploadForm?: () => void;
 }) {
   return (
     <div className="flex gap-2 px-4 py-2 inset-x-0 bottom-0 rounded-xl">
@@ -152,11 +167,13 @@ function InputMessage({
 }
 
 const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
   const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
-  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState(null);
+  const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState<
+    boolean | null
+  >(null);
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
@@ -194,7 +211,8 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
       getThreadbyID(params).then((res) => {
         setMessages(
           res.messages.map((message) => ({
-            ...message,
+            content: message.content,
+            user_id: message.user_id,
             align: message.role === "human" ? "end" : "start",
           }))
         );
@@ -205,7 +223,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
       // invalid url, redirect to home
       window.location.href = "/";
     }
-  }, [agent]);
+  });
 
   const appendMessage = (content, align, sources = []) => {
     setMessages((prevMessages) => [
@@ -294,6 +312,9 @@ const ChatPanel = ({ agent, thread, setSelectedDocument }) => {
       body: JSON.stringify(chatMessage),
     })
       .then((response) => {
+        if (!response.body) {
+          throw new Error("Response body is null");
+        }
         const reader = response.body
           .pipeThrough(new TextDecoderStream())
           .getReader();
