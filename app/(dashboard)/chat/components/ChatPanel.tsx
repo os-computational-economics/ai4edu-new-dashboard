@@ -21,6 +21,7 @@ import "highlight.js/styles/atom-one-dark.min.css";
 import { getThreadbyID } from "@/api/thread/thread";
 import useMount from "@/components/hooks/useMount";
 import { Bot, User } from "lucide-react";
+import ShinyText from "./ShinyText";
 
 interface Source {
   index: number;
@@ -72,7 +73,10 @@ function Message({
             <User className="inline-block size-6 text-green-600" />
           </div>
         ) : (
-          <Bot className="size-7 text-sky-600" />
+          <div className="text-left w-full flex flex-row">
+            <Bot className="size-7 text-sky-600 mr-2" />
+            {content === "" ? <ShinyText text="Thinking" className="mt-1" /> : null}
+          </div>
         )}
         <p className="overflow-x-auto">
           <ReactMarkdown
