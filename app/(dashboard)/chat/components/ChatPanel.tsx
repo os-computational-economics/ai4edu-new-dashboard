@@ -293,6 +293,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
   };
 
   const sendMessage = async () => {
+    if (isResponseStreaming) return;
     await checkToken();
 
     let currentThreadId = threadId;
