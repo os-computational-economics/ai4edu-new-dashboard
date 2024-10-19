@@ -294,6 +294,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
 
   const sendMessage = async () => {
     if (isResponseStreaming) return;
+    setIsResponseStreaming(true);
     await checkToken();
 
     let currentThreadId = threadId;
@@ -346,7 +347,6 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
         if (!response.body) {
           throw new Error("Response body is null");
         }
-        setIsResponseStreaming(true);
         const reader = response.body
           .pipeThrough(new TextDecoderStream())
           .getReader();
