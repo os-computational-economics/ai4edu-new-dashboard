@@ -16,7 +16,7 @@ const ThreadCard = ({ thread, onSelect }) => (
         <p className="text-small font-semibold text-default-600">
           {new Date(`${thread.created_at}Z`).toLocaleString()}
         </p>
-        <p className="text-small font-semibold text-default-600">{thread.student_id}</p>
+        {/* <p className="text-small font-semibold text-default-600">{thread.student_id}</p> */}
       </div>
     </CardFooter>
   </Card>

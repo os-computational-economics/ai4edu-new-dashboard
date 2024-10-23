@@ -59,18 +59,19 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
       {Object.values(groupedMessages).map((group, index) => (
         <div key={index} className="mb-4 relative">
           <div className="sticky bg-gray-50 backdrop-blur-md bg-opacity-50 dark:bg-black dark:backdrop-blur-md dark:bg-opacity-50 rounded-xl top-0 z-10 flex lg:flex-row flex-col items-center justify-between border dark:border-gray-500 pb-2 px-4 pt-2 text-left">
-            <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3>
+            {/* <h3 className="text-lg font-semibold">Current Student: {group.userId}</h3> */}
+            <h3 className="text-lg font-semibold">Student Chat</h3>
             <div className="inline-flex sm:flex-row flex-col items-center gap-1">
               <CSVLink
-                data={group.messages.map(({ thread_id, created_at, msg_id, user_id, role, content }) => ({
+                data={group.messages.map(({ thread_id, created_at, msg_id, role, content }) => ({
                   ThreadID: thread_id,
                   CreatedAt: created_at,
                   MessageID: msg_id,
-                  UserID: user_id,
+                  // UserID: user_id,
                   Role: role,
                   Content: content
                 }))}
-                filename={`${group.messages[0].thread_id.slice(0, 8)}-${group.userId}.csv`}
+                filename={`${group.messages[0].thread_id.slice(0, 8)}_chat_log.csv`}
                 target="_blank"
               >
                 <Button color="primary" variant="flat">
