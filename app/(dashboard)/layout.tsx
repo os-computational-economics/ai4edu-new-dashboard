@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 import { fontSans } from "@/config/fonts";
 import clsx from "clsx";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "AI4EDU - Dashboard",
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx("font-sans antialiased", fontSans.className)}>
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
