@@ -155,6 +155,9 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
             setPersona(e.target.value);
             handleChange("system_prompt", e.target.value);
           }}
+          data-gramm="false"
+          data-gramm_editor="false"
+          data-enable-grammarly="false"
         />
       </div>
 
