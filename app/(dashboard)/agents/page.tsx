@@ -189,7 +189,7 @@ const Tables = () => {
 
     if (storedSelectedCourse.role === "student") {
       return (
-        <div className="relative flex items-center justify-center gap-2">
+        <div className="relative flex items-start">
           <Tooltip content="Start a new chat" isDisabled={!agent.status}>
             <Button
               isIconOnly
@@ -202,6 +202,7 @@ const Tables = () => {
                 setCurrentAgent(agent);
                 openChatPage(agent);
               }}
+              className="left-10"
             >
               <MdMessage />
             </Button>

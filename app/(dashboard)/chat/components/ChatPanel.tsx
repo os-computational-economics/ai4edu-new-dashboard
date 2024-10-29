@@ -24,7 +24,9 @@ import 'highlight.js/styles/atom-one-dark.min.css'
 import { getThreadbyID } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
 import { Bot, User } from 'lucide-react'
+import ShinyText from "./ShinyText";
 import clsx from 'clsx'
+
 
 interface Source {
   index: number
@@ -79,7 +81,10 @@ function Message({
             <User className="inline-block size-6 text-green-600" />
           </div>
         ) : (
-          <Bot className="size-7 text-sky-600" />
+          <div className="text-left w-full flex flex-row">
+            <Bot className="size-7 text-sky-600 mr-2" />
+            {content === "" ? <ShinyText text="Thinking" className="mt-1" /> : null}
+          </div>
         )}
         <p className="overflow-x-auto">
           <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex, rehypeHighlight]}>
@@ -308,14 +313,20 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
   }
 
   const sendMessage = async () => {
-    await checkToken()
+    if (isResponseStreaming) return;
+    setIsResponseStreaming(true);
+    await checkToken();
 
-    let currentThreadId = threadId
-    if (currentThreadId === 'new') {
-      currentThreadId = await getNewThreadID()
-      setThreadId(currentThreadId)
-      const newUrl = `/agents/${agentID}/${currentThreadId}`
-      window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl)
+    let currentThreadId = threadId;
+    if (currentThreadId === "new") {
+      currentThreadId = await getNewThreadID();
+      setThreadId(currentThreadId);
+      const newUrl = `/agents/${agentID}/${currentThreadId}`;
+      window.history.replaceState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        "",
+        newUrl
+      );
     }
 
     if (!currentThreadId || message.trim() === '') return
@@ -356,46 +367,81 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
         if (!response.body) {
           throw new Error('Response body is null')
         }
-        setIsResponseStreaming(true)
-        const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+        const reader = response.body
+          .pipeThrough(new TextDecoderStream())
+          .getReader();
 
         const processStream = async () => {
-          let responseMessage = ''
-          let sources = [] // Initialize sources array here
+          let responseMessage = "";
+          let sources: Source[] = [];  // Initialize the sources array
 
-          appendMessage('', 'start')
+          appendMessage("", "start");
+          let readBuffer = "";  // Initialize the read buffer
           while (true) {
-            const { done, value } = await reader.read()
-            if (done) break
-            const lines = value.split('\n').filter((line) => line.trim() !== '')
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                try {
-                  const data = JSON.parse(line.slice(6))
-
-                  if (data.source && Array.isArray(data.source) && data.source.length > 0) {
-                    sources = data.source.map((src, index) => {
-                      const parsedSrc = src
-                      return {
-                        index: index + 1,
-                        fileName: parsedSrc.file_name,
-                        page: parsedSrc.page + 1,
-                        fileID: parsedSrc.file_id
-                      }
-                    })
+            const { done, value } = await reader.read();  // Read the next chunk of data
+            readBuffer += value || ""; // Append the new value to the buffer
+            const lines = readBuffer.split("\n").filter((line) => line !== "" && line !== "\r"); // Split the buffer into lines and remove empty lines
+            if (lines.length >= 3  || (done && lines.length > 0)) {  // Check if there are at least 3 lines, or if the stream is done
+              let line = "";  // Initialize the line variable
+              let data:{"response"?:string, "source"?: any[]} = {};  // Initialize the data object
+              let usedLine = 0;  // Initialize the index of the last line used
+              // When there are at least 3 lines, we are absolutely sure that the middle line is complete JSON
+              // However, we still try to parse the last line first. If the last line is incomplete, we will use the second last line
+              try {  // Try to parse the JSON from the last line
+                line = lines.at(-1) || "";
+                if (line.startsWith("data: ")) {
+                  data = JSON.parse(line.slice(6));
+                  usedLine = -1;
+                } else {
+                  line = lines.at(-2) || "";
+                  if (line.startsWith("data: ")) {
+                    data = JSON.parse(line.slice(6));
+                    usedLine = -2;
                   }
-
-                  responseMessage = data.response
-                  updateLastMessage(responseMessage, sources)
-                } catch (e) {
-                  if (e instanceof SyntaxError) {
-                    console.warn('Incomplete JSON received, waiting for the next chunk.')
-                  } else {
-                    console.error('Error parsing JSON:', e, line)
+                }
+              } catch (e) { // If there is a syntax error, get the second last line
+                if (e instanceof SyntaxError) {
+                  line = lines.at(-2) || "";
+                  if (line.startsWith("data: ")) {
+                    data = JSON.parse(line.slice(6));
+                    usedLine = -2;
                   }
                 }
               }
+
+              try {
+                if (
+                  data.source &&
+                  Array.isArray(data.source) &&
+                  data.source.length > 0
+                ) {
+                  sources = data.source.map((src, index) => {
+                    const parsedSrc = src;
+                    return {
+                      index: index + 1,
+                      fileName: parsedSrc.file_name,
+                      page: parsedSrc.page + 1,
+                      fileID: parsedSrc.file_id,
+                    };
+                  });
+                }
+
+                responseMessage = data.response || "";
+                updateLastMessage(responseMessage, sources);
+              } catch (e) {
+                if (e instanceof SyntaxError) {
+                  console.warn(
+                    "Incomplete JSON received, waiting for the next chunk."
+                  );
+                } else {
+                  console.error("Error parsing JSON:", e, line);
+                }
+              }
+              readBuffer = usedLine === -1 ? "" : lines.at(-1) || "";  // If the last line was used, clear the buffer.
+              // If the second last line was used, keep the last line in the buffer
+
             }
+            if (done) break;
           }
           setIsResponseStreaming(false)
         }

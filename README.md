@@ -10,7 +10,7 @@
 - Full Responsive
 - Home Page with Charts
 - roster Page
-- More pages coming soon...
+- More pages coming soon..
 
 ```
 ├── components
