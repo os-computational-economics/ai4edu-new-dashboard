@@ -89,7 +89,7 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
                   <h2 className="text-2xl font-bold">Agent Development Mode</h2>
                 </div>
                 <div>
-                  <Button className="bg-blue-500 text-white" isLoading={isLoading} onClick={handleUpdate}>
+                  <Button className="bg-blue-500 text-white " disabled={!currentAgent?.agent_name || !currentAgent?.system_prompt} isLoading={isLoading} onClick={handleUpdate}>
                     {isLoading ? 'Publishing...' : 'Publish Agent'}
                   </Button>
                 </div>

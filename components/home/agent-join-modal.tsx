@@ -21,10 +21,12 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
     useContext(WorkspaceContext);
   const [workspaceID, setWorkspaceID] = useState("");
   const [workspacePassword, setWorkspacePassword] = useState("");
+  const [joinError, setJoinError] = useState(false);
 
   const handleCloseModal = () => {
     setWorkspaceID("");
     setWorkspacePassword("");
+    setJoinError(false);
     onClose();
   };
 
@@ -52,6 +54,7 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
       })
       .catch((error) => {
         console.error("Error joining workspace:", error);
+        setJoinError(true);
       });
   };
 
@@ -90,7 +93,12 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
               onValueChange={(value) => setWorkspacePassword(value)}
               isClearable
             />
+            {joinError && 
+              <span className="text-red-700 text-sm">
+                Incorrect ID or password
+              </span>}
           </ModalBody>
+          
 
           <ModalFooter>
             <Button variant="faded" onClick={handleCloseModal}>
