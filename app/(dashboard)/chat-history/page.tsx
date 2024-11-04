@@ -91,7 +91,7 @@ export default function App() {
               <CardList threads={threads} onSelect={handleSelectThread} />
             </ScrollShadow>
           </div>
-          <div className="flex flex-shrink-0 flex-col items-center justify-center mt-4 z-0">
+          <div className="flex flex-shrink-0 flex-col items-center justify-center my-6 z-0">
             {total > 0 && (
               <>
                 <Pagination total={totalPages} initialPage={currentPage} onChange={handlePageChange} />
@@ -102,7 +102,7 @@ export default function App() {
             )}
           </div>
         </div>
-        <Card className="flex w-3/5 flex-col items-center justify-center border p-2 mx-3 mb-6 dark:border-gray-500">
+        <Card className="flex w-3/5 flex-col items-center justify-center border p-2 mx-3 mb-6 mt-3 dark:border-gray-500">
           {threadDetails ? (
             <HistoryPanel thread={matching_thread ? matching_thread : threads[0]} threadDetails={threadDetails} />
           ) : (
