@@ -21,7 +21,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   useMount(() => {
     // send a OnPage event to Vercel Analytics every 30 seconds
-    const interval = setInterval(() => {
+    (function sendOnPageEvent() {
       try {
         const userInfo = JSON.stringify({
           studentID: getCurrentUserStudentID(),
@@ -41,8 +41,8 @@ export function Providers({ children, themeProps }: ProvidersProps) {
           error: String(e),
         });
       }
-    }, 30000);
-    return () => clearInterval(interval);
+      setTimeout(sendOnPageEvent, 30000);
+    })();
   });
 
   useEffect(() => {
