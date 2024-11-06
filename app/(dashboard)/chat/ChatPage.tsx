@@ -6,7 +6,7 @@ import ChatPanel from "./components/ChatPanel";
 import { Modal, ModalContent, ModalHeader, Button } from "@nextui-org/react";
 import { GripVertical } from "lucide-react";
 import { submitRating } from "@/api/feedback/feedback";
-import { on } from "events";
+import { THREAD_RATING_TRIGGER_PROBABILITY } from "@/utils/constants";
 
 type Document = {
   id: number;
@@ -32,11 +32,29 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
 
   const handleModalClose = () => {
     setSelectedDocumentFileID(null);
-    setIsRatingModalOpen(true);
-    // onClose()
+    // get the current path in the address bar
+    const currentPath = window.location.pathname;
+    if (currentPath.includes("/new")) {
+      // do not trigger rating modal for new threads with no messages
+      onClose();
+      return;
+    }
+    // trigger rating modal according to the probability
+    if (Math.random() < THREAD_RATING_TRIGGER_PROBABILITY) {
+      setIsRatingModalOpen(true);
+    } else {
+      onClose();
+    }
   };
 
   const handleRating = (rating) => {
+    if (thread === "new") {
+      // update the thread id to the current thread id
+      // get the current path in the address bar
+      const currentPath = window.location.pathname;
+      // the thread id is the last part of the path
+      thread = currentPath.split("/").pop();
+    }
     if (thread && rating) {
       submitRating({ thread_id: thread, rating: rating })
         .then(() => {
