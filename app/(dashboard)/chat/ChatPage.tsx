@@ -4,9 +4,10 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import DocumentPanel from "./components/DocumentPanel";
 import ChatPanel from "./components/ChatPanel";
 import { Modal, ModalContent, ModalHeader, Button } from "@nextui-org/react";
-import { GripVertical } from "lucide-react";
+import { GripVertical, X } from "lucide-react";
 import { submitRating } from "@/api/feedback/feedback";
 import { THREAD_RATING_TRIGGER_PROBABILITY } from "@/utils/constants";
+import { Direction } from "react-resizable-panels/dist/declarations/src/types";
 
 type Document = {
   id: number;
@@ -21,6 +22,24 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
   const [isChatModalOpen, setIsChatModalOpen] = useState(true);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [rating, setRating] = useState(null);
+  const [direction, setDirection] = useState<Direction>("horizontal");
+
+  useEffect(() => {
+    // Function to handle resize
+    const handleResize = () => {
+      // Change to vertical if screen width is less than 768px (typical tablet breakpoint)
+      setDirection(window.innerWidth < 640 ? "vertical" : "horizontal");
+    };
+
+    // Set initial direction
+    handleResize();
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleDocumentClick = (document: Document) => {
     setSelectedDocumentFileID(document);
@@ -91,24 +110,51 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                 </aside>*/}
                 <PanelGroup
                   autoSaveId="chat-interface"
-                  direction="horizontal"
+                  direction={direction}
                   className="w-full"
                 >
-                  <Panel defaultSize={25} maxSize={70} minSize={20}>
-                    <DocumentPanel
-                      selectedDocument={selectedDocumentFileID}
-                      selectedDocumentPage={selectedDocumentPage}
-                    />
-                  </Panel>
-                  <PanelResizeHandle>
-                    <div
-                      className={`flex flex-col rounded-lg h-full items-center my-2 justify-center w-2 bg-gray-200 hover:bg-gray-300 dark:bg-[#191919] dark:hover:bg-[#1d1d1d] transition-colors cursor-col-resize`}
-                      style={{ height: "calc(100% - 1rem)" }}
-                    >
-                      <GripVertical className="w-4 h-4 text-gray-400" />
-                    </div>
-                  </PanelResizeHandle>
-                  <Panel defaultSize={65} maxSize={80} minSize={30}>
+                  {selectedDocumentFileID && (
+                    <>
+                      <Panel
+                        defaultSize={25}
+                        maxSize={70}
+                        minSize={20}
+                        id="document"
+                        order={1}
+                        className="relative"
+                      >
+                        <Button
+                          className="absolute top-2 right-1 z-50"
+                          variant="flat"
+                          isIconOnly
+                          size="sm"
+                          onClick={() => setSelectedDocumentFileID(null)}
+                          radius="full"
+                        >
+                          <X size={20} />
+                        </Button>
+                        <DocumentPanel
+                          selectedDocument={selectedDocumentFileID}
+                          selectedDocumentPage={selectedDocumentPage}
+                        />
+                      </Panel>
+                      <PanelResizeHandle>
+                        <div
+                          className={`flex flex-col rounded-lg w-full sm:h-full sm:w-2 items-center my-2 justify-center bg-gray-200 hover:bg-gray-300 dark:bg-[#191919] dark:hover:bg-[#1d1d1d] transition-colors cursor-row-resize sm:cursor-col-resize`}
+                          style={{ height: "calc(100% - 1rem)" }}
+                        >
+                          <GripVertical className="w-4 h-4 text-gray-400 rotate-90 sm:rotate-0" />
+                        </div>
+                      </PanelResizeHandle>
+                    </>
+                  )}
+                  <Panel
+                    defaultSize={65}
+                    maxSize={80}
+                    minSize={30}
+                    id="chat"
+                    order={2}
+                  >
                     <ChatPanel
                       agent={agent}
                       thread={thread}
