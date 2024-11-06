@@ -80,7 +80,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
               </CSVLink>
               {currentUserId === group.userId && (
                 <div>
-                  <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}`}>
+                  <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}?from=chat-history`}>
                     <Button color="primary" variant="flat" className="ml-2">
                       Continue Chat
                     </Button>

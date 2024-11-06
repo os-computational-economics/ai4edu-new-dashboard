@@ -1,8 +1,22 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 
-import { Card, Textarea, ScrollShadow, Button } from "@nextui-org/react";
+import {
+  Card,
+  Textarea,
+  ScrollShadow,
+  Button,
+  Tooltip,
+} from "@nextui-org/react";
 import { IoSend } from "react-icons/io5";
+import { LuThumbsUp, LuThumbsDown } from "react-icons/lu";
+import { BiDetail } from "react-icons/bi";
+import {
+  PiThumbsUpDuotone,
+  PiThumbsDownDuotone,
+  PiThumbsUpFill,
+  PiThumbsDownFill,
+} from "react-icons/pi";
 
 import Cookies from "js-cookie";
 import ReactMarkdown from "react-markdown";
@@ -14,14 +28,16 @@ import { checkToken } from "@/utils/CookiesUtil";
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
+import { submitRating } from "@/api/feedback/feedback";
 // import { FileUploadForm } from "./FileUpload";
 
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/atom-one-dark.min.css";
 import { getThreadbyID } from "@/api/thread/thread";
 import useMount from "@/components/hooks/useMount";
-import { Bot, User, WholeWord } from "lucide-react";
+import { Bot, User } from "lucide-react";
 import ShinyText from "./ShinyText";
+import clsx from "clsx";
 
 interface Source {
   index: number;
@@ -35,22 +51,31 @@ interface Message {
   align: string;
   sources?: Source[];
   user_id?: string;
+  currentChatSession?: boolean;
+  MsgId?: string;
 }
 
 function Message({
   content,
   align,
   sources,
+  MsgId,
+  threadId,
   setSelectedDocument,
   setSelectedDocumentPage,
+  currentChatSession,
 }: {
   content: string;
   align: string;
   sources?: Source[];
+  MsgId?: string;
+  threadId?: string;
   setSelectedDocument: (fileID: string) => void;
   setSelectedDocumentPage: (page: number) => void;
+  currentChatSession?: boolean;
 }) {
   const [showSources, setShowSources] = useState(false);
+  const [feedback, setFeedback] = useState(String); //  '0' - bad, '1' - good
 
   const className =
     align === "end"
@@ -61,6 +86,19 @@ function Message({
   const onSourceClick = (sourceFileID: string, sourcePage: number) => {
     setSelectedDocument(sourceFileID);
     setSelectedDocumentPage(sourcePage);
+  };
+
+  const handleFeedback = (rating) => {
+    console.log(threadId, MsgId);
+    if (threadId && MsgId) {
+      submitRating({
+        thread_id: threadId,
+        message_id: MsgId,
+        rating: rating,
+      }).then((res) => {
+        console.log("Rating submitted:", res);
+      });
+    }
   };
 
   return (
@@ -75,7 +113,9 @@ function Message({
         ) : (
           <div className="text-left w-full flex flex-row">
             <Bot className="size-7 text-sky-600 mr-2" />
-            {content === "" ? <ShinyText text="Thinking" className="mt-1" /> : null}
+            {content === "" ? (
+              <ShinyText text="Thinking" className="mt-1" />
+            ) : null}
           </div>
         )}
         <p className="overflow-x-auto">
@@ -87,18 +127,75 @@ function Message({
           </ReactMarkdown>
         </p>
       </div>
-      {sources && sources.length > 0 && (
+      {align === "start" && currentChatSession && (
         <div className="mt-2">
-          <Button
-            color="secondary"
-            size="sm"
-            variant="light"
-            radius="sm"
-            onClick={() => setShowSources(!showSources)}
-          >
-            {showSources ? "Hide Sources" : "Display Sources"}
-          </Button>
-          {showSources && (
+          <div className="flex items-center gap-2">
+            {/* <Button
+              color="secondary"
+              size="sm"
+              variant="light"
+              radius="sm"
+              onClick={() => setShowSources(!showSources)}
+            >
+              {showSources ? 'Hide Sources' : 'Show Sources'}
+            </Button> */}
+            {sources && sources.length > 0 && (
+              <Tooltip
+                content={showSources ? "Hide Sources" : "Show Sources"}
+                placement="bottom"
+              >
+                {/* <span className="hover:bg-gray-100 "> */}
+                <span
+                  className={clsx(
+                    showSources ? "bg-gray-100 dark:bg-neutral-700" : "hover:bg-gray-100 dark:hover:bg-neutral-700",
+                    "rounded-md p-1"
+                  )}
+                >
+                  <BiDetail
+                    className="text-gray-600 hover:cursor-pointer dark:text-white"
+                    onClick={() => setShowSources(!showSources)}
+                  />
+                </span>
+              </Tooltip>
+            )}
+            <div className="flex justify-end gap-2">
+              {feedback !== "0" && (
+                <Tooltip content="Good response" placement="bottom">
+                  <span className="hover:bg-gray-100 rounded-md p-1 dark:hover:bg-neutral-700">
+                    {feedback === "1" ? (
+                      <PiThumbsUpFill className="hover:cursor-pointer dark:text-white" />
+                    ) : (
+                      <PiThumbsUpDuotone
+                        className="hover:cursor-pointer dark:text-white"
+                        onClick={() => {
+                          setFeedback("1");
+                          handleFeedback(1);
+                        }}
+                      />
+                    )}
+                  </span>
+                </Tooltip>
+              )}
+              {feedback !== "1" && (
+                <Tooltip content="Bad response" placement="bottom">
+                  <span className="hover:bg-gray-100 rounded-md p-1 dark:hover:bg-neutral-700">
+                    {feedback === "0" ? (
+                      <PiThumbsDownFill className="hover:cursor-pointer dark:text-white" />
+                    ) : (
+                      <PiThumbsDownDuotone
+                        className="hover:cursor-pointer dark:text-white"
+                        onClick={() => {
+                          setFeedback("0");
+                          handleFeedback(0);
+                        }}
+                      />
+                    )}
+                  </span>
+                </Tooltip>
+              )}
+            </div>
+          </div>
+          {showSources && sources && sources.length > 0 && (
             <ul className="mt-2 bg-gray-100 dark:bg-neutral-800 p-2 rounded-lg">
               {sources.map((source, index) => (
                 <li
@@ -150,13 +247,11 @@ function InputMessage({
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            e.stopPropagation();
           }
         }}
         onKeyUp={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            e.stopPropagation();
             sendMessage();
           }
         }}
@@ -180,7 +275,12 @@ function InputMessage({
   );
 }
 
-const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage }) => {
+const ChatPanel = ({
+  agent,
+  thread,
+  setSelectedDocument,
+  setSelectedDocumentPage,
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
@@ -198,7 +298,10 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
 
   useEffect(() => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: isResponseStreaming ? "auto" : "smooth", block: 'end' });
+      lastMessageRef.current.scrollIntoView({
+        behavior: isResponseStreaming ? "auto" : "smooth",
+        block: "end",
+      });
     }
   }, [messages]);
 
@@ -249,16 +352,17 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
   const appendMessage = (content, align, sources = []) => {
     setMessages((prevMessages) => [
       ...prevMessages,
-      { content, align, sources },
+      { content, align, sources, currentChatSession: true },
     ]);
   };
 
-  const updateLastMessage = (content, sources) => {
+  const updateLastMessage = (content, sources, MsgId) => {
     setMessages((prevMessages) => {
       const newMessages = [...prevMessages];
       if (newMessages.length > 0) {
         newMessages[newMessages.length - 1].content = content;
         newMessages[newMessages.length - 1].sources = sources;
+        newMessages[newMessages.length - 1].MsgId = MsgId;
       }
       return newMessages;
     });
@@ -353,21 +457,26 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
 
         const processStream = async () => {
           let responseMessage = "";
-          let sources: Source[] = [];  // Initialize the sources array
+          let sources: Source[] = []; // Initialize the sources array
 
           appendMessage("", "start");
-          let readBuffer = "";  // Initialize the read buffer
+          let readBuffer = ""; // Initialize the read buffer
           while (true) {
-            const { done, value } = await reader.read();  // Read the next chunk of data
+            const { done, value } = await reader.read(); // Read the next chunk of data
             readBuffer += value || ""; // Append the new value to the buffer
-            const lines = readBuffer.split("\n").filter((line) => line !== "" && line !== "\r"); // Split the buffer into lines and remove empty lines
-            if (lines.length >= 3  || (done && lines.length > 0)) {  // Check if there are at least 3 lines, or if the stream is done
-              let line = "";  // Initialize the line variable
-              let data:{"response"?:string, "source"?: any[]} = {};  // Initialize the data object
-              let usedLine = 0;  // Initialize the index of the last line used
+            const lines = readBuffer
+              .split("\n")
+              .filter((line) => line !== "" && line !== "\r"); // Split the buffer into lines and remove empty lines
+            if (lines.length >= 3 || (done && lines.length > 0)) {
+              // Check if there are at least 3 lines, or if the stream is done
+              let line = ""; // Initialize the line variable
+              let data: { response?: string; source?: any[]; msg_id?: string } =
+                {}; // Initialize the data object
+              let usedLine = 0; // Initialize the index of the last line used
               // When there are at least 3 lines, we are absolutely sure that the middle line is complete JSON
               // However, we still try to parse the last line first. If the last line is incomplete, we will use the second last line
-              try {  // Try to parse the JSON from the last line
+              try {
+                // Try to parse the JSON from the last line
                 line = lines.at(-1) || "";
                 if (line.startsWith("data: ")) {
                   data = JSON.parse(line.slice(6));
@@ -379,7 +488,8 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
                     usedLine = -2;
                   }
                 }
-              } catch (e) { // If there is a syntax error, get the second last line
+              } catch (e) {
+                // If there is a syntax error, get the second last line
                 if (e instanceof SyntaxError) {
                   line = lines.at(-2) || "";
                   if (line.startsWith("data: ")) {
@@ -407,7 +517,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
                 }
 
                 responseMessage = data.response || "";
-                updateLastMessage(responseMessage, sources);
+                updateLastMessage(responseMessage, sources, data.msg_id);
               } catch (e) {
                 if (e instanceof SyntaxError) {
                   console.warn(
@@ -417,9 +527,8 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
                   console.error("Error parsing JSON:", e, line);
                 }
               }
-              readBuffer = usedLine === -1 ? "" : lines.at(-1) || "";  // If the last line was used, clear the buffer.
+              readBuffer = usedLine === -1 ? "" : lines.at(-1) || ""; // If the last line was used, clear the buffer.
               // If the second last line was used, keep the last line in the buffer
-
             }
             if (done) break;
           }
@@ -436,7 +545,7 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
   };
 
   return (
-    <Card className="m-2 ml-1" style={{ height: 'calc(100% - 1rem)' }}>
+    <Card className="m-2 ml-1" style={{ height: "calc(100% - 1rem)" }}>
       <div className="flex flex-col grow px-4 pt-5 pb-2 w-full text-base leading-6 max-md:px-5 max-md:max-w-full h-full">
         <ScrollShadow
           size={20}
@@ -450,6 +559,9 @@ const ChatPanel = ({ agent, thread, setSelectedDocument, setSelectedDocumentPage
               sources={message.sources}
               setSelectedDocument={setSelectedDocument}
               setSelectedDocumentPage={setSelectedDocumentPage}
+              currentChatSession={message.currentChatSession}
+              MsgId={message.MsgId}
+              threadId={threadId}
             />
           ))}
           <div ref={lastMessageRef} className="min-h-3"></div>

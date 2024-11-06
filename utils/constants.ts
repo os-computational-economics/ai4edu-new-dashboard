@@ -1,0 +1,1 @@
+export const THREAD_RATING_TRIGGER_PROBABILITY = 0.3  // Probability of showing the rating modal, 0.5 = 50%
