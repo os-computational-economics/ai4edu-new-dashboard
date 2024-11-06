@@ -13,7 +13,13 @@ const modelList = [
   { value: "anthropic", label: "Anthropic - Claude AI" },
 ];
 
-const Tables = ({ params }: { params: { agent: string; thread: string } }) => {
+const Tables = ({
+  params,
+  searchParams,
+}: {
+  params: { agent: string; thread: string };
+  searchParams: { from?: string };
+}) => {
   const [agent, setAgent] = useState<Agent>();
   const [creatorId, setCreatorId] = useState("");
   const [isLoading, setisLoading] = useState(false);
@@ -60,7 +66,11 @@ const Tables = ({ params }: { params: { agent: string; thread: string } }) => {
   };
   const closeChatModal = () => {
     // go back to previous page
-    router.back();
+    if (searchParams.from === "chat-history") {
+      router.push("/chat-history");
+    } else {
+      router.push("/agents");
+    }
   };
 
   return (
