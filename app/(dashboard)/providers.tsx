@@ -32,6 +32,12 @@ export function Providers({ children, themeProps }: ProvidersProps) {
           timestamp: new Date().toISOString(),
           url: window.location.href,
         });
+        // make sure both userInfo and pageInfo are not empty before sending the event
+        // this is to avoid sending empty events
+        // judging empty by checking if the string length is less than 10
+        if (userInfo.length < 10 || pageInfo.length < 10) {
+          return;
+        }
         track("OnPage", {
           userInfo: userInfo,
           PageInfo: pageInfo,
