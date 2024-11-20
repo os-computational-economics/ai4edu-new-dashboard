@@ -3,26 +3,46 @@ import React, { useState, useEffect } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import DocumentPanel from "./components/DocumentPanel";
 import ChatPanel from "./components/ChatPanel";
-import { Modal, ModalContent, ModalHeader, Button } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  Button,
+  Chip,
+  Divider,
+} from "@nextui-org/react";
 import { GripVertical, X } from "lucide-react";
 import { submitRating } from "@/api/feedback/feedback";
 import { THREAD_RATING_TRIGGER_PROBABILITY } from "@/utils/constants";
 import { Direction } from "react-resizable-panels/dist/declarations/src/types";
+import { Agent } from "@/api/agent/agent";
+import ChatFileList from "./components/ChatFileList";
 
 type Document = {
   id: number;
   title: string;
 };
 
-const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
+const ChatPage = ({
+  isOpen,
+  onClose,
+  status,
+  agent,
+  thread,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  status: number;
+  agent: Agent;
+  thread: string;
+}) => {
   const [selectedDocumentFileID, setSelectedDocumentFileID] = useState<
     Document | string | null
   >(null);
   const [selectedDocumentPage, setSelectedDocumentPage] = useState<number>(1);
-  const [isChatModalOpen, setIsChatModalOpen] = useState(true);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
-  const [rating, setRating] = useState(null);
   const [direction, setDirection] = useState<Direction>("horizontal");
+  const [uniqueFileIDs, setUniqueFileIDs] = useState<string[]>([]);
 
   useEffect(() => {
     // Function to handle resize
@@ -40,14 +60,6 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
     // Cleanup
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const handleDocumentClick = (document: Document) => {
-    setSelectedDocumentFileID(document);
-  };
-
-  useEffect(() => {
-    console.log("$$$", agent);
-  }, [agent]);
 
   const handleModalClose = () => {
     setSelectedDocumentFileID(null);
@@ -72,7 +84,7 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
       // get the current path in the address bar
       const currentPath = window.location.pathname;
       // the thread id is the last part of the path
-      thread = currentPath.split("/").pop();
+      thread = currentPath.split("/").pop() || "";
     }
     if (thread && rating) {
       submitRating({ thread_id: thread, rating: rating })
@@ -99,8 +111,28 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                {agent?.workspace_id} - {agent?.agent_name}
+              <ModalHeader className="flex flex-row justify-start gap-3 items-center pb-1 pt-2">
+                {agent.agent_files &&
+                  Object.keys(agent.agent_files).length > 0 && (
+                    <>
+                      <div className="flex-none">
+                        <ChatFileList
+                          agent={agent}
+                          setSelectedDocument={setSelectedDocumentFileID}
+                          uniqueFileIDs={uniqueFileIDs}
+                        />
+                      </div>
+                      <Divider orientation="vertical" className="flex-none" />
+                    </>
+                  )}
+                <div className="flex flex-row items-center gap-2 my-1 min-w-0 flex-1 mr-2">
+                  <Chip className="flex-none rounded-xl">
+                    {agent?.workspace_id}
+                  </Chip>
+                  <p className="text-lg font-bold truncate">
+                    {agent?.agent_name}
+                  </p>
+                </div>
               </ModalHeader>
               <div className="flex h-[calc(100vh-62px)]">
                 {/*<aside className="z-30 overflow-auto">
@@ -116,7 +148,7 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                   {selectedDocumentFileID && (
                     <>
                       <Panel
-                        defaultSize={25}
+                        defaultSize={35}
                         maxSize={70}
                         minSize={20}
                         id="document"
@@ -160,6 +192,7 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
                       thread={thread}
                       setSelectedDocument={setSelectedDocumentFileID}
                       setSelectedDocumentPage={setSelectedDocumentPage}
+                      setUniqueFileIDs={setUniqueFileIDs} // Pass the setter function
                     />
                   </Panel>
                 </PanelGroup>

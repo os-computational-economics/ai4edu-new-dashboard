@@ -13,7 +13,7 @@ const modelList = [
   { value: "anthropic", label: "Anthropic - Claude AI" },
 ];
 
-const Tables = ({
+const Page = ({
   params,
   searchParams,
 }: {
@@ -55,9 +55,11 @@ const Tables = ({
   const fetchAgent = () => {
     getAgentByID({ agent_id: params.agent })
       .then((res) => {
-        setisLoading(false);
-        setAgent(res);
-        console.log(res);
+        if (res !== undefined) {
+          setisLoading(false);
+          setAgent(res);
+          console.log(res);
+        }
       })
       .catch((error) => {
         setisLoading(false);
@@ -74,19 +76,21 @@ const Tables = ({
   };
 
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <div className="mx-6 ">
         <ToastContainer />
-        <ChatPage
-          isOpen={true}
-          onClose={closeChatModal}
-          status={status}
-          agent={agent}
-          thread={params.thread}
-        ></ChatPage>
+        {agent && (
+          <ChatPage
+            isOpen={true}
+            onClose={closeChatModal}
+            status={status}
+            agent={agent}
+            thread={params.thread}
+          />
+        )}
       </div>
     </Suspense>
   );
 };
 
-export default Tables;
+export default Page;
