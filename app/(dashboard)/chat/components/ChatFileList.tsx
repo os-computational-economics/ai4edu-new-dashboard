@@ -47,7 +47,7 @@ const ChatFileList = ({
             "true"
           );
           setHasSeenTooltip(true);
-        }, 5000);
+        }, 9000);
 
         return () => clearTimeout(hideTimer);
       }, 2000);
