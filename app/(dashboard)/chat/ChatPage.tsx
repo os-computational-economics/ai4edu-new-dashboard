@@ -60,14 +60,6 @@ const ChatPage = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleDocumentClick = (document: Document) => {
-    setSelectedDocumentFileID(document);
-  };
-
-  useEffect(() => {
-    console.log("$$$", agent);
-  }, [agent]);
-
   const handleModalClose = () => {
     setSelectedDocumentFileID(null);
     // get the current path in the address bar
@@ -119,7 +111,10 @@ const ChatPage = ({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-row justify-start gap-6 items-center pb-1 pt-2">
-                <ChatFileList agent={agent} />
+                <ChatFileList
+                  agent={agent}
+                  setSelectedDocument={setSelectedDocumentFileID}
+                />
                 <Divider orientation="vertical" />
                 <div className="flex flex-row items-center align-bottom gap-2">
                   <Chip>{agent?.workspace_id}</Chip>
@@ -140,7 +135,7 @@ const ChatPage = ({
                   {selectedDocumentFileID && (
                     <>
                       <Panel
-                        defaultSize={25}
+                        defaultSize={35}
                         maxSize={70}
                         minSize={20}
                         id="document"
