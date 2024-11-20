@@ -111,16 +111,27 @@ const ChatPage = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-row justify-start gap-6 items-center pb-1 pt-2">
-                <ChatFileList
-                  agent={agent}
-                  setSelectedDocument={setSelectedDocumentFileID}
-                  uniqueFileIDs={uniqueFileIDs} // Pass the unique file IDs
-                />
-                <Divider orientation="vertical" />
-                <div className="flex flex-row items-center align-bottom gap-2">
-                  <Chip>{agent?.workspace_id}</Chip>
-                  {agent?.agent_name}
+              <ModalHeader className="flex flex-row justify-start gap-3 items-center pb-1 pt-2">
+                {agent.agent_files &&
+                  Object.keys(agent.agent_files).length > 0 && (
+                    <>
+                      <div className="flex-none">
+                        <ChatFileList
+                          agent={agent}
+                          setSelectedDocument={setSelectedDocumentFileID}
+                          uniqueFileIDs={uniqueFileIDs}
+                        />
+                      </div>
+                      <Divider orientation="vertical" className="flex-none" />
+                    </>
+                  )}
+                <div className="flex flex-row items-center gap-2 my-1 min-w-0 flex-1 mr-2">
+                  <Chip className="flex-none rounded-xl">
+                    {agent?.workspace_id}
+                  </Chip>
+                  <p className="text-lg font-bold truncate">
+                    {agent?.agent_name}
+                  </p>
                 </div>
               </ModalHeader>
               <div className="flex h-[calc(100vh-62px)]">

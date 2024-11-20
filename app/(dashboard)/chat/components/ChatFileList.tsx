@@ -78,7 +78,13 @@ const ChatFileList = ({
                   className="px-2"
                 />
                 <ScrollShadow className="flex flex-col gap-2 overflow-auto py-1 px-2 max-h-[70vh]">
-                  {agent.agent_files &&
+                  {showReferencedFilesOnly && uniqueFileIDs.length === 0 ? (
+                    <div className="px-2 py-4 text-center text-sm text-foreground-muted">
+                      No files have been referenced in this chat session. Only
+                      referenced files are shown when this toggle is enabled.
+                    </div>
+                  ) : (
+                    agent.agent_files &&
                     Object.entries(agent.agent_files)
                       .filter(([file_id, file_name]) => {
                         const matchesSearch = file_name
@@ -109,7 +115,8 @@ const ChatFileList = ({
                             </CardHeader>
                           </Card>
                         </div>
-                      ))}
+                      ))
+                  )}
                 </ScrollShadow>
               </div>
             )}
