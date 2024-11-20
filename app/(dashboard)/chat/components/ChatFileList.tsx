@@ -63,6 +63,9 @@ const ChatFileList = ({
       size="lg"
       isOpen={isPopoverOpen}
       onOpenChange={setIsPopoverOpen}
+      onClose={() => {
+        setFileSearchQuery("");
+      }}
     >
       <PopoverTrigger>
         <Button isIconOnly variant="flat">
