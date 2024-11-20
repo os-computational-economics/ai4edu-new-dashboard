@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Tooltip,
@@ -14,11 +14,12 @@ import {
 } from "@nextui-org/react";
 import { File } from "lucide-react";
 import { Agent } from "@/api/agent/agent";
+import { HAVE_SEEN_FILE_TOOLTIP_LOCAL_STORAGE_KEY } from "@/utils/constants";
 
 const ChatFileList = ({
   agent,
   setSelectedDocument,
-  uniqueFileIDs, // Add this prop
+  uniqueFileIDs,
 }: {
   agent: Agent;
   setSelectedDocument: (string) => void;
@@ -27,6 +28,33 @@ const ChatFileList = ({
   const [fileSearchQuery, setFileSearchQuery] = useState("");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [showReferencedFilesOnly, setShowReferencedFilesOnly] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hasSeenTooltip, setHasSeenTooltip] = useState(true);
+
+  useEffect(() => {
+    const hasSeenTooltipValue = localStorage.getItem(
+      HAVE_SEEN_FILE_TOOLTIP_LOCAL_STORAGE_KEY
+    );
+    if (!hasSeenTooltipValue) {
+      setHasSeenTooltip(false);
+      const showTimer = setTimeout(() => {
+        setShowTooltip(true);
+
+        const hideTimer = setTimeout(() => {
+          setShowTooltip(false);
+          localStorage.setItem(
+            HAVE_SEEN_FILE_TOOLTIP_LOCAL_STORAGE_KEY,
+            "true"
+          );
+          setHasSeenTooltip(true);
+        }, 5000);
+
+        return () => clearTimeout(hideTimer);
+      }, 2000);
+
+      return () => clearTimeout(showTimer);
+    }
+  }, []);
 
   return (
     <Popover
@@ -38,7 +66,13 @@ const ChatFileList = ({
     >
       <PopoverTrigger>
         <Button isIconOnly variant="flat">
-          <Tooltip content="View Files" placement="bottom" closeDelay={50}>
+          <Tooltip
+            content="View Files"
+            placement="bottom"
+            closeDelay={50}
+            offset={15}
+            {...(!hasSeenTooltip && { isOpen: showTooltip })}
+          >
             <File size={20} />
           </Tooltip>
         </Button>
