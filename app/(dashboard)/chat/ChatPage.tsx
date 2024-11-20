@@ -42,6 +42,7 @@ const ChatPage = ({
   const [selectedDocumentPage, setSelectedDocumentPage] = useState<number>(1);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [direction, setDirection] = useState<Direction>("horizontal");
+  const [uniqueFileIDs, setUniqueFileIDs] = useState<string[]>([]);
 
   useEffect(() => {
     // Function to handle resize
@@ -114,6 +115,7 @@ const ChatPage = ({
                 <ChatFileList
                   agent={agent}
                   setSelectedDocument={setSelectedDocumentFileID}
+                  uniqueFileIDs={uniqueFileIDs} // Pass the unique file IDs
                 />
                 <Divider orientation="vertical" />
                 <div className="flex flex-row items-center align-bottom gap-2">
@@ -179,6 +181,7 @@ const ChatPage = ({
                       thread={thread}
                       setSelectedDocument={setSelectedDocumentFileID}
                       setSelectedDocumentPage={setSelectedDocumentPage}
+                      setUniqueFileIDs={setUniqueFileIDs} // Pass the setter function
                     />
                   </Panel>
                 </PanelGroup>

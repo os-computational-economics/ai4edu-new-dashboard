@@ -10,6 +10,7 @@ import {
   Card,
   CardHeader,
   ScrollShadow,
+  Switch,
 } from "@nextui-org/react";
 import { File } from "lucide-react";
 import { Agent } from "@/api/agent/agent";
@@ -17,12 +18,15 @@ import { Agent } from "@/api/agent/agent";
 const ChatFileList = ({
   agent,
   setSelectedDocument,
+  uniqueFileIDs, // Add this prop
 }: {
   agent: Agent;
   setSelectedDocument: (string) => void;
+  uniqueFileIDs: string[];
 }) => {
   const [fileSearchQuery, setFileSearchQuery] = useState("");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [showReferencedFilesOnly, setShowReferencedFilesOnly] = useState(false);
 
   return (
     <Popover
@@ -42,9 +46,26 @@ const ChatFileList = ({
       <PopoverContent className="w-[80vw] sm:w-[50vw] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
         {(titleProps) => (
           <div className="pr-1 pl-0 py-2 w-full">
-            <p className="text-md font-bold text-foreground pl-2" {...titleProps}>
-              Files
-            </p>
+            <div className="flex flex-row items-center justify-between">
+              <p
+                className="text-md font-bold text-foreground pl-2"
+                {...titleProps}
+              >
+                Files
+              </p>
+              <div className="flex flex-row items-center gap-2">
+                <div className="text-sm text-foreground">
+                  Referenced files only
+                </div>
+                <Switch
+                  size="sm"
+                  isSelected={showReferencedFilesOnly}
+                  onChange={() =>
+                    setShowReferencedFilesOnly(!showReferencedFilesOnly)
+                  }
+                />
+              </div>
+            </div>
             {agent && (
               <div className="mt-2 flex flex-col gap-2 w-full">
                 <Input
@@ -57,13 +78,18 @@ const ChatFileList = ({
                   className="px-2"
                 />
                 <ScrollShadow className="flex flex-col gap-2 overflow-auto py-1 px-2 max-h-[70vh]">
-                  {agent?.agent_files &&
+                  {agent.agent_files &&
                     Object.entries(agent.agent_files)
-                      .filter(([file_id, file_name]) =>
-                        file_name
+                      .filter(([file_id, file_name]) => {
+                        const matchesSearch = file_name
                           .toLowerCase()
-                          .includes(fileSearchQuery.toLowerCase())
-                      )
+                          .includes(fileSearchQuery.toLowerCase());
+                        const isReferenced = uniqueFileIDs.includes(file_id);
+                        return (
+                          matchesSearch &&
+                          (!showReferencedFilesOnly || isReferenced)
+                        );
+                      })
                       .map(([file_id, file_name]) => (
                         <div
                           key={file_id}
@@ -73,8 +99,7 @@ const ChatFileList = ({
                           }}
                         >
                           <Card
-                            key={file_id}
-                            className="flex flex-row items-center gap-2 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                            className="flex flex-row items-center gap-2 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800"
                             shadow="sm"
                           >
                             <CardHeader>

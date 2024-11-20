@@ -9,7 +9,6 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { IoSend } from "react-icons/io5";
-import { LuThumbsUp, LuThumbsDown } from "react-icons/lu";
 import { BiDetail } from "react-icons/bi";
 import {
   PiThumbsUpDuotone,
@@ -29,6 +28,7 @@ import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
 import { submitRating } from "@/api/feedback/feedback";
+import { Agent } from "@/api/agent/agent";
 // import { FileUploadForm } from "./FileUpload";
 
 import "katex/dist/katex.min.css";
@@ -147,7 +147,9 @@ function Message({
                 {/* <span className="hover:bg-gray-100 "> */}
                 <span
                   className={clsx(
-                    showSources ? "bg-gray-100 dark:bg-neutral-700" : "hover:bg-gray-100 dark:hover:bg-neutral-700",
+                    showSources
+                      ? "bg-gray-100 dark:bg-neutral-700"
+                      : "hover:bg-gray-100 dark:hover:bg-neutral-700",
                     "rounded-md p-1"
                   )}
                 >
@@ -280,6 +282,13 @@ const ChatPanel = ({
   thread,
   setSelectedDocument,
   setSelectedDocumentPage,
+  setUniqueFileIDs, // Add this prop
+}: {
+  agent: Agent;
+  thread: string;
+  setSelectedDocument: (fileID: string) => void;
+  setSelectedDocumentPage: (page: number) => void;
+  setUniqueFileIDs: (fileIDs: string[]) => void;
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
@@ -348,6 +357,20 @@ const ChatPanel = ({
       window.location.href = "/";
     }
   });
+
+  useEffect(() => {
+    // Extract unique file IDs from messages with sources
+    const fileIDSet = new Set<string>();
+    messages.forEach((message) => {
+      if (message.sources && message.sources.length > 0) {
+        message.sources.forEach((source) => {
+          fileIDSet.add(source.fileID);
+        });
+      }
+    });
+    // Convert the Set to an array and pass it to the parent
+    setUniqueFileIDs(Array.from(fileIDSet));
+  }, [messages]);
 
   const appendMessage = (content, align, sources = []) => {
     setMessages((prevMessages) => [
