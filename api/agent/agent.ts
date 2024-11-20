@@ -10,7 +10,9 @@ export interface Agent {
   updated_at: string;
   voice: boolean;
   status: number;
-  agent_files?: Array<{}> | null;
+  agent_files?: {
+    file_id: string;
+  };
   system_prompt?: string;
 }
 

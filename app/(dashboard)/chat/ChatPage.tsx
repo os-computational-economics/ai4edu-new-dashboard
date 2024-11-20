@@ -3,25 +3,44 @@ import React, { useState, useEffect } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import DocumentPanel from "./components/DocumentPanel";
 import ChatPanel from "./components/ChatPanel";
-import { Modal, ModalContent, ModalHeader, Button } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  Button,
+  Chip,
+  Divider,
+} from "@nextui-org/react";
 import { GripVertical, X } from "lucide-react";
 import { submitRating } from "@/api/feedback/feedback";
 import { THREAD_RATING_TRIGGER_PROBABILITY } from "@/utils/constants";
 import { Direction } from "react-resizable-panels/dist/declarations/src/types";
+import { Agent } from "@/api/agent/agent";
+import ChatFileList from "./components/ChatFileList";
 
 type Document = {
   id: number;
   title: string;
 };
 
-const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
+const ChatPage = ({
+  isOpen,
+  onClose,
+  status,
+  agent,
+  thread,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  status: number;
+  agent: Agent;
+  thread: string;
+}) => {
   const [selectedDocumentFileID, setSelectedDocumentFileID] = useState<
     Document | string | null
   >(null);
   const [selectedDocumentPage, setSelectedDocumentPage] = useState<number>(1);
-  const [isChatModalOpen, setIsChatModalOpen] = useState(true);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
-  const [rating, setRating] = useState(null);
   const [direction, setDirection] = useState<Direction>("horizontal");
 
   useEffect(() => {
@@ -72,7 +91,7 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
       // get the current path in the address bar
       const currentPath = window.location.pathname;
       // the thread id is the last part of the path
-      thread = currentPath.split("/").pop();
+      thread = currentPath.split("/").pop() || "";
     }
     if (thread && rating) {
       submitRating({ thread_id: thread, rating: rating })
@@ -99,8 +118,13 @@ const ChatPage = ({ isOpen, onClose, status, agent, thread }) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                {agent?.workspace_id} - {agent?.agent_name}
+              <ModalHeader className="flex flex-row justify-start gap-6 items-center pb-1 pt-2">
+                <ChatFileList agent={agent} />
+                <Divider orientation="vertical" />
+                <div className="flex flex-row items-center align-bottom gap-2">
+                  <Chip>{agent?.workspace_id}</Chip>
+                  {agent?.agent_name}
+                </div>
               </ModalHeader>
               <div className="flex h-[calc(100vh-62px)]">
                 {/*<aside className="z-30 overflow-auto">
