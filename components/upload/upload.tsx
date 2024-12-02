@@ -60,7 +60,7 @@ const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acce
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={closeModal} size="lg">
+      <Modal className='mb-[25vh] sm:mb-0' isOpen={isOpen} onClose={closeModal} size="lg">
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">{modalTitle}</ModalHeader>
           <ModalBody>
