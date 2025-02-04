@@ -11,18 +11,20 @@ import {
   TableRow,
   TableCell,
   Spinner,
-  Pagination
+  Pagination,
+  Switch
 } from '@nextui-org/react'
 import useMount from '@/components/hooks/useMount'
-import { createWorkspace, getWorkspaceList } from '@/api/workspace/workspace'
+import { createWorkspace, getWorkspaceList, setWorkspaceStatus } from '@/api/workspace/workspace'
 
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
 interface Workspace {
   workspace_id: string
   workspace_name: string
   workspace_password: string
   school_id: string
+  status: number
 }
 
 const Workspace = () => {
@@ -55,6 +57,7 @@ const Workspace = () => {
       .then((res) => {
         setisLoading(false)
         console.log('Workspace created:', res)
+        toast.success('Workspace created successfully')
         setWorkspaceId('')
         setWorkspaceName('')
         setWorkspacePassword('')
@@ -62,6 +65,9 @@ const Workspace = () => {
         fetchWorkspaceList(currentPage, pageSize)
       })
       .catch((error) => {
+        console.log(error)
+        setisLoading(false)
+        toast.error(error?.response?.data?.message)
         console.error('Error creating workspace:', error)
       })
   }
@@ -80,15 +86,39 @@ const Workspace = () => {
     getWorkspaceList(params)
       .then((res) => {
         setWorkspaceList(res.workspace_list)
+        setTotal(res.total)
+        setisLoading(false)
         console.log(res)
       })
       .catch((error) => {
+        setisLoading(false)
         console.error('Error fetching workspace list:', error)
+      })
+  }
+
+  const handleWorkspaceStatusChange = (workspace: Workspace) => {
+    // 1 = active, 0 = inactive, 2 = deleted
+    // Toggle workspace status: if it's 1, set it to 0; if it's 0, set it to 1.
+    const toggledStatus = workspace.status === 1 ? 0 : 1
+    const data = {
+      workspace_id: workspace.workspace_id,
+      workspace_status: toggledStatus
+    }
+
+    setWorkspaceStatus(data)
+      .then((res) => {
+        toast.success('Workspace updated successfully')
+        console.log('Workspace status updated successfully!')
+        fetchWorkspaceList(currentPage, pageSize)
+      })
+      .catch((error) => {
+        console.error('Error updating workspace status:', error)
       })
   }
 
   return (
     <div className="m-6">
+      <ToastContainer />
       <div>
         <h2 className="text-xl font-bold mb-4">Create Workspace</h2>
         <div className="grid grid-cols-2 gap-4">
@@ -144,7 +174,9 @@ const Workspace = () => {
               <div>
                 <div className="flex h-full w-full items-center justify-center">
                   <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
-                  <div className="ml-8 text-small text-default-600">{`Total ${total} user${total === 1 ? `` : `s`}`}</div>
+                  <div className="ml-8 text-small text-default-600">{`Total ${total} user${
+                    total === 1 ? `` : `s`
+                  }`}</div>
                 </div>
               </div>
             )
@@ -154,6 +186,7 @@ const Workspace = () => {
             <TableColumn key="school_id">School ID</TableColumn>
             <TableColumn key="workspace_id">Workspace ID</TableColumn>
             <TableColumn key="workspace_name">Workspace Name</TableColumn>
+            <TableColumn key="workspace_status">Workspace Status</TableColumn>
           </TableHeader>
           <TableBody
             items={workspaceList}
@@ -166,10 +199,17 @@ const Workspace = () => {
             }
           >
             {workspaceList.map((workspace) => (
-              <TableRow key={workspace.school_id}>
+              <TableRow key={workspace.workspace_id}>
                 <TableCell>{workspace.school_id}</TableCell>
                 <TableCell>{workspace.workspace_id}</TableCell>
                 <TableCell>{workspace.workspace_name}</TableCell>
+                <TableCell>
+                  <Switch
+                    isSelected={workspace.status === 1}
+                    onChange={(e) => handleWorkspaceStatusChange(workspace)}
+                  />
+                  {workspace.status === 1 ? 'Active' : 'Inactive'}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

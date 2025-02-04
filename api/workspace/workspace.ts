@@ -29,6 +29,7 @@ const api = {
   createWorkspace: role + `/${path}` + "/create_workspace",
   setUserRole: role + `/${path}` + "/set_user_role",
   setUserRoleStudentID: role + `/${path}` + "/set_user_role_with_student_id",
+  setWorkspaceStatus: role + `/${path}` + "/set_workspace_status"
 };
 
 // add users via CSV
@@ -83,6 +84,15 @@ export function setUserRole(data): Promise<any> {
 export function setUserRoleStudentID(data): Promise<any> {
   return request({
     url: api.setUserRoleStudentID,
+    method: "post",
+    data,
+  });
+}
+
+// set_workspace_status
+export function setWorkspaceStatus(data): Promise<any> {
+  return request({
+    url: api.setWorkspaceStatus,
     method: "post",
     data,
   });
