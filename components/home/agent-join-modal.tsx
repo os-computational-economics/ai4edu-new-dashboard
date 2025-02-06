@@ -61,7 +61,7 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
   return (
     <div>
       <ToastContainer />
-      <Modal isOpen={isOpen} onClose={() => handleCloseModal()}>
+      <Modal className="mb-[25vh] md:mb-0" isOpen={isOpen} onClose={() => handleCloseModal()}>
         <ModalContent>
           <ModalHeader>Join Workspace</ModalHeader>
           <ModalBody>
