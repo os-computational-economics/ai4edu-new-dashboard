@@ -293,7 +293,7 @@ const ChatPanel = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
-  const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
+  const [userId, setUserId] = useState(Cookies.get("user_id") || null);
   const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState<
     boolean | null
   >(null);
@@ -452,7 +452,7 @@ const ChatPanel = ({
       thread_id: currentThreadId,
       workspace_id: workspace_id,
       provider: model,
-      user_id: studentId,
+      user_id: userId,
       agent_id: agentID,
       voice: voice,
     };

@@ -24,7 +24,7 @@ export interface AgentsResponse {
 export interface NewAgent {
   agent_name: string;
   course_id: string;
-  student_id: string;
+  user_id: string;
   voice: boolean;
   status: number;
   allow_model_choice: boolean;
@@ -35,7 +35,7 @@ export interface UpdateAgent {
   agent_id: string;
   agent_name: string;
   course_id: string;
-  student_id: string;
+  user_id: string;
   voice: boolean;
   status: number;
   allow_model_choice: boolean;
@@ -46,7 +46,7 @@ export interface DeleteAgent {
   agent_id: string;
   agent_name: string;
   course_id: string;
-  student_id: string;
+  user_id: string;
   status: number;
 }
 

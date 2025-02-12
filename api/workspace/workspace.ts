@@ -5,7 +5,7 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
-  student_id: string;
+  student_id: string;  // TODO: It looks like this is only used in tables now? Could probably be removed in the future
   role: Array<{
     student: boolean;
     teacher: boolean;
