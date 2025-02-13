@@ -32,7 +32,7 @@ export default function App() {
     const params = {
       page,
       page_size: pageSize,
-      student_id: roleList[workspace_id] === 'teacher' ? 'all' : getCurrentUserStudentID(),
+      user_id: roleList[workspace_id] === 'teacher' ? 'all' : getCurrentUserStudentID(),
       workspace_id: workspace_id
     }
 
