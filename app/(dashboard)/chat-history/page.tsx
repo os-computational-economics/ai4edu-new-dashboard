@@ -5,7 +5,7 @@ import HistoryPanel from './components/HistoryPanel'
 import { Pagination } from '@nextui-org/react'
 import { ToastContainer, toast } from 'react-toastify'
 import { WorkspaceContext } from '@/components/layout/layout'
-import { getCurrentUserStudentID, getWorkspaceRole, checkExpired } from '@/utils/CookiesUtil'
+import { getWorkspaceRole, checkExpired, getCurrentUserID } from '@/utils/CookiesUtil'
 import { Card, ScrollShadow } from '@nextui-org/react'
 import { getThreadsList, getThreadbyID, Thread, SingleThreadResponse } from '@/api/thread/thread'
 import useMount from '@/components/hooks/useMount'
@@ -32,7 +32,7 @@ export default function App() {
     const params = {
       page,
       page_size: pageSize,
-      user_id: roleList[workspace_id] === 'teacher' ? 'all' : getCurrentUserStudentID(),
+      user_id: roleList[workspace_id] === 'teacher' ? -1 : getCurrentUserID(),  // Passing -1 in place of all, since user_id must be an int
       workspace_id: workspace_id
     }
 
