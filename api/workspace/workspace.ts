@@ -28,7 +28,7 @@ const api = {
   studentJoinWorkspace: role + `/${path}` + "/student_join_workspace",
   createWorkspace: role + `/${path}` + "/create_workspace",
   setUserRole: role + `/${path}` + "/set_user_role",
-  setUserRoleStudentID: role + `/${path}` + "/set_user_role_with_student_id",
+  setUserRoleUserID: role + `/${path}` + "/set_user_role_with_user_id",
   setWorkspaceStatus: role + `/${path}` + "/set_workspace_status"
 };
 
@@ -80,10 +80,10 @@ export function setUserRole(data): Promise<any> {
   });
 }
 
-// set_user_role_with_student_id
-export function setUserRoleStudentID(data): Promise<any> {
+// set_user_role_with_user_id
+export function setUserRoleUserID(data): Promise<any> {
   return request({
-    url: api.setUserRoleStudentID,
+    url: api.setUserRoleUserID,
     method: "post",
     data,
   });

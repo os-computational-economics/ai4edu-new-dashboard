@@ -15,7 +15,7 @@ import {
   Input
 } from '@nextui-org/react'
 import { getUserList, grantAccess, User } from '@/api/auth/auth'
-import { getWorkspaceList, setUserRole, setUserRoleStudentID } from '@/api/workspace/workspace'
+import { getWorkspaceList, setUserRole, setUserRoleUserID } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
@@ -119,7 +119,7 @@ const Tables = () => {
     }
 
     const requestData = {
-      student_id: user.student_id,
+      user_id: user.user_id,
       role: updatedRoles
     }
 
@@ -135,13 +135,13 @@ const Tables = () => {
 
   const setUsersRole = () => {
     const requestData = {
-      user_id: '-1', // setting to -1 as we are not using user_id
-      student_id: studentID,
+      user_id: Number(userID),
+      student_id: "N/A", // setting to "N/A" as we are not using student_id
       workspace_id: workspaceID,
       role: roleValue[0]
     }
-    setUserRoleStudentID(requestData).then(() => {
-      toast.success(`User ${studentID} updated with role ${roleValue}`)
+    setUserRoleUserID(requestData).then(() => {
+      toast.success(`User ${userID} updated with role ${roleValue}`)
       fetchUserList(1, pageSize, workspaceID)
     })
   }
@@ -190,9 +190,9 @@ const Tables = () => {
           size="sm"
           isDisabled={!values.length || isLoading}
           type="email"
-          label="Case ID / Student ID"
+          label="User ID"
           className="max-w-xs"
-          onValueChange={setStudentID}
+          onValueChange={setUserID}
         />
         <Select
           label="Select a role"
@@ -210,7 +210,7 @@ const Tables = () => {
         </Select>
         <Button
           color="primary"
-          isDisabled={!values.length || !studentID || !roleValue.length || isLoading}
+          isDisabled={!values.length || !userID || !roleValue.length || isLoading}
           onClick={() => setUsersRole()}
           isLoading={isLoading}
           endContent={<MdCached />}
