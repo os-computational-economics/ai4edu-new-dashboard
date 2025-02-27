@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation'
 import { formatedCourses, checkExpired } from '@/utils/CookiesUtil'
 import { WorkspaceContext } from '@/components/layout/layout'
 import AgentJoinModal from '@/components/home/agent-join-modal'
+import ArchiveModal from './archive-modal'
 
 interface Course {
   id: string
@@ -25,9 +26,9 @@ interface Course {
   name: string
 }
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({course}) => {
   const { currentWorkspace, setCurrentWorkspace } = useContext(WorkspaceContext)
-
+  const [ archiveModalOpen, setArchiveModalOpen ] = useState(false)
   const router = useRouter()
 
   const handleCourseClick = () => {
@@ -47,10 +48,19 @@ const CourseCard = ({ course }) => {
   }
 
   return (
+    <>
     <Card className="py-3 w-full max-w-80" isPressable onPress={handleCourseClick}>
-      <CardHeader className="pb-2 pt-0 px-4 flex-col items-start">
-        <p className="text-medium font-bold truncate w-full">{course.name}</p>
-        <small className="text-default-500 truncate w-full uppercase">{course.id}</small>
+      <CardHeader className="pb-2 pt-0 px-4 flex items-start justify-between">
+        <div className='flex flex-col'>
+            <p className="text-medium font-bold truncate w-full">{course.name}</p>
+            <small className="text-default-500 truncate w-full uppercase">{course.id}</small>
+        </div>
+        {course.role == "teacher" ? 
+        <Button onClick={() => {
+            setArchiveModalOpen(true)
+        }}>Archive</Button>
+        : <></>
+        }
       </CardHeader>
       <CardBody className="overflow-visible py-0 px-3">
         <Image
@@ -62,12 +72,15 @@ const CourseCard = ({ course }) => {
         />
       </CardBody>
     </Card>
+    <ArchiveModal isOpen={archiveModalOpen} onClose={() => {setArchiveModalOpen(false)}} course={course}/>
+    </>
   )
 }
 
 export const Content = () => {
   const [courses, setCourses] = useState<Course[]>([])
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false)
+  
 
   useEffect(() => {
     const courseList = formatedCourses()
@@ -95,10 +108,11 @@ export const Content = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 justify-center w-full">
               {courses.length > 0 ? (
-                courses.map((course) => <CourseCard key={course.id} course={course} />)
+                courses.map((course) => <CourseCard key={course.id} course={course}/>)
               ) : (
                 <p>No workspaces available at the moment. Please click &apos;Join a Workspace&apos; to join one.</p>
               )}
+              
             </div>
           </div>
         </div>
