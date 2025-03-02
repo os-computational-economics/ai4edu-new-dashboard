@@ -23,7 +23,7 @@ const ArchiveModal = ({ isOpen, onClose, course }) => {
           <ModalBody>
             <div className="flex items-center gap-2 p-3 rounded-lg">
               <span className="text-black-100">
-                Are you sure you would like to archive the {course.name}{" "}
+                Are you sure you would like to archive the <strong>{course.name}{" "}</strong>
                 workspace?
               </span>
             </div>
