@@ -27,7 +27,6 @@ const api = {
   getWorkspaceList: role + `/${path}` + "/get_workspace_list",
   studentJoinWorkspace: role + `/${path}` + "/student_join_workspace",
   createWorkspace: role + `/${path}` + "/create_workspace",
-  setUserRole: role + `/${path}` + "/set_user_role",
   setUserRoleUserID: role + `/${path}` + "/set_user_role_with_user_id",
   setWorkspaceStatus: role + `/${path}` + "/set_workspace_status"
 };
@@ -66,15 +65,6 @@ export function studentJoinWorkspace(data): Promise<any> {
 export function createWorkspace(data): Promise<any> {
   return request({
     url: api.createWorkspace,
-    method: "post",
-    data,
-  });
-}
-
-// set_user_role
-export function setUserRole(data): Promise<any> {
-  return request({
-    url: api.setUserRole,
     method: "post",
     data,
   });

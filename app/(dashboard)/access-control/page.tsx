@@ -15,7 +15,7 @@ import {
   Input
 } from '@nextui-org/react'
 import { getUserList, grantAccess, User } from '@/api/auth/auth'
-import { getWorkspaceList, setUserRole, setUserRoleUserID } from '@/api/workspace/workspace'
+import { getWorkspaceList, setUserRoleUserID } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
