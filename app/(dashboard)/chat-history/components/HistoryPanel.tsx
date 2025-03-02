@@ -10,7 +10,7 @@ import 'highlight.js/styles/atom-one-dark.min.css' // CSS for code highlighting
 import { preprocessLaTeX } from '@/utils/CustomMessageRender'
 import Link from 'next/link'
 import { Thread } from '@/api/thread/thread'
-import { getCurrentUserStudentID } from '@/utils/CookiesUtil'
+import { getCurrentUserID } from '@/utils/CookiesUtil'
 import { Bot, User } from 'lucide-react'
 
 // Define a type for individual messages
@@ -41,7 +41,7 @@ type HistoryPanelProps = {
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) => {
   console.log('Received thread details in HistoryPanel:', threadDetails)
-  const currentUserId = getCurrentUserStudentID()
+  const currentUserId = getCurrentUserID()
 
   // Group messages by user_id
   const groupedMessages = threadDetails.messages.reduce<GroupedMessages>((acc, message) => {
@@ -78,7 +78,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ thread, threadDetails }) =>
                   Download Record
                 </Button>
               </CSVLink>
-              {currentUserId === group.userId && (
+              {String(currentUserId) === String(group.userId) && (
                 <div>
                   <Link href={`/agents/${thread.agent_id}/${group.messages[0].thread_id}?from=chat-history`}>
                     <Button color="primary" variant="flat" className="ml-2">
