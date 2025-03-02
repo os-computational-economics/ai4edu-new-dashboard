@@ -16,38 +16,65 @@ export interface Agent {
   system_prompt?: string;
 }
 
-export interface AgentsResponse {
+export interface ListAgentsRequest {
+  workspace_id: string;
+  page?: number;
+  page_size?: number;
+}
+
+export interface ListAgentsResponse {
   agents: Array<Agent>;
   total: number;
 }
 
-export interface NewAgent {
+export interface NewAgentRequest {
   agent_name: string;
-  course_id: string;
-  user_id: string;
+  workspace_id: string;
+  creator: string; // TODO: This should be user_id, migrate later
   voice: boolean;
   status: number;
   allow_model_choice: boolean;
   model: string;
+  system_prompt: string;
+  agent_files: {
+    file_id: string;
+  };
 }
 
-export interface UpdateAgent {
+export interface NewAgentResponse {
   agent_id: string;
+}
+
+export interface UpdateAgentRequest {
+  agent_id: string;
+  workspace_id: string;
   agent_name: string;
-  course_id: string;
-  user_id: string;
+  creator: string; // TODO: This should be user_id, migrate later
   voice: boolean;
   status: number;
   allow_model_choice: boolean;
   model: string;
+  system_prompt: string;
+  agent_files: {
+    file_id: string;
+  };
 }
 
-export interface DeleteAgent {
+export interface UpdateAgentResponse {
   agent_id: string;
-  agent_name: string;
-  course_id: string;
-  user_id: string;
-  status: number;
+}
+
+export interface DeleteAgentRequest {
+  agent_id: string;
+  workspace_id: string;
+}
+
+export interface DeleteAgentResponse {
+  agent_id: string;
+}
+
+export interface getAgentByIDRequest {
+  agent_id: string;
 }
 
 export interface AgentUploadFileResponse {
@@ -69,7 +96,7 @@ const api = {
 };
 
 // add agent
-export function addAgent(data): Promise<NewAgent> {
+export function addAgent(data: NewAgentRequest): Promise<NewAgentResponse> {
   return request({
     url: api.addAgent,
     method: "post",
@@ -78,7 +105,9 @@ export function addAgent(data): Promise<NewAgent> {
 }
 
 // update agent
-export function updateAgent(data): Promise<UpdateAgent> {
+export function updateAgent(
+  data: UpdateAgentRequest
+): Promise<UpdateAgentResponse> {
   return request({
     url: api.updateAgent,
     method: "post",
@@ -87,7 +116,9 @@ export function updateAgent(data): Promise<UpdateAgent> {
 }
 
 // update agent
-export function deleteAgent(data): Promise<DeleteAgent> {
+export function deleteAgent(
+  data: DeleteAgentRequest
+): Promise<DeleteAgentResponse> {
   return request({
     url: api.deleteAgent,
     method: "post",
@@ -96,7 +127,9 @@ export function deleteAgent(data): Promise<DeleteAgent> {
 }
 
 // get agent lists
-export function getAgents(params): Promise<AgentsResponse> {
+export function getAgents(
+  params: ListAgentsRequest
+): Promise<ListAgentsResponse> {
   return request({
     url: api.getAgents,
     method: "get",
@@ -105,7 +138,7 @@ export function getAgents(params): Promise<AgentsResponse> {
 }
 
 // get agent by id
-export function getAgentByID(data): Promise<Agent> {
+export function getAgentByID(data: getAgentByIDRequest): Promise<Agent> {
   return request({
     url: api.getAgentbyID + data.agent_id,
     method: "get",

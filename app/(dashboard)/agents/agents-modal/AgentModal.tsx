@@ -2,8 +2,8 @@
 import { useEffect, useState, useContext } from 'react'
 
 import { Modal, ModalContent, Button } from '@nextui-org/react'
-import { addAgent, updateAgent } from '@/api/agent/agent'
-import { MdArrowBackIosNew, MdAdd } from 'react-icons/md'
+import { addAgent, updateAgent, UpdateAgentRequest } from '@/api/agent/agent'
+import { MdArrowBackIosNew } from 'react-icons/md'
 import { WorkspaceContext } from '@/components/layout/layout'
 
 import AgentDevelopment from '../../agent-dev/agent-development'
@@ -18,7 +18,7 @@ const AgentModal = ({ isOpen, onClose, status, agent }) => {
   }, [agent])
 
   const handleUpdate = () => {
-    const adjustedData = {
+    const adjustedData: UpdateAgentRequest = {
       ...currentAgent,
       agent_id: agent?.agent_id,
       voice: currentAgent.voice === true,
