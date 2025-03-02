@@ -25,7 +25,6 @@ const role = "admin"
 
 const api = {
   getUserList: role + `/${path}` + "/get_user_list",
-  grantAccess: role + `/${path}` + "/grant_access",
   ping: role + "/ping",
 };
 
@@ -33,15 +32,6 @@ export function ping(): Promise<any> {
   return request({
     url: api.ping,
     method: "get",
-  });
-}
-
-// add agent
-export function grantAccess(data): Promise<any> {
-  return request({
-    url: api.grantAccess,
-    method: "post",
-    data,
   });
 }
 
