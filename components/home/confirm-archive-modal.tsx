@@ -60,10 +60,10 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
       <ToastContainer />
       <Modal isOpen={isOpen} onClose={() => handleCloseModal()}>
         <ModalContent>
-          <ModalHeader>Join Workspace</ModalHeader>
+          <ModalHeader>Archive Workspace</ModalHeader>
           <ModalBody>
             <div className="flex items-center gap-2 p-3 rounded-lg">
-              <span className="text-black-100">
+              <span className="text-black-100 font-bold">
                 To confirm the action, enter the name of the workspace you would
                 like to archive.
               </span>
