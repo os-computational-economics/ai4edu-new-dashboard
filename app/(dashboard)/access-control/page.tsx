@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useMemo, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import {
   Table,
   TableHeader,
@@ -14,14 +14,12 @@ import {
   SelectItem,
   Input
 } from '@nextui-org/react'
-import { getUserList, grantAccess, User } from '@/api/auth/auth'
+import { getUserList, User } from '@/api/auth/auth'
 import { getWorkspaceList, setUserRoleUserID } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import throttle from 'lodash/throttle'
-import { set } from 'lodash'
 
 interface Workspace {
   workspace_id: string
@@ -111,32 +109,9 @@ const Tables = () => {
     }
   }
 
-  const handleRoleChange = (user, selectedRoles) => {
-    const updatedRoles = {
-      student: selectedRoles.includes('student'),
-      teacher: selectedRoles.includes('teacher'),
-      admin: selectedRoles.includes('admin')
-    }
-
-    const requestData = {
-      user_id: user.user_id,
-      role: updatedRoles
-    }
-
-    grantAccess(requestData)
-      .then(() => {
-        toast.success(`Roles updated for ${user.first_name} ${user.last_name}`)
-      })
-      .catch((error) => {
-        toast.error(`Failed to update roles: ${error.message}`)
-        console.error('Error updating roles:', error)
-      })
-  }
-
   const setUsersRole = () => {
     const requestData = {
       user_id: Number(userID),
-      student_id: "N/A", // setting to "N/A" as we are not using student_id
       workspace_id: workspaceID,
       role: roleValue[0]
     }
