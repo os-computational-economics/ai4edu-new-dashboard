@@ -44,7 +44,10 @@ export const UserDropdown = () => {
         expires: 15,
         domain: firstLevelDomain
       });
-      Cookies.set('student_id', decodedToken.student_id, { expires: 15, domain: firstLevelDomain })
+      Cookies.set('user_id', decodedToken.user_id, { 
+        expires: 15, 
+        domain: firstLevelDomain 
+      });
     } else if (refresh_token) {
       setFullName(Cookies.get('full_name') || '-')
       setEmail(Cookies.get('email') || '-')

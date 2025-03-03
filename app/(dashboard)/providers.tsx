@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { track } from "@vercel/analytics";
 import useMount from "@/components/hooks/useMount";
-import { getCurrentUserStudentID, getCurrentUserID } from "@/utils/CookiesUtil";
+import { getCurrentUserID } from "@/utils/CookiesUtil";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -24,7 +24,6 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     (function sendOnPageEvent() {
       try {
         const userInfo = JSON.stringify({
-          studentID: getCurrentUserStudentID(),
           userID: getCurrentUserID(),
         });
         const pageInfo = JSON.stringify({

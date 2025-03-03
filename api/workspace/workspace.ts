@@ -5,7 +5,7 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
-  student_id: string;
+  student_id: string; // TODO: It looks like this is only used in tables now? Could probably be removed in the future
   role: Array<{
     student: boolean;
     teacher: boolean;
@@ -18,18 +18,23 @@ export interface UserList {
   total: number;
 }
 
+export interface setUserRoleUserIDRequest {
+  user_id: number;
+  workspace_id: string;
+  role: string;
+}
+
 // API paths
 const path = "workspace";
-const role = "admin"
+const role = "admin";
 
 const api = {
   addUsersViaCsv: role + `/${path}` + "/add_users_via_csv",
   getWorkspaceList: role + `/${path}` + "/get_workspace_list",
   studentJoinWorkspace: role + `/${path}` + "/student_join_workspace",
   createWorkspace: role + `/${path}` + "/create_workspace",
-  setUserRole: role + `/${path}` + "/set_user_role",
-  setUserRoleStudentID: role + `/${path}` + "/set_user_role_with_student_id",
-  setWorkspaceStatus: role + `/${path}` + "/set_workspace_status"
+  setUserRoleUserID: role + `/${path}` + "/set_user_role_with_user_id",
+  setWorkspaceStatus: role + `/${path}` + "/set_workspace_status",
 };
 
 // add users via CSV
@@ -39,7 +44,7 @@ export function addUsersViaCsv(data, url): Promise<any> {
     method: "post",
     data,
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
   });
 }
@@ -71,19 +76,12 @@ export function createWorkspace(data): Promise<any> {
   });
 }
 
-// set_user_role
-export function setUserRole(data): Promise<any> {
+// set_user_role_with_user_id
+export function setUserRoleUserID(
+  data: setUserRoleUserIDRequest
+): Promise<any> {
   return request({
-    url: api.setUserRole,
-    method: "post",
-    data,
-  });
-}
-
-// set_user_role_with_student_id
-export function setUserRoleStudentID(data): Promise<any> {
-  return request({
-    url: api.setUserRoleStudentID,
+    url: api.setUserRoleUserID,
     method: "post",
     data,
   });

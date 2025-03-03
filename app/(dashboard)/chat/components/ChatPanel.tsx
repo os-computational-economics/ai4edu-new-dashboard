@@ -25,7 +25,7 @@ import rehypeHighlight from "rehype-highlight";
 
 import { checkToken } from "@/utils/CookiesUtil";
 import { preprocessLaTeX } from "@/utils/CustomMessageRender";
-import { getCurrentUserStudentID } from "@/utils/CookiesUtil";
+import { getCurrentUserID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
 import { submitRating } from "@/api/feedback/feedback";
 import { Agent } from "@/api/agent/agent";
@@ -293,7 +293,7 @@ const ChatPanel = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [threadId, setThreadId] = useState(thread);
-  const [studentId, setStudentId] = useState(Cookies.get("student_id") || null);
+  const [userId, setUserId] = useState(Cookies.get("user_id") || null);
   const [hasWriteAccessToThread, setHasWriteAccessToThread] = useState<
     boolean | null
   >(null);
@@ -323,7 +323,7 @@ const ChatPanel = ({
     }
     if (agent?.status === 1) {
       const firstMessage = messages[0];
-      const currentUserID = getCurrentUserStudentID();
+      const currentUserID = getCurrentUserID();
       setHasWriteAccessToThread(firstMessage.user_id === currentUserID);
     } else {
       // if agent is not active or deleted, user can't write to the thread anyway, so no need to check
@@ -452,7 +452,7 @@ const ChatPanel = ({
       thread_id: currentThreadId,
       workspace_id: workspace_id,
       provider: model,
-      user_id: studentId,
+      user_id: userId,
       agent_id: agentID,
       voice: voice,
     };

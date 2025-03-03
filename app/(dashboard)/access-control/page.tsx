@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useMemo, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import {
   Table,
   TableHeader,
@@ -14,14 +14,12 @@ import {
   SelectItem,
   Input
 } from '@nextui-org/react'
-import { getUserList, grantAccess, User } from '@/api/auth/auth'
-import { getWorkspaceList, setUserRole, setUserRoleStudentID } from '@/api/workspace/workspace'
+import { getUserList, User } from '@/api/auth/auth'
+import { getWorkspaceList, setUserRoleUserID } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import throttle from 'lodash/throttle'
-import { set } from 'lodash'
 
 interface Workspace {
   workspace_id: string
@@ -111,37 +109,14 @@ const Tables = () => {
     }
   }
 
-  const handleRoleChange = (user, selectedRoles) => {
-    const updatedRoles = {
-      student: selectedRoles.includes('student'),
-      teacher: selectedRoles.includes('teacher'),
-      admin: selectedRoles.includes('admin')
-    }
-
-    const requestData = {
-      student_id: user.student_id,
-      role: updatedRoles
-    }
-
-    grantAccess(requestData)
-      .then(() => {
-        toast.success(`Roles updated for ${user.first_name} ${user.last_name}`)
-      })
-      .catch((error) => {
-        toast.error(`Failed to update roles: ${error.message}`)
-        console.error('Error updating roles:', error)
-      })
-  }
-
   const setUsersRole = () => {
     const requestData = {
-      user_id: '-1', // setting to -1 as we are not using user_id
-      student_id: studentID,
+      user_id: Number(userID),
       workspace_id: workspaceID,
       role: roleValue[0]
     }
-    setUserRoleStudentID(requestData).then(() => {
-      toast.success(`User ${studentID} updated with role ${roleValue}`)
+    setUserRoleUserID(requestData).then(() => {
+      toast.success(`User ${userID} updated with role ${roleValue}`)
       fetchUserList(1, pageSize, workspaceID)
     })
   }
@@ -190,9 +165,9 @@ const Tables = () => {
           size="sm"
           isDisabled={!values.length || isLoading}
           type="email"
-          label="Case ID / Student ID"
+          label="User ID"
           className="max-w-xs"
-          onValueChange={setStudentID}
+          onValueChange={setUserID}
         />
         <Select
           label="Select a role"
@@ -210,7 +185,7 @@ const Tables = () => {
         </Select>
         <Button
           color="primary"
-          isDisabled={!values.length || !studentID || !roleValue.length || isLoading}
+          isDisabled={!values.length || !userID || !roleValue.length || isLoading}
           onClick={() => setUsersRole()}
           isLoading={isLoading}
           endContent={<MdCached />}

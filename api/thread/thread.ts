@@ -25,7 +25,7 @@ export interface SingleThreadResponse {
 }
 
 export interface ListThreads {
-  student_id: string;
+  user_id: string;
   page: number;
   page_size: number;
 }

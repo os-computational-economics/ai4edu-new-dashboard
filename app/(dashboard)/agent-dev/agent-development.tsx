@@ -81,7 +81,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
 
   const handleDataCollectionChange = (checked) => {
     setDataCollection(checked)
-    handleChange('status', checked ? 1 : 0)
+    handleChange('data_collection', checked ? 1 : 0)
   }
 
   const handleModelChange = (keys: Selection) => {
@@ -230,7 +230,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
                   <Switch isSelected={dataCollection} onValueChange={handleDataCollectionChange} />
                 </div>
               </div>
-              <div className="flex justify-between items-center">
+              {/* <div className="flex justify-between items-center">
                 <span>Enable Voice Input</span>
                 <Switch
                   isSelected={voiceInput}
@@ -239,7 +239,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
                     handleChange('voice', checked)
                   }}
                 />
-              </div>
+              </div> */}
               <div className="flex justify-between items-center">
                 <span>Model Selection</span>
                 {/* <Dropdown isDisabled={!modelSelection}> */}
