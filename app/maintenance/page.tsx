@@ -138,7 +138,7 @@ export default function Maintenance() {
             color: "transparent",
           }}
         >
-          We'll be back soon
+          We&rsquo;ll be back soon!
         </h1>
 
         <p
