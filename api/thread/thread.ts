@@ -3,12 +3,14 @@ import request from "@/utils/request";
 export interface Thread {
   thread_id: string;
   user_id: string;
+  workspace_id: string;
   created_at: string;
   agent_id: string;
+  agent_name: string;
 }
 
 export interface ListThreadsResponse {
-  threads: Array<Thread>;
+  items: Array<Thread>;
   total: number;
 }
 

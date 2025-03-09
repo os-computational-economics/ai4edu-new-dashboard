@@ -51,7 +51,7 @@ export default function App() {
 
     getThreadsList(params)
       .then((res) => {
-        setThreads(res.threads);
+        setThreads(res.items);
         setTotal(res.total); // Set the total count for pagination
       })
       .catch((error) => {

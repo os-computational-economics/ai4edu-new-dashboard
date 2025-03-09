@@ -23,7 +23,7 @@ export interface ListAgentsRequest {
 }
 
 export interface ListAgentsResponse {
-  agents: Array<Agent>;
+  items: Array<Agent>;
   total: number;
 }
 
