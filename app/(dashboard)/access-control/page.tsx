@@ -84,7 +84,7 @@ const Tables = () => {
     getUserList(params)
       .then((res) => {
         setisLoading(false)
-        setUsers(res.user_list)
+        setUsers(res.items)
         setTotal(res.total)
       })
       .catch((error) => {
