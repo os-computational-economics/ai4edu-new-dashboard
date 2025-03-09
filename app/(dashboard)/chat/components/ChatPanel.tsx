@@ -28,7 +28,7 @@ import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { getCurrentUserID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
 import { submitRating } from "@/api/feedback/feedback";
-import { Agent } from "@/api/agent/agent";
+import { GetAgentByIDResponse } from "@/api/agent/agent";
 // import { FileUploadForm } from "./FileUpload";
 
 import "katex/dist/katex.min.css";
@@ -284,7 +284,7 @@ const ChatPanel = ({
   setSelectedDocumentPage,
   setUniqueFileIDs, // Add this prop
 }: {
-  agent: Agent;
+  agent: GetAgentByIDResponse;
   thread: string;
   setSelectedDocument: (fileID: string) => void;
   setSelectedDocumentPage: (page: number) => void;

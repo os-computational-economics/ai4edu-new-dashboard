@@ -15,7 +15,7 @@ import { GripVertical, X } from "lucide-react";
 import { submitRating } from "@/api/feedback/feedback";
 import { THREAD_RATING_TRIGGER_PROBABILITY } from "@/utils/constants";
 import { Direction } from "react-resizable-panels/dist/declarations/src/types";
-import { Agent } from "@/api/agent/agent";
+import { GetAgentByIDResponse } from "@/api/agent/agent";
 import ChatFileList from "./components/ChatFileList";
 
 type Document = {
@@ -33,7 +33,7 @@ const ChatPage = ({
   isOpen: boolean;
   onClose: () => void;
   status: number;
-  agent: Agent;
+  agent: GetAgentByIDResponse;
   thread: string;
 }) => {
   const [selectedDocumentFileID, setSelectedDocumentFileID] = useState<

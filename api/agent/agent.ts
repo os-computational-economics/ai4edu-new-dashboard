@@ -73,8 +73,21 @@ export interface DeleteAgentResponse {
   agent_id: string;
 }
 
-export interface getAgentByIDRequest {
+export interface GetAgentByIDRequest {
   agent_id: string;
+}
+
+export interface GetAgentByIDResponse {
+  agent_id: string;
+  agent_name: string;
+  allow_model_choice: boolean;
+  model: string;
+  voice: boolean;
+  workspace_id: string;
+  agent_files: {
+    file_id: string;
+  };
+  status: number;
 }
 
 export interface AgentUploadFileResponse {
@@ -138,7 +151,7 @@ export function getAgents(
 }
 
 // get agent by id
-export function getAgentByID(data: getAgentByIDRequest): Promise<Agent> {
+export function getAgentByID(data: GetAgentByIDRequest): Promise<GetAgentByIDResponse> {
   return request({
     url: api.getAgentbyID + data.agent_id,
     method: "get",

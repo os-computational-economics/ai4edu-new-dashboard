@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useContext, Suspense } from "react";
-import { getAgentByID, Agent } from "@/api/agent/agent";
+import { getAgentByID, GetAgentByIDResponse } from "@/api/agent/agent";
 import useMount from "@/components/hooks/useMount";
 import ChatPage from "../../../chat/ChatPage";
 
@@ -20,9 +20,7 @@ const Page = ({
   params: { agent: string; thread: string };
   searchParams: { from?: string };
 }) => {
-  const [agent, setAgent] = useState<Agent>();
-  const [creatorId, setCreatorId] = useState("");
-  const [isLoading, setisLoading] = useState(false);
+  const [agent, setAgent] = useState<GetAgentByIDResponse | null>(null);
 
   const [status, setStatus] = useState(1); // 1 - new Agent, 2 - Edit Agent
 
@@ -31,12 +29,6 @@ const Page = ({
   useMount(() => {
     fetchAgent();
   });
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setCreatorId(localStorage.getItem("user_id") || "test001");
-    }
-  }, []);
 
   const generateShareUrl = (agent) => {
     const baseUrl = "https://chat.ai4edu.io";
@@ -56,13 +48,11 @@ const Page = ({
     getAgentByID({ agent_id: params.agent })
       .then((res) => {
         if (res !== undefined) {
-          setisLoading(false);
           setAgent(res);
           console.log(res);
         }
       })
       .catch((error) => {
-        setisLoading(false);
         console.error("Error fetching agents:", error);
       });
   };
