@@ -24,6 +24,25 @@ export interface setUserRoleUserIDRequest {
   role: string;
 }
 
+export interface WorkspaceListRequest {
+  page: number;
+  page_size: number;
+}
+
+export interface Workspace {
+  workspace_id: string;
+  workspace_name: string;
+  status: number;
+  school_id: number;
+}
+
+export interface WorkspaceListResponse {
+  items: Array<Workspace>;
+  page: number;
+  page_size: number;
+  total: number;
+}
+
 // API paths
 const path = "workspace";
 const role = "admin";
@@ -50,7 +69,7 @@ export function addUsersViaCsv(data, url): Promise<any> {
 }
 
 // get workspace list
-export function getWorkspaceList(params): Promise<any> {
+export function getWorkspaceList(params: WorkspaceListRequest): Promise<WorkspaceListResponse> {
   return request({
     url: api.getWorkspaceList,
     method: "get",
