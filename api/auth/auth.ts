@@ -7,15 +7,10 @@ export interface User {
   last_name: string;
   student_id: string;
   workspace_role: { [key: string]: string }
-  role: Array<{
-    student: boolean;
-    teacher: boolean;
-    admin: boolean;
-  }>;
 }
 
 export interface UserList {
-  user_list: Array<User>;
+  items: Array<User>;
   total: number;
 }
 
