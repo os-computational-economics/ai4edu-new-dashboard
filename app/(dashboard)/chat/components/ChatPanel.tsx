@@ -301,7 +301,7 @@ const ChatPanel = ({
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
-  const workspace_id =
+  const workspace_id: string =
     agent?.workspace_id || JSON.parse(localStorage.getItem("workspace")!)?.id;
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
@@ -426,7 +426,7 @@ const ChatPanel = ({
 
     let currentThreadId = threadId;
     if (currentThreadId === "new") {
-      currentThreadId = await getNewThreadID();
+      currentThreadId = await getNewThreadID() || "error";
       setThreadId(currentThreadId);
       const newUrl = `/agents/${agentID}/${currentThreadId}`;
       window.history.replaceState(

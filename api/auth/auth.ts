@@ -9,6 +9,12 @@ export interface User {
   workspace_role: { [key: string]: string }
 }
 
+export interface UserListRequest {
+  page?: number;
+  page_size?: number;
+  workspace_id?: string;
+}
+
 export interface UserList {
   items: Array<User>;
   total: number;
@@ -31,7 +37,7 @@ export function ping(): Promise<any> {
 }
 
 // get agent lists
-export function getUserList(params): Promise<UserList> {
+export function getUserList(params: UserListRequest): Promise<UserList> {
   return request({
     url: api.getUserList,
     method: "get",
