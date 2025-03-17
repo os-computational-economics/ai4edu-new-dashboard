@@ -25,7 +25,7 @@ const Workspace = () => {
   const [workspaceName, setWorkspaceName] = useState('')
   const [workspacePassword, setWorkspacePassword] = useState('')
   const [workspaceList, setWorkspaceList] = useState<WorkspaceType[]>([])
-  const [schoolID, setSchoolID] = useState('')
+  const [schoolID, setSchoolID] = useState(1)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [total, setTotal] = useState(0)
@@ -54,7 +54,7 @@ const Workspace = () => {
         setWorkspaceId('')
         setWorkspaceName('')
         setWorkspacePassword('')
-        setSchoolID('')
+        setSchoolID(1)
         fetchWorkspaceList(currentPage, pageSize)
       })
       .catch((error) => {
@@ -141,8 +141,8 @@ const Workspace = () => {
             isRequired
             label="School ID"
             type="number"
-            value={schoolID}
-            onChange={(e) => setSchoolID(e.target.value)}
+            value={String(schoolID)}
+            onChange={(e) => setSchoolID(Number(e.target.value))}
           />
         </div>
         <Spacer y={1} />
