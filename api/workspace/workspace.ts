@@ -24,6 +24,48 @@ export interface setUserRoleUserIDRequest {
   role: string;
 }
 
+export interface WorkspaceListRequest {
+  page: number;
+  page_size: number;
+}
+
+export interface Workspace {
+  workspace_id: string;
+  workspace_name: string;
+  status: number;
+  school_id: number;
+}
+
+export interface WorkspaceListResponse {
+  items: Array<Workspace>;
+  page: number;
+  page_size: number;
+  total: number;
+}
+
+export interface StudentJoinWorkspaceRequest {
+  workspace_id: string;
+  password: string;
+}
+
+export interface CreateWorkspaceRequest {
+  workspace_id: string;
+  workspace_name: string;
+  workspace_password: string;
+  school_id: number;
+}
+
+enum WorkspaceStatus {
+  ACTIVE = 1,
+  INACTIVE = 0,
+  DELETED = 2,
+}
+
+export interface UpdateWorkspaceRequest {
+  workspace_id: string;
+  workspace_status: WorkspaceStatus;
+}
+
 // API paths
 const path = "workspace";
 const role = "admin";
@@ -50,7 +92,7 @@ export function addUsersViaCsv(data, url): Promise<any> {
 }
 
 // get workspace list
-export function getWorkspaceList(params): Promise<any> {
+export function getWorkspaceList(params: WorkspaceListRequest): Promise<WorkspaceListResponse> {
   return request({
     url: api.getWorkspaceList,
     method: "get",
@@ -59,7 +101,7 @@ export function getWorkspaceList(params): Promise<any> {
 }
 
 // student_join_workspace
-export function studentJoinWorkspace(data): Promise<any> {
+export function studentJoinWorkspace(data: StudentJoinWorkspaceRequest): Promise<any> {
   return request({
     url: api.studentJoinWorkspace,
     method: "post",
@@ -68,7 +110,7 @@ export function studentJoinWorkspace(data): Promise<any> {
 }
 
 // create_workspace
-export function createWorkspace(data): Promise<any> {
+export function createWorkspace(data: CreateWorkspaceRequest): Promise<any> {
   return request({
     url: api.createWorkspace,
     method: "post",
@@ -88,7 +130,7 @@ export function setUserRoleUserID(
 }
 
 // set_workspace_status
-export function setWorkspaceStatus(data): Promise<any> {
+export function setWorkspaceStatus(data: UpdateWorkspaceRequest): Promise<any> {
   return request({
     url: api.setWorkspaceStatus,
     method: "post",

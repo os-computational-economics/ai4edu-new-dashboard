@@ -99,7 +99,7 @@ const Tables = () => {
     getAgents(params)
       .then((res) => {
         setisLoading(false);
-        setAgents(res.agents);
+        setAgents(res.items);
         setTotal(res.total);
       })
       .catch((error) => {

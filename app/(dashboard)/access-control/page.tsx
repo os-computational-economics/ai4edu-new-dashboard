@@ -15,18 +15,11 @@ import {
   Input
 } from '@nextui-org/react'
 import { getUserList, User } from '@/api/auth/auth'
-import { getWorkspaceList, setUserRoleUserID } from '@/api/workspace/workspace'
+import { getWorkspaceList, setUserRoleUserID, Workspace } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
-interface Workspace {
-  workspace_id: string
-  workspace_name: string
-  workspace_password: string
-  school_id: string
-}
 
 const Tables = () => {
   const [users, setUsers] = useState<User[]>([])
@@ -63,7 +56,7 @@ const Tables = () => {
     getWorkspaceList(params)
       .then((res) => {
         console.log(res)
-        setWorkspaceList(res.workspace_list)
+        setWorkspaceList(res.items)
       })
       .catch((error) => {
         console.error('Error fetching workspace list:', error)
@@ -84,7 +77,7 @@ const Tables = () => {
     getUserList(params)
       .then((res) => {
         setisLoading(false)
-        setUsers(res.user_list)
+        setUsers(res.items)
         setTotal(res.total)
       })
       .catch((error) => {

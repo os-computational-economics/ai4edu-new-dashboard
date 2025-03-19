@@ -7,15 +7,16 @@ export interface User {
   last_name: string;
   student_id: string;
   workspace_role: { [key: string]: string }
-  role: Array<{
-    student: boolean;
-    teacher: boolean;
-    admin: boolean;
-  }>;
+}
+
+export interface UserListRequest {
+  page?: number;
+  page_size?: number;
+  workspace_id?: string;
 }
 
 export interface UserList {
-  user_list: Array<User>;
+  items: Array<User>;
   total: number;
 }
 
@@ -36,7 +37,7 @@ export function ping(): Promise<any> {
 }
 
 // get agent lists
-export function getUserList(params): Promise<UserList> {
+export function getUserList(params: UserListRequest): Promise<UserList> {
   return request({
     url: api.getUserList,
     method: "get",

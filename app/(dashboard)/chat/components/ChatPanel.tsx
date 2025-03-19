@@ -28,7 +28,7 @@ import { preprocessLaTeX } from "@/utils/CustomMessageRender";
 import { getCurrentUserID } from "@/utils/CookiesUtil";
 import { steamChatURL, getNewThread } from "@/api/chat/chat";
 import { submitRating } from "@/api/feedback/feedback";
-import { Agent } from "@/api/agent/agent";
+import { GetAgentByIDResponse } from "@/api/agent/agent";
 // import { FileUploadForm } from "./FileUpload";
 
 import "katex/dist/katex.min.css";
@@ -284,7 +284,7 @@ const ChatPanel = ({
   setSelectedDocumentPage,
   setUniqueFileIDs, // Add this prop
 }: {
-  agent: Agent;
+  agent: GetAgentByIDResponse;
   thread: string;
   setSelectedDocument: (fileID: string) => void;
   setSelectedDocumentPage: (page: number) => void;
@@ -301,7 +301,7 @@ const ChatPanel = ({
   const model = agent?.model || "openai";
   const voice = agent?.voice;
   const agentID = agent?.agent_id;
-  const workspace_id =
+  const workspace_id: string =
     agent?.workspace_id || JSON.parse(localStorage.getItem("workspace")!)?.id;
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
@@ -426,7 +426,7 @@ const ChatPanel = ({
 
     let currentThreadId = threadId;
     if (currentThreadId === "new") {
-      currentThreadId = await getNewThreadID();
+      currentThreadId = await getNewThreadID() || "error";
       setThreadId(currentThreadId);
       const newUrl = `/agents/${agentID}/${currentThreadId}`;
       window.history.replaceState(

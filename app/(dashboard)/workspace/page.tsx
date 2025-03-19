@@ -15,24 +15,17 @@ import {
   Switch
 } from '@nextui-org/react'
 import useMount from '@/components/hooks/useMount'
-import { createWorkspace, getWorkspaceList, setWorkspaceStatus } from '@/api/workspace/workspace'
+import { createWorkspace, getWorkspaceList, setWorkspaceStatus, Workspace as WorkspaceType } from '@/api/workspace/workspace'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-interface Workspace {
-  workspace_id: string
-  workspace_name: string
-  workspace_password: string
-  school_id: string
-  status: number
-}
 
 const Workspace = () => {
   const [workspaceId, setWorkspaceId] = useState('')
   const [workspaceName, setWorkspaceName] = useState('')
   const [workspacePassword, setWorkspacePassword] = useState('')
-  const [workspaceList, setWorkspaceList] = useState<Workspace[]>([])
-  const [schoolID, setSchoolID] = useState('')
+  const [workspaceList, setWorkspaceList] = useState<WorkspaceType[]>([])
+  const [schoolID, setSchoolID] = useState(1)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [total, setTotal] = useState(0)
@@ -61,7 +54,7 @@ const Workspace = () => {
         setWorkspaceId('')
         setWorkspaceName('')
         setWorkspacePassword('')
-        setSchoolID('')
+        setSchoolID(1)
         fetchWorkspaceList(currentPage, pageSize)
       })
       .catch((error) => {
@@ -85,7 +78,7 @@ const Workspace = () => {
     }
     getWorkspaceList(params)
       .then((res) => {
-        setWorkspaceList(res.workspace_list)
+        setWorkspaceList(res.items)
         setTotal(res.total)
         setisLoading(false)
         console.log(res)
@@ -96,7 +89,7 @@ const Workspace = () => {
       })
   }
 
-  const handleWorkspaceStatusChange = (workspace: Workspace) => {
+  const handleWorkspaceStatusChange = (workspace: WorkspaceType) => {
     // 1 = active, 0 = inactive, 2 = deleted
     // Toggle workspace status: if it's 1, set it to 0; if it's 0, set it to 1.
     const toggledStatus = workspace.status === 1 ? 0 : 1
@@ -148,8 +141,8 @@ const Workspace = () => {
             isRequired
             label="School ID"
             type="number"
-            value={schoolID}
-            onChange={(e) => setSchoolID(e.target.value)}
+            value={String(schoolID)}
+            onChange={(e) => setSchoolID(Number(e.target.value))}
           />
         </div>
         <Spacer y={1} />

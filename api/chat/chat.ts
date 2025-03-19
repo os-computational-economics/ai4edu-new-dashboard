@@ -1,6 +1,15 @@
 import request from "@/utils/request";
 import { apiUrl } from "@/utils/request";
 
+export interface NewThreadRequest {
+  workspace_id: string;
+  agent_id: string;
+}
+
+export interface NewThreadResponse {
+  thread_id: string;
+}
+
 // API paths
 const path = "users";
 const role = "user";
@@ -29,7 +38,7 @@ export function streamChat(data): Promise<any> {
   });
 }
 
-export function getNewThread(params): Promise<any> {
+export function getNewThread(params: NewThreadRequest): Promise<NewThreadResponse> {
   return request({
     url: api.newThread,
     method: "get",

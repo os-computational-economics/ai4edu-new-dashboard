@@ -13,7 +13,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 import { File } from "lucide-react";
-import { Agent } from "@/api/agent/agent";
+import { GetAgentByIDResponse } from "@/api/agent/agent";
 import { HAVE_SEEN_FILE_TOOLTIP_LOCAL_STORAGE_KEY } from "@/utils/constants";
 
 const ChatFileList = ({
@@ -21,7 +21,7 @@ const ChatFileList = ({
   setSelectedDocument,
   uniqueFileIDs,
 }: {
-  agent: Agent;
+  agent: GetAgentByIDResponse;
   setSelectedDocument: (string) => void;
   uniqueFileIDs: string[];
 }) => {
