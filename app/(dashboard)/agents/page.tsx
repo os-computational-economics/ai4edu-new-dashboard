@@ -38,11 +38,6 @@ const statusColorMap = {
   2: "danger", // Inactive
 };
 
-const modelList = [
-  { value: "openai", label: "OpenAI - ChatGPT" },
-  { value: "anthropic", label: "Anthropic - Claude AI" },
-];
-
 const Tables = () => {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [total, setTotal] = useState(0);

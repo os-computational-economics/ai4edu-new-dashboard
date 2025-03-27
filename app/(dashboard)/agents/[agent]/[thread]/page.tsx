@@ -8,11 +8,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 
-const modelList = [
-  { value: "openai", label: "OpenAI - ChatGPT" },
-  { value: "anthropic", label: "Anthropic - Claude AI" },
-];
-
 const Page = ({
   params,
   searchParams,
