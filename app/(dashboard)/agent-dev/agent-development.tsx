@@ -104,6 +104,8 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
         return 'Anthropic - Claude AI'
       case 'xlab':
         return 'xLab - Self-Hosted - Model May Vary'
+      case 'xlab-reasoning':
+        return 'xLab - Self-Hosted - Reasoning'
       default:
         return 'Select a model'
     }
@@ -262,6 +264,7 @@ const AgentDevelopment = ({ agent, onUpdate }) => {
                     <DropdownItem key="openai">OpenAI - ChatGPT</DropdownItem>
                     <DropdownItem key="anthropic">Anthropic - Claude AI</DropdownItem>
                     <DropdownItem key="xlab">xLab - Self-Hosted - Model May Vary</DropdownItem>
+                    <DropdownItem key="xlab-reasoning">xLab - Self-Hosted - Reasoning</DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </div>
