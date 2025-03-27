@@ -75,6 +75,7 @@ function Message({
   currentChatSession?: boolean;
 }) {
   const [showSources, setShowSources] = useState(false);
+  const [showThought, setShowThought] = useState(false);
   const [feedback, setFeedback] = useState(String); //  '0' - bad, '1' - good
 
   const className =
@@ -101,6 +102,17 @@ function Message({
     }
   };
 
+  // Check if message has </think> tag
+  const hasThinkTag = content.includes('</think>');
+  let thoughtContent = '';
+  let mainContent = content;
+  
+  if (hasThinkTag) {
+    const parts = content.split('</think>');
+    thoughtContent = parts[0];
+    mainContent = parts.slice(1).join('');
+  }
+
   return (
     <div
       className={`flex flex-col items-${align} my-1 font-medium text-black max-md:pr-5 max-md:max-w-full`}
@@ -118,12 +130,36 @@ function Message({
             ) : null}
           </div>
         )}
+        
+        {hasThinkTag && !align.includes("end") && (
+          <div className="mb-2">
+            <button 
+              onClick={() => setShowThought(!showThought)}
+              className="text-blue-500 hover:text-blue-700 flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md text-sm"
+            >
+              <span className="mr-1">{showThought ? '▼' : '►'}</span> 
+              thought process
+            </button>
+            
+            {showThought && (
+              <div className="mt-2 p-2 bg-gray-100 dark:bg-gray-700 bg-opacity-70 rounded-md">
+                <ReactMarkdown
+                  remarkPlugins={[remarkMath]}
+                  rehypePlugins={[rehypeKatex, rehypeHighlight]}
+                >
+                  {preprocessLaTeX(thoughtContent)}
+                </ReactMarkdown>
+              </div>
+            )}
+          </div>
+        )}
+        
         <p className="overflow-x-auto">
           <ReactMarkdown
             remarkPlugins={[remarkMath]}
             rehypePlugins={[rehypeKatex, rehypeHighlight]}
           >
-            {preprocessLaTeX(content)}
+            {preprocessLaTeX(hasThinkTag ? mainContent : content)}
           </ReactMarkdown>
         </p>
       </div>

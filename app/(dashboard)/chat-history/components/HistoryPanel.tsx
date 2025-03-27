@@ -124,12 +124,44 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({
                   <Bot className="mr-2 inline-block text-sky-600" />
                 )}
 
+                {message.role !== "human" && message.content.includes('</think>') && (
+                  <div className="mb-2">
+                    <button 
+                      onClick={(e) => {
+                        const target = e.currentTarget.nextElementSibling;
+                        if (target) target.classList.toggle('hidden');
+                        const spanElement = e.currentTarget.querySelector('span');
+                        if (spanElement) {
+                          spanElement.textContent = target?.classList.contains('hidden') ? '►' : '▼';
+                        }
+                      }}
+                      className="text-blue-500 hover:text-blue-700 flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md text-sm"
+                    >
+                      <span className="mr-1">►</span> 
+                      thought process
+                    </button>
+                    
+                    <div className="text-sm mt-2 p-2 bg-gray-100 dark:bg-gray-700 bg-opacity-70 rounded-md hidden">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkMath]}
+                        rehypePlugins={[rehypeKatex, rehypeHighlight]}
+                      >
+                        {preprocessLaTeX(message.content.split('</think>')[0])}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                )}
+
                 <p className="text-sm text-left overflow-x-auto">
                   <ReactMarkdown
                     remarkPlugins={[remarkMath]}
                     rehypePlugins={[rehypeKatex, rehypeHighlight]}
                   >
-                    {preprocessLaTeX(message.content)}
+                    {preprocessLaTeX(
+                      message.content.includes('</think>') && message.role !== "human" 
+                        ? message.content.split('</think>').slice(1).join('') 
+                        : message.content
+                    )}
                   </ReactMarkdown>
                   {/* {message.content} */}
                 </p>
