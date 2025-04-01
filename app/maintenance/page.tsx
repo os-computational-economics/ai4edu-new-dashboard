@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export default function Maintenance() {
   // You can set these values as props or from an API
   const [maintenanceTimestamp, setMaintenanceTimestamp] = useState(
-    "2025-03-02T23:59:59"
+    "2025-04-05T23:59:59"
   );
   const [maintenanceTimeZone, setMaintenanceTimeZone] =
     useState("America/New_York");
