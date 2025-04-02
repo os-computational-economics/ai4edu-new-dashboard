@@ -19,19 +19,19 @@ import { ping } from "@/api/auth/auth";
 const AgentJoinModal = ({ isOpen, onClose }) => {
   const { currentWorkspace, setCurrentWorkspace } =
     useContext(WorkspaceContext);
-  const [workspaceID, setWorkspaceID] = useState("");
+  const [workspaceJoinCode, setWorkspaceJoinCode] = useState("");
   const [workspacePassword, setWorkspacePassword] = useState("");
   const [joinError, setJoinError] = useState(false);
 
   const handleCloseModal = () => {
-    setWorkspaceID("");
+    setWorkspaceJoinCode("");
     setWorkspacePassword("");
     setJoinError(false);
     onClose();
   };
 
   const onSubmit = () => {
-    const param = { workspace_id: workspaceID, password: workspacePassword };
+    const param = { workspace_join_code: workspaceJoinCode };
     studentJoinWorkspace(param)
       .then((response) => {
         toast.success(
@@ -69,8 +69,7 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
               <MdInfoOutline size={24} />
               <span className="text-black-100 text-xs">
                 To join a new workspace, enter the{" "}
-                <span className="font-semibold">Workspace ID</span> and
-                <span className="font-semibold"> Workspace Password</span>{" "}
+                <span className="font-semibold">Join Code</span>{" "}
                 provided by your instructor.
               </span>
             </div>
@@ -78,19 +77,10 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
             <Input
               size="sm"
               variant="bordered"
-              label="Workspace ID"
+              label="Join Code"
               isRequired
-              value={workspaceID}
-              onValueChange={(value) => setWorkspaceID(value)}
-              isClearable
-            />
-            <Input
-              size="sm"
-              variant="bordered"
-              label="Workspace Password"
-              isRequired
-              value={workspacePassword}
-              onValueChange={(value) => setWorkspacePassword(value)}
+              value={workspaceJoinCode}
+              onValueChange={(value) => setWorkspaceJoinCode(value)}
               isClearable
             />
             {joinError && 
@@ -107,7 +97,7 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
             <Button
               color="primary"
               onClick={onSubmit}
-              isDisabled={!workspaceID || !workspacePassword}
+              isDisabled={!workspaceJoinCode}
             >
               Join
             </Button>

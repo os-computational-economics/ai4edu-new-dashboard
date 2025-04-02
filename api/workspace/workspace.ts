@@ -44,8 +44,7 @@ export interface WorkspaceListResponse {
 }
 
 export interface StudentJoinWorkspaceRequest {
-  workspace_id: string;
-  password: string;
+  workspace_join_code: string;
 }
 
 export interface CreateWorkspaceRequest {

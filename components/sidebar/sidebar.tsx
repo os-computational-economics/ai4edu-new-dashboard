@@ -9,7 +9,7 @@ import { useSidebarContext } from '../layout/layout-context'
 import { usePathname } from 'next/navigation'
 import { CustomersIcon } from '../icons/sidebar/customers-icon'
 import { CollapseItems } from './collapse-items'
-import { isAdmin, formatedCourses } from '@/utils/CookiesUtil'
+import { isSystemAdmin, isWorkspaceAdmin, formatedCourses } from '@/utils/CookiesUtil'
 import { useRouter } from 'next/navigation'
 import { Users, BotMessageSquare, History, Settings, KeySquare, LayoutDashboard } from 'lucide-react'
 
@@ -108,10 +108,26 @@ export const SidebarWrapper = () => {
     return sidebarItems
   }
 
-  const renderAdminItems = (): React.ReactNode[] => {
-    const adminItems: React.ReactNode[] = []
+  const renderWorkspaceAdminItems = (): React.ReactNode[] => {
+    const workspaceAdminItems: React.ReactNode[] = []
 
-    adminItems.push(
+    workspaceAdminItems.push(
+      <SidebarItem
+        key="workspace"
+        isActive={pathname === '/workspace'}
+        title="Workspace Management"
+        icon={<Settings size={32} />}
+        href="workspace"
+      />
+    )
+
+    return workspaceAdminItems
+  }
+
+  const renderSystemAdminItems = (): React.ReactNode[] => {
+    const systemAdminItems: React.ReactNode[] = []
+
+    systemAdminItems.push(
       <SidebarItem
         key="workspace"
         isActive={pathname === '/workspace'}
@@ -135,7 +151,7 @@ export const SidebarWrapper = () => {
       // />
     )
 
-    return adminItems
+    return systemAdminItems
   }
 
   return (
@@ -155,7 +171,10 @@ export const SidebarWrapper = () => {
             {selectedCourse && (
               <SidebarMenu title={selectedCourse.name}>{renderSidebarItems(selectedCourse.role)}</SidebarMenu>
             )}
-            {isAdmin() && <SidebarMenu title="Admin">{renderAdminItems()}</SidebarMenu>}
+            {isSystemAdmin() ? <SidebarMenu title="System Admin">{renderSystemAdminItems()}</SidebarMenu>
+              : isWorkspaceAdmin() ? <SidebarMenu title="Workspace Admin">{renderWorkspaceAdminItems()}</SidebarMenu>
+              : null}
+            {}
           </div>
         </div>
       </div>

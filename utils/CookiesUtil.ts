@@ -38,9 +38,13 @@ const formatedCourses = () => {
   return formattedCourses;
 };
 
-const isAdmin = () => {
+const isSystemAdmin = () => {
   return decodeToken()?.system_admin;
 };
+
+const isWorkspaceAdmin = () => {
+  return decodeToken()?.workspace_admin;
+}
 
 const checkExpired = () => {
   // check if there is no access token but there is a refresh token
@@ -81,7 +85,8 @@ const checkToken = () => {
 
 export {
   formatedCourses,
-  isAdmin,
+  isSystemAdmin,
+  isWorkspaceAdmin,
   checkExpired,
   getCurrentUserStudentID,
   getWorkspaceRole,
