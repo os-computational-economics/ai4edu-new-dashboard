@@ -16,14 +16,15 @@ import {
 } from '@nextui-org/react'
 import useMount from '@/components/hooks/useMount'
 import { createWorkspace, getWorkspaceList, setWorkspaceStatus, Workspace as WorkspaceType } from '@/api/workspace/workspace'
+import { getCurrentUserID } from '@/utils/CookiesUtil'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 const Workspace = () => {
-  const [workspaceId, setWorkspaceId] = useState('')
+  const [workspacePrompt, setWorkspacePrompt] = useState('')
   const [workspaceName, setWorkspaceName] = useState('')
-  const [workspacePassword, setWorkspacePassword] = useState('')
+  const [workspaceComment, setWorkspaceComment] = useState('')
   const [workspaceList, setWorkspaceList] = useState<WorkspaceType[]>([])
   const [schoolID, setSchoolID] = useState(1)
   const [currentPage, setCurrentPage] = useState(1)
@@ -40,10 +41,11 @@ const Workspace = () => {
   const createNewWorkspace = () => {
     setisLoading(true)
     const params = {
-      workspace_id: workspaceId,
       workspace_name: workspaceName,
-      workspace_password: workspacePassword,
-      school_id: schoolID
+      school_id: schoolID,
+      user_id: getCurrentUserID(),
+      workspace_prompt: workspacePrompt,
+      workspace_comment: workspaceComment
     }
 
     createWorkspace(params)
@@ -51,9 +53,9 @@ const Workspace = () => {
         setisLoading(false)
         console.log('Workspace created:', res)
         toast.success('Workspace created successfully')
-        setWorkspaceId('')
+        setWorkspacePrompt('')
         setWorkspaceName('')
-        setWorkspacePassword('')
+        setWorkspaceComment('')
         setSchoolID(1)
         fetchWorkspaceList(currentPage, pageSize)
       })
@@ -118,23 +120,9 @@ const Workspace = () => {
           <Input
             isClearable
             isRequired
-            label="Workspace ID"
-            value={workspaceId}
-            onChange={(e) => setWorkspaceId(e.target.value)}
-          />
-          <Input
-            isClearable
-            isRequired
             label="Workspace Name"
             value={workspaceName}
             onChange={(e) => setWorkspaceName(e.target.value)}
-          />
-          <Input
-            isClearable
-            isRequired
-            label="Workspace Password"
-            value={workspacePassword}
-            onChange={(e) => setWorkspacePassword(e.target.value)}
           />
           <Input
             isClearable
@@ -144,12 +132,24 @@ const Workspace = () => {
             value={String(schoolID)}
             onChange={(e) => setSchoolID(Number(e.target.value))}
           />
+          <Input
+            isClearable
+            label="Workspace Prompt"
+            value={workspacePrompt}
+            onChange={(e) => setWorkspacePrompt(e.target.value)}
+          />
+          <Input
+            isClearable
+            label="Workspace Comment"
+            value={workspaceComment}
+            onChange={(e) => setWorkspaceComment(e.target.value)}
+          />
         </div>
         <Spacer y={1} />
         <div className="flex justify-end mt-2">
           <Button
             isLoading={isLoading}
-            isDisabled={!workspaceId || !workspaceName || !workspacePassword || !schoolID}
+            isDisabled={!workspaceName || !schoolID}
             onClick={createNewWorkspace}
             color="primary"
           >
@@ -179,6 +179,8 @@ const Workspace = () => {
             <TableColumn key="school_id">School ID</TableColumn>
             <TableColumn key="workspace_id">Workspace ID</TableColumn>
             <TableColumn key="workspace_name">Workspace Name</TableColumn>
+            <TableColumn key="workspace_prompt">Workspace Prompt</TableColumn>
+            <TableColumn key="workspace_comment">Workspace Comment</TableColumn>
             <TableColumn key="workspace_status">Workspace Status</TableColumn>
           </TableHeader>
           <TableBody
@@ -196,6 +198,8 @@ const Workspace = () => {
                 <TableCell>{workspace.school_id}</TableCell>
                 <TableCell>{workspace.workspace_id}</TableCell>
                 <TableCell>{workspace.workspace_name}</TableCell>
+                <TableCell>{workspace.workspace_prompt}</TableCell>
+                <TableCell>{workspace.workspace_comment}</TableCell>
                 <TableCell>
                   <Switch
                     isSelected={workspace.status === 1}

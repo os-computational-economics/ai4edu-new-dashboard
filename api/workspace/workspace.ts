@@ -34,6 +34,8 @@ export interface Workspace {
   workspace_name: string;
   status: number;
   school_id: number;
+  workspace_prompt: string;
+  workspace_comment: string;
 }
 
 export interface WorkspaceListResponse {
@@ -48,10 +50,11 @@ export interface StudentJoinWorkspaceRequest {
 }
 
 export interface CreateWorkspaceRequest {
-  workspace_id: string;
   workspace_name: string;
-  workspace_password: string;
   school_id: number;
+  user_id: number;
+  workspace_prompt: string | null;
+  workspace_comment: string | null;
 }
 
 enum WorkspaceStatus {
