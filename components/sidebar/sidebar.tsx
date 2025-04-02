@@ -108,26 +108,10 @@ export const SidebarWrapper = () => {
     return sidebarItems
   }
 
-  const renderWorkspaceAdminItems = (): React.ReactNode[] => {
-    const workspaceAdminItems: React.ReactNode[] = []
+  const renderAdminItems = (): React.ReactNode[] => {
+    const adminItems: React.ReactNode[] = []
 
-    workspaceAdminItems.push(
-      <SidebarItem
-        key="workspace"
-        isActive={pathname === '/workspace'}
-        title="Workspace Management"
-        icon={<Settings size={32} />}
-        href="workspace"
-      />
-    )
-
-    return workspaceAdminItems
-  }
-
-  const renderSystemAdminItems = (): React.ReactNode[] => {
-    const systemAdminItems: React.ReactNode[] = []
-
-    systemAdminItems.push(
+    adminItems.push(
       <SidebarItem
         key="workspace"
         isActive={pathname === '/workspace'}
@@ -151,7 +135,7 @@ export const SidebarWrapper = () => {
       // />
     )
 
-    return systemAdminItems
+    return adminItems
   }
 
   return (
@@ -171,8 +155,8 @@ export const SidebarWrapper = () => {
             {selectedCourse && (
               <SidebarMenu title={selectedCourse.name}>{renderSidebarItems(selectedCourse.role)}</SidebarMenu>
             )}
-            {isSystemAdmin() ? <SidebarMenu title="System Admin">{renderSystemAdminItems()}</SidebarMenu>
-              : isWorkspaceAdmin() ? <SidebarMenu title="Workspace Admin">{renderWorkspaceAdminItems()}</SidebarMenu>
+            {isSystemAdmin() ? <SidebarMenu title="System Admin">{renderAdminItems()}</SidebarMenu>
+              : isWorkspaceAdmin() ? <SidebarMenu title="Workspace Admin">{renderAdminItems()}</SidebarMenu>
               : null}
             {}
           </div>
