@@ -79,6 +79,7 @@ const api = {
   createWorkspace: role + `/${path}` + "/create_workspace",
   setUserRoleUserID: role + `/${path}` + "/set_user_role_with_user_id",
   setWorkspaceStatus: role + `/${path}` + "/set_workspace_status",
+  getUserWorkspaceDetails: role + `/${path}` + "/get_user_workspace_details"
 };
 
 // add users via CSV
@@ -138,4 +139,12 @@ export function setWorkspaceStatus(data: UpdateWorkspaceRequest): Promise<any> {
     method: "post",
     data,
   });
+}
+
+// get_user_workspace_details
+export function getUserWorkspaceDetails(): Promise<any> {
+  return request({
+    url: api.getUserWorkspaceDetails,
+    method: "get"
+  })
 }

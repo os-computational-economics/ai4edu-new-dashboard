@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { Button, Card, Image } from "@nextui-org/react";
 import { DarkModeSwitch } from "@/components/navbar/darkmodeswitch";
 import { localBackend } from "@/utils/request";
+import { getUserWorkspaceDetails } from "@/api/workspace/workspace"
 
 const SigninPage: React.FC = () => {
   useEffect(() => {
@@ -28,6 +29,16 @@ const SigninPage: React.FC = () => {
           expires: 29 / (24 * 60),
           domain: firstLevelDomain,
         });
+        getUserWorkspaceDetails()
+          .then((res) => {
+            console.log(res)
+            Cookies.set("user_workspace_details", JSON.stringify(res.items), {
+              expires: 15,
+              domain: firstLevelDomain
+            })})
+            .catch((error) => {
+              console.error("Error fetching workspace list", error)
+            })
 
         urlParams.delete("refresh");
         urlParams.delete("access");

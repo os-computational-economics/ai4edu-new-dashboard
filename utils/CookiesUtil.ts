@@ -16,6 +16,16 @@ const decodeToken = () => {
   }
 };
 
+const obtainWorkspaceDetails = () => {
+  const user_workspace_details = Cookies.get("user_workspace_details");
+  if (user_workspace_details) {
+    return JSON.parse(user_workspace_details);
+  }
+  else {
+    return null;
+  }
+}
+
 const getWorkspaceRole = () => {
   return decodeToken()?.workspace_role;
 };
@@ -29,12 +39,27 @@ const getCurrentUserID = () => {
 };
 
 const formatedCourses = () => {
+  // fetch workspace details and roles
+  const workspace_details = obtainWorkspaceDetails() ?? {};
   const roles = decodeToken()?.workspace_role || {};
-  const formattedCourses = Object.entries(roles).map(([id, role]) => ({
-    id,
-    role: role as string,
-    name: id,
+
+  // merge workspace_details and workspace_roles together by workspace_id to centralize data
+  const mergedWorkspaces = workspace_details.map(workspace => {
+    const mergedWorkspaces = { ...workspace };
+    const role = roles[workspace.workspace_id];
+    if (role) {
+      mergedWorkspaces.workspace_role = role;
+    }
+    return mergedWorkspaces;
+  })
+
+  // format courses for course cards
+  const formattedCourses = mergedWorkspaces.map(workspace => ({
+    id: workspace.workspace_id,
+    role: workspace.workspace_role,
+    name: workspace.workspace_name,
   }));
+
   return formattedCourses;
 };
 
