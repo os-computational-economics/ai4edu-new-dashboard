@@ -45,23 +45,17 @@ const CourseCard = ({ course }) => {
         isPressable
         onPress={handleCourseClick}
       >
-        <CardHeader className="pb-2 pt-0 px-4 flex items-start justify-between">
-          <div className="flex flex-col">
-            <p className="text-medium font-bold truncate w-full">
-              {course.name}
-            </p>
-            <small className="text-default-500 truncate w-full uppercase">
-              {course.id}
-            </small>
+        <CardHeader className="pb-2 pt-0 px-4 flex items-center justify-between">
+          <div className="flex flex-col min-w-0">
+            <p className="text-medium font-bold truncate">{course.name}</p>
+            <small className="text-default-500 truncate uppercase">{course.id}</small>
           </div>
-          {course.role == "teacher" ? (
+          {course.role === "teacher" ? (
             <Button
-              onClick={() => {
-                setArchiveModalOpen(true);
-              }}
+              onClick={() => setArchiveModalOpen(true)}
               size="sm"
               isIconOnly
-              className="self-center"
+              className="ml-auto"
             >
               <Archive color="Crimson" />
             </Button>
