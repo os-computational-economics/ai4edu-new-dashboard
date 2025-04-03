@@ -32,6 +32,7 @@ export interface WorkspaceListRequest {
 export interface Workspace {
   workspace_id: string;
   workspace_name: string;
+  workspace_join_code;
   status: number;
   school_id: number;
   workspace_prompt: string;

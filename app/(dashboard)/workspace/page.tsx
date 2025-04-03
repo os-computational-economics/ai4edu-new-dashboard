@@ -179,6 +179,7 @@ const Workspace = () => {
             <TableColumn key="school_id">School ID</TableColumn>
             <TableColumn key="workspace_id">Workspace ID</TableColumn>
             <TableColumn key="workspace_name">Workspace Name</TableColumn>
+            <TableColumn key="workspace_join_code">Workspace Join Code</TableColumn>
             <TableColumn key="workspace_prompt">Workspace Prompt</TableColumn>
             <TableColumn key="workspace_comment">Workspace Comment</TableColumn>
             <TableColumn key="workspace_status">Workspace Status</TableColumn>
@@ -198,6 +199,7 @@ const Workspace = () => {
                 <TableCell>{workspace.school_id}</TableCell>
                 <TableCell>{workspace.workspace_id}</TableCell>
                 <TableCell>{workspace.workspace_name}</TableCell>
+                <TableCell>{workspace.workspace_join_code}</TableCell>
                 <TableCell>{workspace.workspace_prompt}</TableCell>
                 <TableCell>{workspace.workspace_comment}</TableCell>
                 <TableCell>
