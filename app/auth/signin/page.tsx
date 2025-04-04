@@ -4,10 +4,10 @@ import { useEffect } from "react";
 
 import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
-import { Button, Card, Image } from "@heroui/react";
+import { Button, Card, Image, addToast } from "@heroui/react";
 import { DarkModeSwitch } from "@/components/navbar/darkmodeswitch";
 import { localBackend } from "@/utils/request";
-import { getUserWorkspaceDetails } from "@/api/workspace/workspace"
+import { getUserWorkspaceDetails } from "@/api/workspace/workspace";
 import { LOGIN_PERSISTENCE_IN_DAYS } from "@/utils/constants";
 
 const SigninPage: React.FC = () => {
@@ -18,6 +18,11 @@ const SigninPage: React.FC = () => {
       const access = urlParams.get("access");
 
       if (refresh && access) {
+        addToast({
+          title: "Login successful",
+          description: "Getting your information prepared...",
+          color: "success",
+        });
         // refresh token valid for 15 days, under the domain first level domain
         Cookies.set("refresh_token", refresh, {
           expires: LOGIN_PERSISTENCE_IN_DAYS,
@@ -28,18 +33,18 @@ const SigninPage: React.FC = () => {
         });
         getUserWorkspaceDetails()
           .then((res) => {
-            console.log(res)
+            console.log(res);
             Cookies.set("user_workspace_details", JSON.stringify(res.items), {
               expires: LOGIN_PERSISTENCE_IN_DAYS,
-            })})
-            .catch((error) => {
-              console.error("Error fetching workspace list", error)
-            })
+            });
+            urlParams.delete("refresh");
+            urlParams.delete("access");
 
-        urlParams.delete("refresh");
-        urlParams.delete("access");
-
-        redirect("/");
+            redirect("/");
+          })
+          .catch((error) => {
+            console.error("Error fetching workspace list", error);
+          });
       }
 
       const refreshToken = Cookies.get("refresh_token");

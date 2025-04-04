@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { HeroUIProvider } from "@heroui/system";
+import { ToastProvider } from "@heroui/toast";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 
@@ -17,6 +18,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
         attribute="class"
         {...themeProps}
       >
+        <ToastProvider />
         {children}
       </NextThemesProvider>
     </HeroUIProvider>
