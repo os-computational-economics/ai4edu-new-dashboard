@@ -104,7 +104,7 @@ const CourseDropdown = ({ courses, setSelectedCourse }) => {
               </DropdownItem>
             ))
           ) : (
-            <DropdownItem>No courses available</DropdownItem>
+            <DropdownItem key={""}>No courses available</DropdownItem>
           )}
         </DropdownSection>
       </DropdownMenu>
