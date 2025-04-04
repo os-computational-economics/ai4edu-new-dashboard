@@ -5,6 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
 import { AUTH_PATH } from "./constants";
+import logout from "./logout";
+import { log } from "console";
 
 export const localBackend =
   process.env.NEXT_PUBLIC_LOCAL_BACKEND?.toUpperCase() === "TRUE";
@@ -95,9 +97,7 @@ instance.interceptors.request.use(
         }
         return config as any;
       } catch (error) {
-        Cookies.remove("access_token");
-        Cookies.remove("refresh_token");
-        window.location.href = AUTH_PATH;
+        logout();
       }
     }
     return config as any;
@@ -131,12 +131,7 @@ instance.interceptors.response.use(
       });*/
       if (error.response.status === 401) {
         // authorization error, logout
-        Cookies.remove("access_token");
-        Cookies.remove("refresh_token");
-        localStorage.clear();
-        setTimeout(() => {
-          window.location.href = AUTH_PATH;
-        }, 3000);
+        logout();
       } else if (error.response.status === 500) {
         // server error
         /* not an informative error message, should replace

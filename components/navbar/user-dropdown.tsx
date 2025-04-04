@@ -5,27 +5,18 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Navbar,
   NavbarItem,
 } from "@heroui/react";
 import { DarkModeSwitch } from "./darkmodeswitch";
 import Cookies from "js-cookie";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import logout from "@/utils/logout";
 import { AUTH_PATH, LOGIN_PERSISTENCE_IN_DAYS } from "@/utils/constants";
 
 export const UserDropdown = () => {
   const [fullName, setFullName] = useState("");
   const [nameInitials, setNameInitials] = useState("");
   const [email, setEmail] = useState("");
-
-  const Logout = () => {
-    Cookies.remove("refresh_token");
-    Cookies.remove("access_token");
-    Cookies.remove("full_name");
-    Cookies.remove("email");
-    localStorage.clear();
-    window.location.href = AUTH_PATH;
-  };
 
   useEffect(() => {
     const access_token = Cookies.get("access_token");
@@ -111,7 +102,7 @@ export const UserDropdown = () => {
           className="text-danger"
           showDivider
           onPress={() => {
-            Logout();
+            logout();
           }}
         >
           Log Out
