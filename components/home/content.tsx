@@ -46,9 +46,9 @@ const CourseCard = ({ course }) => {
         onPress={handleCourseClick}
       >
         <CardHeader className="pb-2 pt-0 px-4 flex items-center justify-between">
-          <div className="flex flex-col min-w-0">
+          <div className="flex flex-col min-w-0 items-start">
             <p className="text-medium font-bold truncate">{course.name}</p>
-            <small className="text-default-500 truncate uppercase">{course.id}</small>
+            <small className="text-default-500 truncate uppercase">{course.comment}</small>
           </div>
           {course.role === "teacher" ? (
             <Button
