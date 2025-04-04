@@ -1,5 +1,5 @@
-'use client'
-import React, { useEffect, useState } from 'react'
+"use client";
+import React, { useState } from "react";
 import {
   Button,
   Input,
@@ -12,103 +12,107 @@ import {
   TableCell,
   Spinner,
   Pagination,
-  Switch
-} from '@nextui-org/react'
-import useMount from '@/components/hooks/useMount'
-import { createWorkspace, getWorkspaceList, setWorkspaceStatus, Workspace as WorkspaceType } from '@/api/workspace/workspace'
-import { getCurrentUserID } from '@/utils/CookiesUtil'
+  Switch,
+} from "@nextui-org/react";
+import useMount from "@/components/hooks/useMount";
+import {
+  createWorkspace,
+  getWorkspaceList,
+  setWorkspaceStatus,
+  Workspace as WorkspaceType,
+} from "@/api/workspace/workspace";
 
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Workspace = () => {
-  const [workspacePrompt, setWorkspacePrompt] = useState('')
-  const [workspaceName, setWorkspaceName] = useState('')
-  const [workspaceComment, setWorkspaceComment] = useState('')
-  const [workspaceList, setWorkspaceList] = useState<WorkspaceType[]>([])
-  const [schoolID, setSchoolID] = useState(1)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [total, setTotal] = useState(0)
-  const [isLoading, setisLoading] = useState(false)
+  const [workspacePrompt, setWorkspacePrompt] = useState("");
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [workspaceComment, setWorkspaceComment] = useState("");
+  const [workspaceList, setWorkspaceList] = useState<WorkspaceType[]>([]);
+  const [schoolID, setSchoolID] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [isLoading, setisLoading] = useState(false);
 
-  const totalPage = Math.ceil(total / pageSize)
+  const totalPage = Math.ceil(total / pageSize);
 
   useMount(() => {
-    fetchWorkspaceList(currentPage, pageSize)
-  })
+    fetchWorkspaceList(currentPage, pageSize);
+  });
 
   const createNewWorkspace = () => {
-    setisLoading(true)
+    setisLoading(true);
     const params = {
       workspace_name: workspaceName,
       school_id: schoolID,
       workspace_prompt: workspacePrompt,
-      workspace_comment: workspaceComment
-    }
+      workspace_comment: workspaceComment,
+    };
 
     createWorkspace(params)
       .then((res) => {
-        setisLoading(false)
-        console.log('Workspace created:', res)
-        toast.success('Workspace created successfully')
-        setWorkspacePrompt('')
-        setWorkspaceName('')
-        setWorkspaceComment('')
-        setSchoolID(1)
-        fetchWorkspaceList(currentPage, pageSize)
+        setisLoading(false);
+        console.log("Workspace created:", res);
+        toast.success("Workspace created successfully");
+        setWorkspacePrompt("");
+        setWorkspaceName("");
+        setWorkspaceComment("");
+        setSchoolID(1);
+        fetchWorkspaceList(currentPage, pageSize);
       })
       .catch((error) => {
-        console.log(error)
-        setisLoading(false)
-        toast.error(error?.response?.data?.message)
-        console.error('Error creating workspace:', error)
-      })
-  }
+        console.log(error);
+        setisLoading(false);
+        toast.error(error?.response?.data?.message);
+        console.error("Error creating workspace:", error);
+      });
+  };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-    setisLoading(true)
-    fetchWorkspaceList(page, pageSize)
-  }
+    setCurrentPage(page);
+    setisLoading(true);
+    fetchWorkspaceList(page, pageSize);
+  };
 
   const fetchWorkspaceList = (page: number, pageSize: number) => {
     const params = {
       page,
-      page_size: pageSize
-    }
+      page_size: pageSize,
+    };
     getWorkspaceList(params)
       .then((res) => {
-        setWorkspaceList(res.items)
-        setTotal(res.total)
-        setisLoading(false)
-        console.log(res)
+        setWorkspaceList(res.items);
+        setTotal(res.total);
+        setisLoading(false);
+        console.log(res);
       })
       .catch((error) => {
-        setisLoading(false)
-        console.error('Error fetching workspace list:', error)
-      })
-  }
+        setisLoading(false);
+        console.error("Error fetching workspace list:", error);
+      });
+  };
 
   const handleWorkspaceStatusChange = (workspace: WorkspaceType) => {
     // 1 = active, 0 = inactive, 2 = deleted
     // Toggle workspace status: if it's 1, set it to 0; if it's 0, set it to 1.
-    const toggledStatus = workspace.status === 1 ? 0 : 1
+    const toggledStatus = workspace.status === 1 ? 0 : 1;
     const data = {
       workspace_id: workspace.workspace_id,
-      workspace_status: toggledStatus
-    }
+      workspace_status: toggledStatus,
+    };
 
     setWorkspaceStatus(data)
       .then((res) => {
-        toast.success('Workspace updated successfully')
-        console.log('Workspace status updated successfully!')
-        fetchWorkspaceList(currentPage, pageSize)
+        toast.success("Workspace updated successfully");
+        console.log("Workspace status updated successfully!");
+        fetchWorkspaceList(currentPage, pageSize);
       })
       .catch((error) => {
-        console.error('Error updating workspace status:', error)
-      })
-  }
+        console.error("Error updating workspace status:", error);
+      });
+  };
 
   return (
     <div className="m-6">
@@ -165,7 +169,12 @@ const Workspace = () => {
             totalPage > 0 && (
               <div>
                 <div className="flex h-full w-full items-center justify-center">
-                  <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
+                  <Pagination
+                    isDisabled={isLoading}
+                    page={currentPage}
+                    total={totalPage}
+                    onChange={handlePageChange}
+                  />
                   <div className="ml-8 text-small text-default-600">{`Total ${total} user${
                     total === 1 ? `` : `s`
                   }`}</div>
@@ -178,7 +187,9 @@ const Workspace = () => {
             <TableColumn key="school_id">School ID</TableColumn>
             <TableColumn key="workspace_id">Workspace ID</TableColumn>
             <TableColumn key="workspace_name">Workspace Name</TableColumn>
-            <TableColumn key="workspace_join_code">Workspace Join Code</TableColumn>
+            <TableColumn key="workspace_join_code">
+              Workspace Join Code
+            </TableColumn>
             <TableColumn key="workspace_prompt">Workspace Prompt</TableColumn>
             <TableColumn key="workspace_comment">Workspace Comment</TableColumn>
             <TableColumn key="workspace_status">Workspace Status</TableColumn>
@@ -206,7 +217,7 @@ const Workspace = () => {
                     isSelected={workspace.status === 1}
                     onChange={(e) => handleWorkspaceStatusChange(workspace)}
                   />
-                  {workspace.status === 1 ? 'Active' : 'Inactive'}
+                  {workspace.status === 1 ? "Active" : "Inactive"}
                 </TableCell>
               </TableRow>
             ))}
@@ -214,7 +225,7 @@ const Workspace = () => {
         </Table>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Workspace
+export default Workspace;

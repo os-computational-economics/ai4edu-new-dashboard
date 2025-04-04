@@ -79,7 +79,7 @@ const api = {
   createWorkspace: role + `/${path}` + "/create_workspace",
   setUserRoleUserID: role + `/${path}` + "/set_user_role_with_user_id",
   setWorkspaceStatus: role + `/${path}` + "/set_workspace_status",
-  getUserWorkspaceDetails: role + `/${path}` + "/get_user_workspace_details"
+  getUserWorkspaceDetails: role + `/${path}` + "/get_user_workspace_details",
 };
 
 // add users via CSV
@@ -95,7 +95,9 @@ export function addUsersViaCsv(data, url): Promise<any> {
 }
 
 // get workspace list
-export function getWorkspaceList(params: WorkspaceListRequest): Promise<WorkspaceListResponse> {
+export function getWorkspaceList(
+  params: WorkspaceListRequest
+): Promise<WorkspaceListResponse> {
   return request({
     url: api.getWorkspaceList,
     method: "get",
@@ -104,7 +106,9 @@ export function getWorkspaceList(params: WorkspaceListRequest): Promise<Workspac
 }
 
 // student_join_workspace
-export function studentJoinWorkspace(data: StudentJoinWorkspaceRequest): Promise<any> {
+export function studentJoinWorkspace(
+  data: StudentJoinWorkspaceRequest
+): Promise<any> {
   return request({
     url: api.studentJoinWorkspace,
     method: "post",
@@ -145,6 +149,6 @@ export function setWorkspaceStatus(data: UpdateWorkspaceRequest): Promise<any> {
 export function getUserWorkspaceDetails(): Promise<any> {
   return request({
     url: api.getUserWorkspaceDetails,
-    method: "get"
-  })
+    method: "get",
+  });
 }
