@@ -5,7 +5,7 @@ import {
   ModalFooter,
   ModalContent,
   Button,
-  Input,
+  InputOtp,
 } from "@heroui/react";
 import { useContext, useState } from "react";
 import { WorkspaceContext } from "@/components/layout/layout";
@@ -33,9 +33,7 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
     const param = { workspace_join_code: workspaceJoinCode };
     studentJoinWorkspace(param)
       .then((response) => {
-        toast.success(
-          "Join successful"
-        );
+        toast.success("Join successful");
         handleCloseModal();
         setTimeout(() => {
           forceRefreshWorkspaceAndToken();
@@ -59,39 +57,38 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
         <ModalContent>
           <ModalHeader>Join Workspace</ModalHeader>
           <ModalBody>
-            <div className="flex items-center gap-2 p-3 rounded-lg">
-              <MdInfoOutline size={24} />
-              <span className="text-black-100 text-xs">
-                To join a new workspace, enter the{" "}
-                <span className="font-semibold">Join Code</span> provided by
-                your instructor.
-              </span>
-            </div>
+            <div className="flex flex-col items-center gap-2 p-3 rounded-lg">
+              <div className="flex gap-1">
+                <MdInfoOutline size={24} />
+                <span className="text-black-100 text-sm">
+                  To join a new workspace, enter the{" "}
+                  <span className="font-semibold">8-digit Join Code</span>{" "}
+                  provided by your instructor.
+                </span>
+              </div>
 
-            <Input
-              size="sm"
-              variant="bordered"
-              label="Join Code"
-              isRequired
-              value={workspaceJoinCode}
-              onValueChange={(value) => setWorkspaceJoinCode(value)}
-              isClearable
-            />
+              <InputOtp
+                length={8}
+                label="Join Code"
+                variant="bordered"
+                isRequired
+                value={workspaceJoinCode}
+                onValueChange={(value) => setWorkspaceJoinCode(value)}
+              />
+            </div>
             {joinError && (
-              <span className="text-red-700 text-sm">
-                Incorrect joincode
-              </span>
+              <span className="text-red-700 text-sm">Incorrect joincode</span>
             )}
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="faded" onClick={handleCloseModal}>
+            <Button variant="faded" onPress={handleCloseModal}>
               Cancel
             </Button>
             <Button
               color="primary"
-              onClick={onSubmit}
-              isDisabled={!workspaceJoinCode}
+              onPress={onSubmit}
+              isDisabled={!workspaceJoinCode || workspaceJoinCode.length < 8}
             >
               Join
             </Button>
