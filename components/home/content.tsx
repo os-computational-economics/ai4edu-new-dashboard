@@ -48,7 +48,9 @@ const CourseCard = ({ course }) => {
         <CardHeader className="pb-2 pt-0 px-4 flex items-center justify-between">
           <div className="flex flex-col min-w-0 items-start">
             <p className="text-medium font-bold truncate">{course.name}</p>
-            <small className="text-default-500 truncate uppercase">{course.comment}</small>
+            <small className="text-default-500 truncate uppercase">
+              {course.comment}
+            </small>
           </div>
           {course.role === "teacher" ? (
             <Button
@@ -86,17 +88,23 @@ const CourseCard = ({ course }) => {
 export const Content = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  const [pageInfoReady, setPageInfoReady] = useState(false);
 
   useEffect(() => {
     checkExpired();
     const courseList = formatedCourses();
     setCourses(courseList);
+    setPageInfoReady(true);
   }, []);
 
   const closeJoinModal = () => {
     // todo: reload workspace list
     setIsJoinModalOpen(false);
   };
+
+  if (!pageInfoReady) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="h-full lg:px-6 pb-6 v">
