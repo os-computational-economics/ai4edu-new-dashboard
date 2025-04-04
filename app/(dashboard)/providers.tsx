@@ -2,6 +2,7 @@
 import * as React from "react";
 import { HeroUIProvider } from "@heroui/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ToastProvider } from "@heroui/toast";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { Layout } from "../../components/layout/layout";
 import { useEffect } from "react";
@@ -64,6 +65,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
         attribute="class"
         {...themeProps}
       >
+        <ToastProvider />
         <Layout>{children}</Layout>
       </NextThemesProvider>
     </HeroUIProvider>

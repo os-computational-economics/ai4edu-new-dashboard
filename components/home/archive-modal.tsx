@@ -7,8 +7,6 @@ import {
   Button,
 } from "@heroui/react";
 import { useState } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import ConfirmArchiveModal from "./confirm-archive-modal";
 
 const ArchiveModal = ({ isOpen, onClose, course }) => {
@@ -16,7 +14,6 @@ const ArchiveModal = ({ isOpen, onClose, course }) => {
 
   return (
     <div>
-      <ToastContainer />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader>Archive Workspace</ModalHeader>

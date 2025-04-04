@@ -6,13 +6,12 @@ import {
   ModalContent,
   Button,
   InputOtp,
+  addToast,
 } from "@heroui/react";
 import { useContext, useState } from "react";
 import { WorkspaceContext } from "@/components/layout/layout";
 import { studentJoinWorkspace } from "@/api/workspace/workspace";
 import { MdInfoOutline } from "react-icons/md";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
 
 const AgentJoinModal = ({ isOpen, onClose }) => {
@@ -33,7 +32,10 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
     const param = { workspace_join_code: workspaceJoinCode };
     studentJoinWorkspace(param)
       .then((response) => {
-        toast.success("Join successful");
+        addToast({
+          title: "Join successful",
+          color: "success",
+        });
         handleCloseModal();
         setTimeout(() => {
           forceRefreshWorkspaceAndToken();
@@ -48,7 +50,6 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
 
   return (
     <div>
-      <ToastContainer />
       <Modal
         className="mb-[25vh] md:mb-0"
         isOpen={isOpen}

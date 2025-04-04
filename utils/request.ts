@@ -1,12 +1,8 @@
 // request.ts
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import https from "https";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
-import { AUTH_PATH } from "./constants";
 import logout from "./logout";
-import { log } from "console";
 
 export const localBackend =
   process.env.NEXT_PUBLIC_LOCAL_BACKEND?.toUpperCase() === "TRUE";

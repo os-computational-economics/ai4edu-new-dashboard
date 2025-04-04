@@ -6,11 +6,10 @@ import {
   ModalContent,
   Button,
   Input,
+  addToast,
 } from "@heroui/react";
 import { useState } from "react";
 import { setWorkspaceStatus } from "@/api/workspace/workspace";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { ping } from "@/api/auth/auth";
 import { AUTH_PATH } from "@/utils/constants";
 
@@ -33,7 +32,10 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
       };
       setWorkspaceStatus(data)
         .then((res) => {
-          toast.success("Workspace archived successfully");
+          addToast({
+            title: "Workspace archived successfully",
+            color: "success",
+          });
           handleCloseModal();
           setTimeout(() => {
             ping()
@@ -58,7 +60,6 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
 
   return (
     <div>
-      <ToastContainer />
       <Modal isOpen={isOpen} onClose={() => handleCloseModal()}>
         <ModalContent>
           <ModalHeader>Archive Workspace</ModalHeader>

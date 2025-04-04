@@ -14,6 +14,7 @@ import {
   Pagination,
   Switch,
   Textarea,
+  addToast,
 } from "@heroui/react";
 import useMount from "@/components/hooks/useMount";
 import {
@@ -23,8 +24,6 @@ import {
   Workspace as WorkspaceType,
 } from "@/api/workspace/workspace";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
 
 const Workspace = () => {
@@ -57,7 +56,10 @@ const Workspace = () => {
       .then((res) => {
         setisLoading(false);
         console.log("Workspace created:", res);
-        toast.success("Workspace created successfully");
+        addToast({
+          title: "Workspace created successfully",
+          color: "success",
+        });
         setWorkspacePrompt("");
         setWorkspaceName("");
         setWorkspaceComment("");
@@ -68,7 +70,10 @@ const Workspace = () => {
       .catch((error) => {
         console.log(error);
         setisLoading(false);
-        toast.error(error?.response?.data?.message);
+        addToast({
+          title: error?.response?.data?.message,
+          color: "danger",
+        });
         console.error("Error creating workspace:", error);
       });
   };
@@ -108,7 +113,10 @@ const Workspace = () => {
 
     setWorkspaceStatus(data)
       .then((res) => {
-        toast.success("Workspace updated successfully");
+        addToast({
+          title: "Workspace status updated successfully",
+          color: "success",
+        });
         console.log("Workspace status updated successfully!");
         fetchWorkspaceList(currentPage, pageSize);
       })
@@ -119,7 +127,6 @@ const Workspace = () => {
 
   return (
     <div className="m-6">
-      <ToastContainer />
       <div>
         <h2 className="text-xl font-bold mb-4">Create Workspace</h2>
         <div className="grid grid-cols-2 gap-4">

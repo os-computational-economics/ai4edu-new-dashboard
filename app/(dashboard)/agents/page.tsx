@@ -12,6 +12,7 @@ import {
   Spinner,
   Pagination,
   Tooltip,
+  addToast,
 } from "@heroui/react";
 import { getAgents, Agent } from "@/api/agent/agent";
 import {
@@ -26,10 +27,7 @@ import AgentModal from "./agents-modal/AgentModal";
 import ConfirmDeleteModal from "./agents-modal/ConfirmDeleteModal";
 import { WorkspaceContext } from "@/components/layout/layout";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-import { getNewThread } from "@/api/chat/chat";
 
 const statusColorMap = {
   true: "success",
@@ -76,9 +74,9 @@ const Tables = () => {
 
   const CopyToClipboard = (agent) => {
     navigator.clipboard.writeText(generateShareUrl(agent));
-    toast.success("Copied to clipboard!", {
-      hideProgressBar: true,
-      autoClose: 2000,
+    addToast({
+      title: "Copied to clipboard!",
+      color: "success",
     });
   };
 
@@ -141,9 +139,9 @@ const Tables = () => {
       localStorage.getItem("workspace") || "{}"
     );
     return (
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between my-1">
-        <h1 className="text-2xl font-bold">Agents</h1>
+          <h1 className="text-2xl font-bold">Agents</h1>
           <div className={"w-full  sm:max-w-[44%]"}></div>
           <div className="flex gap-3">
             <Button
@@ -171,8 +169,8 @@ const Tables = () => {
               </Button>
             )}
           </div>
-          </div>
         </div>
+      </div>
     );
   }, [creatorId, isLoading]);
 
@@ -257,7 +255,6 @@ const Tables = () => {
 
   return (
     <div className="m-6 ">
-      <ToastContainer />
       <ConfirmDeleteModal
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}

@@ -2,8 +2,7 @@
 import React, { useState, useContext } from "react";
 import CardList from "./components/CardList";
 import HistoryPanel from "./components/HistoryPanel";
-import { Pagination } from "@heroui/react";
-import { ToastContainer, toast } from "react-toastify";
+import { addToast, Pagination } from "@heroui/react";
 import { WorkspaceContext } from "@/components/layout/layout";
 import {
   getWorkspaceRole,
@@ -66,13 +65,9 @@ export default function App() {
       })
       .catch((error) => {
         console.log(error.response.data.detail);
-        toast.error(error.response.data.detail, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          progress: undefined,
+        addToast({
+          title: error.response.data.detail,
+          color: "danger",
         });
         // console.error('Error fetching thread details:', error);
       });
@@ -99,7 +94,6 @@ export default function App() {
         <h1 className="text-xl font-bold my-1">Chat History</h1>
       </div>
       <div className="flex h-[calc(100vh-85px)] w-98%">
-        <ToastContainer />
         <div className="flex w-2/5 flex-col">
           <div className="flex-grow overflow-auto">
             <ScrollShadow size={20} className="w-full h-full">

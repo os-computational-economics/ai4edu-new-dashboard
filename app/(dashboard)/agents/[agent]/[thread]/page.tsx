@@ -1,12 +1,11 @@
 "use client";
-import React, { useState, useEffect, useContext, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { getAgentByID, GetAgentByIDResponse } from "@/api/agent/agent";
 import useMount from "@/components/hooks/useMount";
 import ChatPage from "../../../chat/ChatPage";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { addToast } from "@heroui/react";
 
 const Page = ({
   params,
@@ -33,9 +32,9 @@ const Page = ({
 
   const CopyToClipboard = (agent) => {
     navigator.clipboard.writeText(generateShareUrl(agent));
-    toast.success("Copied to clipboard!", {
-      hideProgressBar: true,
-      autoClose: 2000,
+    addToast({
+      title: "Copied to clipboard!",
+      color: "success",
     });
   };
 
@@ -63,7 +62,6 @@ const Page = ({
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="mx-6 ">
-        <ToastContainer />
         {agent && (
           <ChatPage
             isOpen={true}

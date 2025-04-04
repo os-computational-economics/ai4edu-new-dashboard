@@ -12,14 +12,13 @@ import {
   Pagination,
   Select,
   SelectItem,
-  Input
+  Input,
+  addToast,
 } from "@heroui/react"
 import { getUserList, User } from '@/api/auth/auth'
 import { getWorkspaceList, setUserRoleUserID, Workspace } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'
 import useMount from '@/components/hooks/useMount'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 const Tables = () => {
   const [users, setUsers] = useState<User[]>([])
@@ -109,7 +108,10 @@ const Tables = () => {
       role: roleValue[0]
     }
     setUserRoleUserID(requestData).then(() => {
-      toast.success(`User ${userID} updated with role ${roleValue}`)
+      addToast({
+        title: `User ${userID} updated with role ${roleValue}`,
+        color: "success",
+      })
       fetchUserList(1, pageSize, workspaceID)
     })
   }
@@ -194,7 +196,6 @@ const Tables = () => {
       <div>
         <h1 className="text-2xl font-bold">Access Control</h1>
       </div>
-      <ToastContainer />
       <Table
         topContent={topContent}
         topContentPlacement="outside"
