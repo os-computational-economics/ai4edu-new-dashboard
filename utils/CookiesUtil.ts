@@ -4,6 +4,7 @@ import logout from "./logout";
 import "react-toastify/dist/ReactToastify.css";
 import { ping } from "@/api/auth/auth";
 import { getUserWorkspaceDetails } from "@/api/workspace/workspace";
+import { LOGIN_PERSISTENCE_IN_DAYS } from "./constants";
 
 const decodeToken = () => {
   const access_token = Cookies.get("access_token");
@@ -45,7 +46,7 @@ const obtainWorkspaceDetails = () => {
     getUserWorkspaceDetails()
       .then((res) => {
         Cookies.set("user_workspace_details", JSON.stringify(res.items), {
-          expires: 15,
+          expires: LOGIN_PERSISTENCE_IN_DAYS,
         });
         return res.items;
       })

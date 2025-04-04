@@ -11,7 +11,7 @@ import {
 import { DarkModeSwitch } from "./darkmodeswitch";
 import Cookies from "js-cookie";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { AUTH_PATH } from "@/utils/constants";
+import { AUTH_PATH, LOGIN_PERSISTENCE_IN_DAYS } from "@/utils/constants";
 
 export const UserDropdown = () => {
   const [fullName, setFullName] = useState("");
@@ -51,21 +51,21 @@ export const UserDropdown = () => {
           0
         )}`,
         {
-          expires: 15,
+          expires: LOGIN_PERSISTENCE_IN_DAYS,
         }
       );
       Cookies.set(
         "full_name",
         `${decodedToken.first_name} ${decodedToken.last_name}`,
         {
-          expires: 15,
+          expires: LOGIN_PERSISTENCE_IN_DAYS,
         }
       );
       Cookies.set("email", decodedToken.email, {
-        expires: 15,
+        expires: LOGIN_PERSISTENCE_IN_DAYS,
       });
       Cookies.set("user_id", decodedToken.user_id, {
-        expires: 15,
+        expires: LOGIN_PERSISTENCE_IN_DAYS,
       });
     } else if (refresh_token) {
       setFullName(Cookies.get("full_name") || "-");

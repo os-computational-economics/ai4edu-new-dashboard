@@ -8,6 +8,7 @@ import { Button, Card, Image } from "@heroui/react";
 import { DarkModeSwitch } from "@/components/navbar/darkmodeswitch";
 import { localBackend } from "@/utils/request";
 import { getUserWorkspaceDetails } from "@/api/workspace/workspace"
+import { LOGIN_PERSISTENCE_IN_DAYS } from "@/utils/constants";
 
 const SigninPage: React.FC = () => {
   useEffect(() => {
@@ -19,7 +20,7 @@ const SigninPage: React.FC = () => {
       if (refresh && access) {
         // refresh token valid for 15 days, under the domain first level domain
         Cookies.set("refresh_token", refresh, {
-          expires: 15,
+          expires: LOGIN_PERSISTENCE_IN_DAYS,
         });
         // access token valid for 30 minutes, but we set it to 29 minutes to be safe
         Cookies.set("access_token", access, {
@@ -29,7 +30,7 @@ const SigninPage: React.FC = () => {
           .then((res) => {
             console.log(res)
             Cookies.set("user_workspace_details", JSON.stringify(res.items), {
-              expires: 15,
+              expires: LOGIN_PERSISTENCE_IN_DAYS,
             })})
             .catch((error) => {
               console.error("Error fetching workspace list", error)
