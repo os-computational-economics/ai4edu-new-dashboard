@@ -7,7 +7,7 @@ import {
   ScrollShadow,
   Button,
   Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { IoSend } from "react-icons/io5";
 import { BiDetail } from "react-icons/bi";
 import {
@@ -462,7 +462,7 @@ const ChatPanel = ({
 
     let currentThreadId = threadId;
     if (currentThreadId === "new") {
-      currentThreadId = await getNewThreadID() || "error";
+      currentThreadId = (await getNewThreadID()) || "error";
       setThreadId(currentThreadId);
       const newUrl = `/agents/${agentID}/${currentThreadId}`;
       window.history.replaceState(

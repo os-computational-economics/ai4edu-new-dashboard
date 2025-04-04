@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { formatedCourses, checkExpired } from "@/utils/CookiesUtil";
 import { WorkspaceContext } from "@/components/layout/layout";
@@ -52,7 +52,7 @@ const CourseCard = ({ course }) => {
           </div>
           {course.role === "teacher" ? (
             <Button
-              onClick={() => setArchiveModalOpen(true)}
+              onPress={() => setArchiveModalOpen(true)}
               size="sm"
               isIconOnly
               className="ml-auto"
@@ -69,7 +69,6 @@ const CourseCard = ({ course }) => {
             className="object-cover rounded-xl"
             src="/cwru_logo_blue.png"
             width={300}
-            height={200}
           />
         </CardBody>
         <ArchiveModal

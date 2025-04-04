@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, useContext } from 'react'
 
-import { Modal, ModalContent, Button } from '@nextui-org/react'
+import { Modal, ModalContent, Button } from "@heroui/react"
 import { addAgent, updateAgent, UpdateAgentRequest } from '@/api/agent/agent'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { WorkspaceContext } from '@/components/layout/layout'

@@ -10,7 +10,7 @@ import {
   Button,
   Spinner,
   Pagination,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { getUserList, User } from '@/api/auth/auth'
 import { addUsersViaCsv } from '@/api/workspace/workspace'
 import { ToastContainer, toast } from 'react-toastify'

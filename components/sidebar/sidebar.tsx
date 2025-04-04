@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Sidebar } from './sidebar.styles'
-import { Avatar, Tooltip, Image } from '@nextui-org/react'
+import { Avatar, Tooltip, Image } from "@heroui/react"
 import CourseDropdown from './course-dropdown'
 import { HomeIcon } from '../icons/sidebar/home-icon'
 import { SidebarItem } from './sidebar-item'

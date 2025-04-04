@@ -1,7 +1,7 @@
 'use client'
-import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from '@nextui-org/react'
+import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react"
 import React, { useState, useEffect } from 'react'
-import { Image } from '@nextui-org/react'
+import { Image } from "@heroui/react"
 import { BottomIcon } from '../icons/sidebar/bottom-icon'
 import { useRouter } from 'next/navigation'
 

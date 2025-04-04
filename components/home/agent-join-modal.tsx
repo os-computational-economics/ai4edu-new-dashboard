@@ -6,7 +6,7 @@ import {
   ModalContent,
   Button,
   Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useContext, useState } from "react";
 import { WorkspaceContext } from "@/components/layout/layout";
 import { studentJoinWorkspace } from "@/api/workspace/workspace";

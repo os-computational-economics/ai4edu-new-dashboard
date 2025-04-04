@@ -5,14 +5,14 @@ import {
   Input,
   Card,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import { fileUploadURL } from "@/api/chat/chat";
 import { on } from "events";
 import { set } from "react-hook-form";

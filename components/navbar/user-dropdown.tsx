@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarItem } from '@nextui-org/react'
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarItem } from "@heroui/react"
 import { DarkModeSwitch } from './darkmodeswitch'
 import Cookies from 'js-cookie'
 import jwt, { JwtPayload } from 'jsonwebtoken'

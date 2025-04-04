@@ -12,7 +12,7 @@ import {
   Spinner,
   Pagination,
   Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getAgents, Agent } from "@/api/agent/agent";
 import {
   MdCached,

@@ -10,7 +10,7 @@ import {
   Button,
   Chip,
   Divider,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { GripVertical, X } from "lucide-react";
 import { submitRating } from "@/api/feedback/feedback";
 import { THREAD_RATING_TRIGGER_PROBABILITY } from "@/utils/constants";

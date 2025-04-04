@@ -6,7 +6,7 @@ import {
   ModalContent,
   Button,
   Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useState } from "react";
 import { setWorkspaceStatus } from "@/api/workspace/workspace";
 import { ToastContainer, toast } from "react-toastify";

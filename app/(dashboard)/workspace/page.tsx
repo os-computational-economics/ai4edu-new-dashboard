@@ -14,7 +14,7 @@ import {
   Pagination,
   Switch,
   Textarea,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import useMount from "@/components/hooks/useMount";
 import {
   createWorkspace,

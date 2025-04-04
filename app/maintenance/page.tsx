@@ -1,5 +1,5 @@
 "use client";
-import { Divider } from "@nextui-org/react";
+import { Divider } from "@heroui/react";
 import { useState, useEffect } from "react";
 
 export default function Maintenance() {

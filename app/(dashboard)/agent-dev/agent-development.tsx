@@ -1,14 +1,14 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Textarea } from '@nextui-org/react'
+import { Textarea } from "@heroui/react"
 
 import { MdArrowBackIosNew, MdKeyboardArrowDown, MdAdd, MdExpandLess, MdExpandMore } from 'react-icons/md'
 
-import { Input } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
-import { Switch } from '@nextui-org/switch'
-import { DropdownMenu, DropdownItem, Dropdown, DropdownTrigger, Chip } from '@nextui-org/react'
-import { Selection } from '@nextui-org/react'
+import { Input } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Switch } from "@heroui/switch"
+import { DropdownMenu, DropdownItem, Dropdown, DropdownTrigger, Chip } from "@heroui/react"
+import { Selection } from "@heroui/react"
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 import { KnowledgebasePopup, WorkflowPopup } from '@/app/(dashboard)/agent-dev/dev-popups'

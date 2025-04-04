@@ -13,7 +13,7 @@ import {
   Select,
   SelectItem,
   Input
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { getUserList, User } from '@/api/auth/auth'
 import { getWorkspaceList, setUserRoleUserID, Workspace } from '@/api/workspace/workspace'
 import { MdCached } from 'react-icons/md'

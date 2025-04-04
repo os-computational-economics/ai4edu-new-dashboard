@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
-import { Button, Card, Image } from "@nextui-org/react";
+import { Button, Card, Image } from "@heroui/react";
 import { DarkModeSwitch } from "@/components/navbar/darkmodeswitch";
 import { localBackend } from "@/utils/request";
 import { getUserWorkspaceDetails } from "@/api/workspace/workspace"

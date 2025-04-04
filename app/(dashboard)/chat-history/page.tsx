@@ -2,7 +2,7 @@
 import React, { useState, useContext } from "react";
 import CardList from "./components/CardList";
 import HistoryPanel from "./components/HistoryPanel";
-import { Pagination } from "@nextui-org/react";
+import { Pagination } from "@heroui/react";
 import { ToastContainer, toast } from "react-toastify";
 import { WorkspaceContext } from "@/components/layout/layout";
 import {
@@ -10,7 +10,7 @@ import {
   checkExpired,
   getCurrentUserID,
 } from "@/utils/CookiesUtil";
-import { Card, ScrollShadow } from "@nextui-org/react";
+import { Card, ScrollShadow } from "@heroui/react";
 import {
   getThreadsList,
   getThreadbyID,
