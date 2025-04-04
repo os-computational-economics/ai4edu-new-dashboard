@@ -4,6 +4,7 @@ import https from "https";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import { AUTH_PATH } from "./constants";
 
 export const localBackend =
   process.env.NEXT_PUBLIC_LOCAL_BACKEND?.toUpperCase() === "TRUE";
@@ -13,7 +14,9 @@ const apiVersion = process.env.NEXT_PUBLIC_API_VERSION;
 const role = process.env.NEXT_PUBLIC_ROLE;
 let baseURL = process.env.NEXT_PUBLIC_ONLINE_BASE_URL;
 let environment = process.env.NEXT_PUBLIC_DEV_ENVIRONMENT;
-let httpsAgent = new https.Agent({ rejectUnauthorized: process.env.NODE_ENV !== "development" });
+let httpsAgent = new https.Agent({
+  rejectUnauthorized: process.env.NODE_ENV !== "development",
+});
 
 if (process.env.NODE_ENV === "development") {
   /*
@@ -53,7 +56,7 @@ console.log("****", apiUrl);
 const instance = axios.create({
   baseURL: apiUrl,
   timeout: 100000, // 100s
-  httpsAgent: httpsAgent
+  httpsAgent: httpsAgent,
 });
 
 // Request interceptor
@@ -74,11 +77,14 @@ instance.interceptors.request.use(
     ) {
       // if access token is not present but refresh token is present, do a token refresh
       try {
-        const response = await axios.get(`${apiUrl}/admin/generate_access_token`, {
-          headers: {
-            Authorization: `Bearer refresh=${refresh_token}`,
-          },
-        });
+        const response = await axios.get(
+          `${apiUrl}/admin/generate_access_token`,
+          {
+            headers: {
+              Authorization: `Bearer refresh=${refresh_token}`,
+            },
+          }
+        );
         console.log("response", response);
         const new_access_token = response.data.data.access_token;
         Cookies.set("access_token", new_access_token, {
@@ -91,7 +97,7 @@ instance.interceptors.request.use(
       } catch (error) {
         Cookies.remove("access_token");
         Cookies.remove("refresh_token");
-        window.location.href = "/auth/signin";
+        window.location.href = AUTH_PATH;
       }
     }
     return config as any;
@@ -129,7 +135,7 @@ instance.interceptors.response.use(
         Cookies.remove("refresh_token");
         localStorage.clear();
         setTimeout(() => {
-          window.location.href = "/auth/signin";
+          window.location.href = AUTH_PATH;
         }, 3000);
       } else if (error.response.status === 500) {
         // server error

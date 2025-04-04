@@ -12,6 +12,7 @@ import { setWorkspaceStatus } from "@/api/workspace/workspace";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ping } from "@/api/auth/auth";
+import { AUTH_PATH } from "@/utils/constants";
 
 const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
   const [workspaceName, setWorkspaceName] = useState("");
@@ -40,7 +41,7 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
                 window.location.reload();
               })
               .catch((err) => {
-                window.location.href = "/auth/signin";
+                window.location.href = AUTH_PATH;
               });
           }, 100);
           console.log("response", res);

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { track } from "@vercel/analytics";
 import useMount from "@/components/hooks/useMount";
 import { getCurrentUserID } from "@/utils/CookiesUtil";
+import { AUTH_PATH } from "@/utils/constants";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -53,7 +54,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   useEffect(() => {
     const refreshToken = Cookies.get("refresh_token");
     if (!refreshToken) {
-      router.push("/auth/signin");
+      router.push(AUTH_PATH);
     }
   }, []);
   return (

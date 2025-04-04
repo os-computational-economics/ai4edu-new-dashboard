@@ -1,2 +1,4 @@
 export const THREAD_RATING_TRIGGER_PROBABILITY = 0.35  // Probability of showing the rating modal, 0.5 = 50%
 export const HAVE_SEEN_FILE_TOOLTIP_LOCAL_STORAGE_KEY = "ai4eduHaveSeenFileListTooltip"  // Local storage key for the file tooltip
+
+export const AUTH_PATH = "/auth/signin"  // Authentication path
