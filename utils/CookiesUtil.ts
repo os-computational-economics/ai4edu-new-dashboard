@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import logout from "./logout";
 import "react-toastify/dist/ReactToastify.css";
 import { ping } from "@/api/auth/auth";
+import { getUserWorkspaceDetails } from "@/api/workspace/workspace";
 
 const decodeToken = () => {
   const access_token = Cookies.get("access_token");
@@ -22,7 +23,17 @@ const obtainWorkspaceDetails = () => {
     return JSON.parse(user_workspace_details);
   }
   else {
-    return null;
+    // get user workspace details from backend and set it to cookie
+    getUserWorkspaceDetails()
+      .then((res) => {
+        Cookies.set("user_workspace_details", JSON.stringify(res.items), {
+          expires: 15,
+        });
+        return res.items;
+      })
+      .catch((error) => {
+        console.error("Error fetching workspace list", error);
+      });
   }
 }
 
@@ -40,7 +51,7 @@ const getCurrentUserID = () => {
 
 const formatedCourses = () => {
   // fetch workspace details and roles
-  const workspace_details = obtainWorkspaceDetails() ?? {};
+  const workspace_details = obtainWorkspaceDetails() || {};
   const roles = decodeToken()?.workspace_role || {};
 
   // merge workspace_details and workspace_roles together by workspace_id to centralize data
@@ -54,13 +65,14 @@ const formatedCourses = () => {
   })
 
   // format courses for course cards
-  const formattedCourses = mergedWorkspaces.map(workspace => ({
+  const formattedWorkspaces = mergedWorkspaces.map(workspace => ({
     id: workspace.workspace_id,
     role: workspace.workspace_role,
     name: workspace.workspace_name,
+    comment: workspace.workspace_comment,
   }));
 
-  return formattedCourses;
+  return formattedWorkspaces;
 };
 
 const isSystemAdmin = () => {
