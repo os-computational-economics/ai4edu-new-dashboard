@@ -53,7 +53,6 @@ export interface StudentJoinWorkspaceRequest {
 export interface CreateWorkspaceRequest {
   workspace_name: string;
   school_id: number;
-  user_id: number;
   workspace_prompt: string | null;
   workspace_comment: string | null;
 }

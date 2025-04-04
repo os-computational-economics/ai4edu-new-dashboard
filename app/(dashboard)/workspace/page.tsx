@@ -43,7 +43,6 @@ const Workspace = () => {
     const params = {
       workspace_name: workspaceName,
       school_id: schoolID,
-      user_id: getCurrentUserID(),
       workspace_prompt: workspacePrompt,
       workspace_comment: workspaceComment
     }
