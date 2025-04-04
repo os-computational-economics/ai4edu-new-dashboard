@@ -10,11 +10,10 @@ export const UserDropdown = () => {
   const [email, setEmail] = useState('')
 
   const Logout = () => {
-    const firstLevelDomain = '.' + window.location.hostname.split('.').slice(-2).join('.')
-    Cookies.remove('refresh_token', { domain: firstLevelDomain })
-    Cookies.remove('access_token', { domain: firstLevelDomain })
-    Cookies.remove('full_name', { domain: firstLevelDomain })
-    Cookies.remove('email', { domain: firstLevelDomain })
+    Cookies.remove('refresh_token')
+    Cookies.remove('access_token')
+    Cookies.remove('full_name')
+    Cookies.remove('email')
     localStorage.clear()
     window.location.href = '/auth/signin'
   }
@@ -22,7 +21,6 @@ export const UserDropdown = () => {
   useEffect(() => {
     const access_token = Cookies.get('access_token')
     const refresh_token = Cookies.get('refresh_token')
-    const firstLevelDomain = '.' + window.location.hostname.split('.').slice(-2).join('.')
 
     if (access_token) {
       const decodedToken = jwt.decode(access_token) as JwtPayload
@@ -34,19 +32,15 @@ export const UserDropdown = () => {
       // we can still show user's name and email
       Cookies.set('name_initials', `${decodedToken.first_name?.charAt(0)}${decodedToken.last_name?.charAt(0)}`, {
         expires: 15,
-        domain: firstLevelDomain
       });
       Cookies.set('full_name', `${decodedToken.first_name} ${decodedToken.last_name}`, {
         expires: 15,
-        domain: firstLevelDomain
       });
       Cookies.set('email', decodedToken.email, {
         expires: 15,
-        domain: firstLevelDomain
       });
       Cookies.set('user_id', decodedToken.user_id, { 
         expires: 15, 
-        domain: firstLevelDomain 
       });
     } else if (refresh_token) {
       setFullName(Cookies.get('full_name') || '-')

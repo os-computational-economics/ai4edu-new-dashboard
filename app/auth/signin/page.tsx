@@ -15,26 +15,21 @@ const SigninPage: React.FC = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const refresh = urlParams.get("refresh");
       const access = urlParams.get("access");
-      const firstLevelDomain =
-        "." + window.location.hostname.split(".").slice(-2).join(".");
 
       if (refresh && access) {
         // refresh token valid for 15 days, under the domain first level domain
         Cookies.set("refresh_token", refresh, {
           expires: 15,
-          domain: firstLevelDomain,
         });
         // access token valid for 30 minutes, but we set it to 29 minutes to be safe
         Cookies.set("access_token", access, {
           expires: 29 / (24 * 60),
-          domain: firstLevelDomain,
         });
         getUserWorkspaceDetails()
           .then((res) => {
             console.log(res)
             Cookies.set("user_workspace_details", JSON.stringify(res.items), {
               expires: 15,
-              domain: firstLevelDomain
             })})
             .catch((error) => {
               console.error("Error fetching workspace list", error)
