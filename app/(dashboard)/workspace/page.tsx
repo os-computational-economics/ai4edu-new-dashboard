@@ -13,6 +13,7 @@ import {
   Spinner,
   Pagination,
   Switch,
+  Textarea,
 } from "@nextui-org/react";
 import useMount from "@/components/hooks/useMount";
 import {
@@ -135,14 +136,12 @@ const Workspace = () => {
             value={String(schoolID)}
             onChange={(e) => setSchoolID(Number(e.target.value))}
           />
-          <Input
-            isClearable
+          <Textarea
             label="Workspace Prompt"
             value={workspacePrompt}
             onChange={(e) => setWorkspacePrompt(e.target.value)}
           />
-          <Input
-            isClearable
+          <Textarea
             label="Workspace Comment"
             value={workspaceComment}
             onChange={(e) => setWorkspaceComment(e.target.value)}
@@ -164,7 +163,7 @@ const Workspace = () => {
         <h2 className="text-xl font-bold mb-4">Current Workspaces</h2>
         <Table
           topContentPlacement="outside"
-          aria-label="Users List"
+          aria-label="Workspace List"
           bottomContent={
             totalPage > 0 && (
               <div>
@@ -175,7 +174,7 @@ const Workspace = () => {
                     total={totalPage}
                     onChange={handlePageChange}
                   />
-                  <div className="ml-8 text-small text-default-600">{`Total ${total} user${
+                  <div className="ml-8 text-small text-default-600">{`Total ${total} workspaces${
                     total === 1 ? `` : `s`
                   }`}</div>
                 </div>

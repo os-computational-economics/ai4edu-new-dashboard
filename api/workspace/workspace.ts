@@ -41,9 +41,9 @@ export interface Workspace {
 
 export interface WorkspaceListResponse {
   items: Array<Workspace>;
-  page: number;
-  page_size: number;
   total: number;
+  page?: number;
+  page_size?: number;
 }
 
 export interface StudentJoinWorkspaceRequest {
@@ -146,7 +146,7 @@ export function setWorkspaceStatus(data: UpdateWorkspaceRequest): Promise<any> {
 }
 
 // get_user_workspace_details
-export function getUserWorkspaceDetails(): Promise<any> {
+export function getUserWorkspaceDetails(): Promise<WorkspaceListResponse> {
   return request({
     url: api.getUserWorkspaceDetails,
     method: "get",
