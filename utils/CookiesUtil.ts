@@ -17,12 +17,30 @@ const decodeToken = () => {
   }
 };
 
+const forceRefreshWorkspaceAndToken = () => {
+  // delete the two related tokens: access_token and user_workspace_details
+  Cookies.remove("access_token");
+  Cookies.remove("user_workspace_details");
+  ping()
+    .then(obtainWorkspaceDetails)
+    .then(
+      // refresh the page
+      () => {
+        window.location.reload();
+      }
+    )
+    .catch((err) => {
+      console.error("Error refreshing workspace details", err);
+      // if the refresh token is invalid, logout
+      logout();
+    });
+};
+
 const obtainWorkspaceDetails = () => {
   const user_workspace_details = Cookies.get("user_workspace_details");
   if (user_workspace_details) {
     return JSON.parse(user_workspace_details);
-  }
-  else {
+  } else {
     // get user workspace details from backend and set it to cookie
     getUserWorkspaceDetails()
       .then((res) => {
@@ -35,7 +53,7 @@ const obtainWorkspaceDetails = () => {
         console.error("Error fetching workspace list", error);
       });
   }
-}
+};
 
 const getWorkspaceRole = () => {
   return decodeToken()?.workspace_role;
@@ -55,17 +73,17 @@ const formatedCourses = () => {
   const roles = decodeToken()?.workspace_role || {};
 
   // merge workspace_details and workspace_roles together by workspace_id to centralize data
-  const mergedWorkspaces = workspace_details.map(workspace => {
+  const mergedWorkspaces = workspace_details.map((workspace) => {
     const mergedWorkspaces = { ...workspace };
     const role = roles[workspace.workspace_id];
     if (role) {
       mergedWorkspaces.workspace_role = role;
     }
     return mergedWorkspaces;
-  })
+  });
 
   // format courses for course cards
-  const formattedWorkspaces = mergedWorkspaces.map(workspace => ({
+  const formattedWorkspaces = mergedWorkspaces.map((workspace) => ({
     id: workspace.workspace_id,
     role: workspace.workspace_role,
     name: workspace.workspace_name,
@@ -81,7 +99,7 @@ const isSystemAdmin = () => {
 
 const isWorkspaceAdmin = () => {
   return decodeToken()?.workspace_admin;
-}
+};
 
 const checkExpired = () => {
   // check if there is no access token but there is a refresh token
@@ -129,4 +147,5 @@ export {
   getWorkspaceRole,
   getCurrentUserID,
   checkToken,
+  forceRefreshWorkspaceAndToken,
 };

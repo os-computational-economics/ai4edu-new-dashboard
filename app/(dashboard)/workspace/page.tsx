@@ -25,6 +25,7 @@ import {
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
 
 const Workspace = () => {
   const [workspacePrompt, setWorkspacePrompt] = useState("");
@@ -62,6 +63,7 @@ const Workspace = () => {
         setWorkspaceComment("");
         setSchoolID(1);
         fetchWorkspaceList(currentPage, pageSize);
+        forceRefreshWorkspaceAndToken();
       })
       .catch((error) => {
         console.log(error);

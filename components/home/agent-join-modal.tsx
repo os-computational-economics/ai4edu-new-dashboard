@@ -13,8 +13,7 @@ import { studentJoinWorkspace } from "@/api/workspace/workspace";
 import { MdInfoOutline } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Cookies from "js-cookie";
-import { ping } from "@/api/auth/auth";
+import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
 
 const AgentJoinModal = ({ isOpen, onClose }) => {
   const { currentWorkspace, setCurrentWorkspace } =
@@ -35,20 +34,11 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
     studentJoinWorkspace(param)
       .then((response) => {
         toast.success(
-          "Join successful, please logout and login again to see the changes"
+          "Join successful"
         );
         handleCloseModal();
-        const firstLevelDomain =
-          "." + window.location.hostname.split(".").slice(-2).join(".");
-        Cookies.remove("access_token", { domain: firstLevelDomain });
         setTimeout(() => {
-          ping()
-            .then((res) => {
-              window.location.reload();
-            })
-            .catch((err) => {
-              window.location.href = "/auth/signin";
-            });
+          forceRefreshWorkspaceAndToken();
         }, 100);
         console.log("response", response);
       })
@@ -61,7 +51,11 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
   return (
     <div>
       <ToastContainer />
-      <Modal className="mb-[25vh] md:mb-0" isOpen={isOpen} onClose={() => handleCloseModal()}>
+      <Modal
+        className="mb-[25vh] md:mb-0"
+        isOpen={isOpen}
+        onClose={() => handleCloseModal()}
+      >
         <ModalContent>
           <ModalHeader>Join Workspace</ModalHeader>
           <ModalBody>
@@ -69,8 +63,8 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
               <MdInfoOutline size={24} />
               <span className="text-black-100 text-xs">
                 To join a new workspace, enter the{" "}
-                <span className="font-semibold">Join Code</span>{" "}
-                provided by your instructor.
+                <span className="font-semibold">Join Code</span> provided by
+                your instructor.
               </span>
             </div>
 
@@ -83,12 +77,12 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
               onValueChange={(value) => setWorkspaceJoinCode(value)}
               isClearable
             />
-            {joinError && 
+            {joinError && (
               <span className="text-red-700 text-sm">
-                Incorrect ID or password
-              </span>}
+                Incorrect joincode
+              </span>
+            )}
           </ModalBody>
-          
 
           <ModalFooter>
             <Button variant="faded" onClick={handleCloseModal}>
