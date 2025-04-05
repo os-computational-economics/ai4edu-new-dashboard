@@ -47,9 +47,9 @@ const CourseCard = ({ course }) => {
       >
         <CardHeader className="pb-2 pt-0 px-4 flex items-center justify-between">
           <div className="flex flex-col min-w-0 items-start">
-            <p className="text-medium font-bold truncate">{course.name}</p>
-            <small className="text-default-500 truncate uppercase">
-              {course.comment || " "}
+            <p className="text-medium font-bold text-left">{course.name}</p>
+            <small className="text-default-500 text-left">
+              {course.comment || ""}
             </small>
           </div>
           {course.role === "teacher" ? (
