@@ -43,7 +43,7 @@ const CourseCard = ({ course }) => {
       <Card
         className="py-3 w-full max-w-80"
         isPressable
-        onPress={handleCourseClick}
+        onClick={handleCourseClick}
       >
         <CardHeader className="pb-2 pt-0 px-4 flex items-center justify-between">
           <div className="flex flex-col min-w-0 items-start">
@@ -54,7 +54,7 @@ const CourseCard = ({ course }) => {
           </div>
           {course.role === "teacher" ? (
             <Button
-              onPress={() => setArchiveModalOpen(true)}
+              onClick={() => setArchiveModalOpen(true)}
               size="sm"
               isIconOnly
               className="ml-auto"
@@ -114,7 +114,7 @@ export const Content = () => {
               <div className="flex gap-2 items-center">
                 <Button
                   color="primary"
-                  onPress={() => setIsJoinModalOpen(true)}
+                  onClick={() => setIsJoinModalOpen(true)}
                 >
                   Join a Workspace
                 </Button>

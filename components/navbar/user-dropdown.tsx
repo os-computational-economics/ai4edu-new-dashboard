@@ -101,7 +101,7 @@ export const UserDropdown = () => {
           color="danger"
           className="text-danger"
           showDivider
-          onPress={() => {
+          onClick={() => {
             logout();
           }}
         >

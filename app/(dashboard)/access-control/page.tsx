@@ -182,7 +182,7 @@ const Tables = () => {
         <Button
           color="primary"
           isDisabled={!values.length || !userID || !roleValue.length || isLoading}
-          onPress={() => setUsersRole()}
+          onClick={() => setUsersRole()}
           isLoading={isLoading}
           endContent={<MdCached />}
         >

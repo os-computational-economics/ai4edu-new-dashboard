@@ -4,7 +4,7 @@ import React from 'react'
 import { Card, CardHeader, CardFooter, Chip } from "@heroui/react"
 
 const ThreadCard = ({ thread, onSelect }) => (
-  <Card isPressable onPress={() => onSelect(thread.thread_id)}>
+  <Card isPressable onClick={() => onSelect(thread.thread_id)}>
     <CardHeader className="justify-between mb-0 pb-0">
       <div className="flex gap-1">
         <h2 className="text-medium font-bold text-default-700">{thread.agent_name}</h2>

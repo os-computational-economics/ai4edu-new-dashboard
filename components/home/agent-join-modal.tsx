@@ -83,12 +83,12 @@ const AgentJoinModal = ({ isOpen, onClose }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="faded" onPress={handleCloseModal}>
+            <Button variant="faded" onClick={handleCloseModal}>
               Cancel
             </Button>
             <Button
               color="primary"
-              onPress={onSubmit}
+              onClick={onSubmit}
               isDisabled={!workspaceJoinCode || workspaceJoinCode.length < 8}
             >
               Join

@@ -16,7 +16,7 @@ export const AddUser = () => {
   return (
     <div>
       <>
-        <Button onPress={onOpen} color="primary">
+        <Button onClick={onOpen} color="primary">
           Add User
         </Button>
         <Modal
@@ -47,7 +47,7 @@ export const AddUser = () => {
                   <Button color="danger" variant="flat" onClick={onClose}>
                     Close
                   </Button>
-                  <Button color="primary" onPress={onClose}>
+                  <Button color="primary" onClick={onClose}>
                     Add User
                   </Button>
                 </ModalFooter>
