@@ -108,6 +108,7 @@ export default function App() {
                   total={totalPages}
                   initialPage={currentPage}
                   onChange={handlePageChange}
+                  isCompact
                 />
                 <div className="mt-2 text-small text-default-600">{`Total ${total} thread${
                   total === 1 ? `` : `s`

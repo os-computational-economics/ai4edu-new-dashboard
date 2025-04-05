@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react'
+"use client";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -15,122 +15,130 @@ import {
   Input,
   addToast,
   NumberInput,
-} from "@heroui/react"
-import { getUserList, User } from '@/api/auth/auth'
-import { getWorkspaceList, setUserRoleUserID, Workspace } from '@/api/workspace/workspace'
-import { MdCached } from 'react-icons/md'
-import useMount from '@/components/hooks/useMount'
+} from "@heroui/react";
+import { getUserList, User } from "@/api/auth/auth";
+import {
+  getWorkspaceList,
+  setUserRoleUserID,
+  Workspace,
+} from "@/api/workspace/workspace";
+import { MdCached } from "react-icons/md";
+import useMount from "@/components/hooks/useMount";
 
 const Tables = () => {
-  const [users, setUsers] = useState<User[]>([])
-  const [total, setTotal] = useState(0)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
-  const [isLoading, setisLoading] = useState(false)
-  const [workspaceList, setWorkspaceList] = useState<Workspace[]>([])
-  const [workspaceID, setWorkspaceID] = useState('all')
-  const [values, setValues] = useState<string[]>([])
-  const [roleValue, setroleValue] = useState<string[]>([])
-  const [userValue, setUserValue] = useState('')
-  const [searchValue, setSearchValue] = useState('')
-  const [userID, setUserID] = useState(-1)
-  const [studentID, setStudentID] = useState('')
+  const [users, setUsers] = useState<User[]>([]);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [isLoading, setisLoading] = useState(false);
+  const [workspaceList, setWorkspaceList] = useState<Workspace[]>([]);
+  const [workspaceID, setWorkspaceID] = useState("all");
+  const [values, setValues] = useState<string[]>([]);
+  const [roleValue, setroleValue] = useState<string[]>([]);
+  const [userValue, setUserValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [userID, setUserID] = useState(-1);
+  const [studentID, setStudentID] = useState("");
 
-  const totalPage = Math.ceil(total / pageSize)
+  const totalPage = Math.ceil(total / pageSize);
 
   const roleDict = [
-    { key: 'student', label: 'student' },
-    { key: 'teacher', label: 'teacher' }
-  ]
+    { key: "student", label: "student" },
+    { key: "teacher", label: "teacher" },
+  ];
 
   useMount(() => {
-    fetchWorkspaceList(currentPage, pageSize)
-    fetchUserList(currentPage, pageSize, 'all')
-  })
+    fetchWorkspaceList(currentPage, pageSize);
+    fetchUserList(currentPage, pageSize, "all");
+  });
 
   const fetchWorkspaceList = (page: number, pageSize: number) => {
     const params = {
       page,
-      page_size: pageSize
-    }
+      page_size: pageSize,
+    };
     getWorkspaceList(params)
       .then((res) => {
-        console.log(res)
-        setWorkspaceList(res.items)
+        console.log(res);
+        setWorkspaceList(res.items);
       })
       .catch((error) => {
-        console.error('Error fetching workspace list:', error)
-      })
-  }
+        console.error("Error fetching workspace list:", error);
+      });
+  };
 
-  const fetchUserList = (page: number, pageSize: number, workspace_id: string) => {
+  const fetchUserList = (
+    page: number,
+    pageSize: number,
+    workspace_id: string
+  ) => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: workspace_id || 'all',
-      user_name: searchValue || '',
-      user_id: userID || ''
-    }
+      workspace_id: workspace_id || "all",
+      user_name: searchValue || "",
+      user_id: userID || "",
+    };
 
-    console.log('params', params)
+    console.log("params", params);
 
     getUserList(params)
       .then((res) => {
-        setisLoading(false)
-        setUsers(res.items)
-        setTotal(res.total)
+        setisLoading(false);
+        setUsers(res.items);
+        setTotal(res.total);
       })
       .catch((error) => {
-        setisLoading(false)
-        console.error('Error fetching users:', error)
-      })
-  }
+        setisLoading(false);
+        console.error("Error fetching users:", error);
+      });
+  };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-    setisLoading(true)
-    fetchUserList(page, pageSize, workspaceID)
-  }
+    setCurrentPage(page);
+    setisLoading(true);
+    fetchUserList(page, pageSize, workspaceID);
+  };
 
   const handleSearch = (reload) => {
     if (reload) {
-      setisLoading(true)
-      setCurrentPage(1) // Reset to first page for new search
+      setisLoading(true);
+      setCurrentPage(1); // Reset to first page for new search
 
-      fetchUserList(1, pageSize, workspaceID)
-      fetchWorkspaceList(1, pageSize)
+      fetchUserList(1, pageSize, workspaceID);
+      fetchWorkspaceList(1, pageSize);
     }
-  }
+  };
 
   const setUsersRole = () => {
     const requestData = {
       user_id: Number(userID),
       workspace_id: workspaceID,
-      role: roleValue[0]
-    }
+      role: roleValue[0],
+    };
     setUserRoleUserID(requestData).then(() => {
       addToast({
         title: `User ${userID} updated with role ${roleValue}`,
         color: "success",
-      })
-      fetchUserList(1, pageSize, workspaceID)
-    })
-  }
+      });
+      fetchUserList(1, pageSize, workspaceID);
+    });
+  };
 
   const onSelectionchange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue: string = e.target.value
-    console.log('selectedValue', selectedValue)
-    setValues([selectedValue])
-    setWorkspaceID(selectedValue)
-    fetchUserList(1, pageSize, selectedValue)
-  }
+    const selectedValue: string = e.target.value;
+    console.log("selectedValue", selectedValue);
+    setValues([selectedValue]);
+    setWorkspaceID(selectedValue);
+    fetchUserList(1, pageSize, selectedValue);
+  };
 
   const topContent = (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div className="text-sm">
-          Access changes may take up to 30 minutes to take effect. To apply changes immediately, please have the user
-          log out and log back in.
+          Access changes may take up to 30 minutes to take effect. To apply
+          changes immediately, please have the user log out and log back in.
         </div>
         <Button
           variant="bordered"
@@ -148,13 +156,15 @@ const Tables = () => {
           size="sm"
           label="Select Workspace"
           onChange={(e) => {
-            onSelectionchange(e)
+            onSelectionchange(e);
           }}
           selectedKeys={values}
           // disabled={isLoading}
         >
           {workspaceList.map((workspace) => (
-            <SelectItem key={workspace.workspace_id}>{workspace.workspace_name}</SelectItem>
+            <SelectItem key={workspace.workspace_id}>
+              {workspace.workspace_name}
+            </SelectItem>
           ))}
         </Select>
         <NumberInput
@@ -172,7 +182,7 @@ const Tables = () => {
           selectedKeys={roleValue}
           isDisabled={!values.length || isLoading}
           onChange={(e) => {
-            setroleValue([e.target.value])
+            setroleValue([e.target.value]);
           }}
         >
           {roleDict.map((role) => (
@@ -181,7 +191,9 @@ const Tables = () => {
         </Select>
         <Button
           color="primary"
-          isDisabled={!values.length || !userID || !roleValue.length || isLoading}
+          isDisabled={
+            !values.length || !userID || !roleValue.length || isLoading
+          }
           onClick={() => setUsersRole()}
           isLoading={isLoading}
           endContent={<MdCached />}
@@ -190,7 +202,7 @@ const Tables = () => {
         </Button>
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="m-6">
@@ -205,8 +217,16 @@ const Tables = () => {
           totalPage > 0 && (
             <div>
               <div className="flex h-full w-full items-center justify-center">
-                <Pagination isDisabled={isLoading} page={currentPage} total={totalPage} onChange={handlePageChange} />
-                <div className="ml-8 text-small text-default-600">{`Total ${total} user${total === 1 ? `` : `s`}`}</div>
+                <Pagination
+                  isDisabled={isLoading}
+                  page={currentPage}
+                  total={totalPage}
+                  onChange={handlePageChange}
+                  isCompact
+                />
+                <div className="ml-8 text-small text-default-600">{`Total ${total} user${
+                  total === 1 ? `` : `s`
+                }`}</div>
               </div>
             </div>
           )
@@ -241,7 +261,7 @@ const Tables = () => {
         </TableBody>
       </Table>
     </div>
-  )
-}
+  );
+};
 
-export default Tables
+export default Tables;

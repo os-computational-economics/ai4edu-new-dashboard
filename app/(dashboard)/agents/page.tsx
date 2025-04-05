@@ -280,6 +280,7 @@ const Tables = () => {
                   page={currentPage}
                   total={totalPage}
                   onChange={handlePageChange}
+                  isCompact
                 />
                 <div className="ml-8 text-small text-default-600">
                   {" "}

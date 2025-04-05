@@ -249,6 +249,7 @@ const Workspace = () => {
                     page={currentPage}
                     total={totalPage}
                     onChange={handlePageChange}
+                    isCompact
                   />
                   <div className="ml-8 text-small text-default-600">{`Total ${total} workspaces${
                     total === 1 ? `` : `s`
