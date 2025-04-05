@@ -4,21 +4,21 @@ import { getAgentByID, GetAgentByIDResponse } from "@/api/agent/agent";
 import useMount from "@/components/hooks/useMount";
 import ChatPage from "../../../chat/ChatPage";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { addToast } from "@heroui/react";
 
-const Page = ({
-  params,
-  searchParams,
-}: {
-  params: { agent: string; thread: string };
-  searchParams: { from?: string };
-}) => {
+const Page = () => {
   const [agent, setAgent] = useState<GetAgentByIDResponse | null>(null);
 
   const [status, setStatus] = useState(1); // 1 - new Agent, 2 - Edit Agent
 
   const router = useRouter();
+
+  const params = useParams<{ agent: string; thread: string }>();
+
+  const searchParams = useSearchParams();
+
+  const from = searchParams.get("from");
 
   useMount(() => {
     fetchAgent();
@@ -52,7 +52,7 @@ const Page = ({
   };
   const closeChatModal = () => {
     // go back to previous page
-    if (searchParams.from === "chat-history") {
+    if (from === "chat-history") {
       router.push("/chat-history");
     } else {
       router.push("/agents");
