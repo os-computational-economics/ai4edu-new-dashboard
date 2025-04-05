@@ -100,7 +100,7 @@ const formatedCourses = () => {
 
     return {
       workspace_id: workspaceId,
-      workspace_role: role,
+      workspace_role: role as string,
       workspace_name: workspaceDetail.workspace_name || "",
       workspace_comment: workspaceDetail.workspace_comment || "",
     };
