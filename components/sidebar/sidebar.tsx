@@ -9,7 +9,7 @@ import { useSidebarContext } from '../layout/layout-context'
 import { usePathname } from 'next/navigation'
 import { CustomersIcon } from '../icons/sidebar/customers-icon'
 import { CollapseItems } from './collapse-items'
-import { isSystemAdmin, isWorkspaceAdmin, formatedCourses } from '@/utils/CookiesUtil'
+import { isSystemAdmin, isWorkspaceAdmin } from '@/utils/CookiesUtil'
 import { useRouter } from 'next/navigation'
 import { Users, BotMessageSquare, History, Settings, KeySquare, LayoutDashboard } from 'lucide-react'
 
