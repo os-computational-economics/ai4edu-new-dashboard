@@ -31,6 +31,9 @@ const Tables = () => {
   const { currentWorkspace, setCurrentWorkspace } =
     useContext(WorkspaceContext);
 
+  const workspaceId =
+    currentWorkspace?.id || JSON.parse(localStorage.getItem("workspace")!)?.id;
+
   useEffect(() => {
     fetchUserList(currentPage, pageSize);
   }, []);
@@ -39,9 +42,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id:
-        currentWorkspace?.id ||
-        JSON.parse(localStorage.getItem("workspace")!)?.id,
+      workspace_id: workspaceId,
     };
 
     getUserList(params)
@@ -71,12 +72,6 @@ const Tables = () => {
     }
   };
 
-  const handleFileChange = (event) => {
-    console.log("file:", event);
-    setFile(event.target.files[0]);
-    // handleFileUpload()
-  };
-
   const handleFileUpload = (file) => {
     if (!file) {
       addToast({
@@ -88,9 +83,6 @@ const Tables = () => {
 
     const formData = new FormData();
 
-    const workspaceId =
-      currentWorkspace?.id ||
-      JSON.parse(localStorage.getItem("workspace")!)?.id;
     const urlWorkspace = `admin/workspace/add_users_via_csv?workspace_id=${workspaceId}`;
 
     formData.append("file", file);
@@ -181,6 +173,8 @@ const Tables = () => {
           <TableColumn key="user_id">User ID</TableColumn>
           <TableColumn key="student_id">Student ID</TableColumn>
           <TableColumn key="name">User Name</TableColumn>
+          <TableColumn key="email">Email</TableColumn>
+          <TableColumn key="role">Role</TableColumn>
         </TableHeader>
         <TableBody
           items={users}
@@ -199,6 +193,8 @@ const Tables = () => {
               <TableCell>
                 {user.first_name} {user.last_name}
               </TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.workspace_role[workspaceId]}</TableCell>
             </TableRow>
           ))}
         </TableBody>
