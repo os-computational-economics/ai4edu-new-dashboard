@@ -14,7 +14,7 @@ const ArchiveModal = ({ isOpen, onClose, course }) => {
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isDismissable={false} backdrop="blur">
         <ModalContent>
           <ModalHeader>Archive Workspace</ModalHeader>
           <ModalBody>

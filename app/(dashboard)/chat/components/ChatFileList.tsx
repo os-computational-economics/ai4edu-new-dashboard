@@ -76,7 +76,10 @@ const ChatFileList = ({
             offset={15}
             {...(!hasSeenTooltip && { isOpen: showTooltip })}
           >
-            <File size={20} />
+            <span className="text-sm">
+              {" "}
+              <File size={20} />
+            </span>
           </Tooltip>
         </Button>
       </PopoverTrigger>

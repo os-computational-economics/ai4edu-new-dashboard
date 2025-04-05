@@ -103,102 +103,101 @@ const ChatPage = ({
       <Modal
         isOpen={isOpen}
         onClose={handleModalClose}
+        isDismissable={false}
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
         size="full"
         className="dark:bg-black"
       >
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-row justify-start gap-3 items-center pb-1 pt-2">
-                {agent.agent_files &&
-                  Object.keys(agent.agent_files).length > 0 && (
-                    <>
-                      <div className="flex-none">
-                        <ChatFileList
-                          agent={agent}
-                          setSelectedDocument={setSelectedDocumentFileID}
-                          uniqueFileIDs={uniqueFileIDs}
-                        />
-                      </div>
-                      <Divider orientation="vertical" className="flex-none" />
-                    </>
-                  )}
-                <div className="flex flex-row items-center gap-2 my-1 min-w-0 flex-1 mr-2">
-                  <Chip className="flex-none rounded-xl">
-                    {agent?.workspace_id}
-                  </Chip>
-                  <p className="text-lg font-bold truncate">
-                    {agent?.agent_name}
-                  </p>
-                </div>
-              </ModalHeader>
-              <div className="flex h-[calc(100vh-62px)]">
-                {/*<aside className="z-30 overflow-auto">
+          <>
+            <ModalHeader className="flex flex-row justify-start gap-3 items-center pb-1 pt-2">
+              {agent.agent_files &&
+                Object.keys(agent.agent_files).length > 0 && (
+                  <>
+                    <div className="flex-none">
+                      <ChatFileList
+                        agent={agent}
+                        setSelectedDocument={setSelectedDocumentFileID}
+                        uniqueFileIDs={uniqueFileIDs}
+                      />
+                    </div>
+                    <Divider orientation="vertical" className="flex-none" />
+                  </>
+                )}
+              <div className="flex flex-row items-center gap-2 my-1 min-w-0 flex-1 mr-2">
+                <Chip className="flex-none rounded-xl">
+                  {agent?.workspace_id}
+                </Chip>
+                <p className="text-lg font-bold truncate">
+                  {agent?.agent_name}
+                </p>
+              </div>
+            </ModalHeader>
+            <div className="flex h-[calc(100vh-62px)]">
+              {/*<aside className="z-30 overflow-auto">
                   <div className="flex flex-col grow pb-20 w-full bg-white">
                     <Objectives documents={documents} onDocumentClick={handleDocumentClick} />
                   </div>
                 </aside>*/}
-                <PanelGroup
-                  autoSaveId="chat-interface"
-                  direction={direction}
-                  className="w-full"
-                >
-                  {selectedDocumentFileID && (
-                    <>
-                      <Panel
-                        defaultSize={35}
-                        maxSize={70}
-                        minSize={20}
-                        id="document"
-                        order={1}
-                        className="relative"
+              <PanelGroup
+                autoSaveId="chat-interface"
+                direction={direction}
+                className="w-full"
+              >
+                {selectedDocumentFileID && (
+                  <>
+                    <Panel
+                      defaultSize={35}
+                      maxSize={70}
+                      minSize={20}
+                      id="document"
+                      order={1}
+                      className="relative"
+                    >
+                      <Button
+                        className="absolute top-2 right-1 z-50"
+                        variant="flat"
+                        isIconOnly
+                        size="sm"
+                        onClick={() => setSelectedDocumentFileID(null)}
+                        radius="full"
                       >
-                        <Button
-                          className="absolute top-2 right-1 z-50"
-                          variant="flat"
-                          isIconOnly
-                          size="sm"
-                          onClick={() => setSelectedDocumentFileID(null)}
-                          radius="full"
-                        >
-                          <X size={20} />
-                        </Button>
-                        <DocumentPanel
-                          selectedDocument={selectedDocumentFileID}
-                          selectedDocumentPage={selectedDocumentPage}
-                        />
-                      </Panel>
-                      <PanelResizeHandle>
-                        <div
-                          className={`flex flex-col rounded-lg w-full sm:h-full sm:w-2 items-center my-2 justify-center bg-gray-200 hover:bg-gray-300 dark:bg-[#191919] dark:hover:bg-[#1d1d1d] transition-colors cursor-row-resize sm:cursor-col-resize`}
-                          style={{ height: "calc(100% - 1rem)" }}
-                        >
-                          <GripVertical className="w-4 h-4 text-gray-400 rotate-90 sm:rotate-0" />
-                        </div>
-                      </PanelResizeHandle>
-                    </>
-                  )}
-                  <Panel
-                    defaultSize={65}
-                    maxSize={80}
-                    minSize={30}
-                    id="chat"
-                    order={2}
-                  >
-                    <ChatPanel
-                      agent={agent}
-                      thread={thread}
-                      setSelectedDocument={setSelectedDocumentFileID}
-                      setSelectedDocumentPage={setSelectedDocumentPage}
-                      setUniqueFileIDs={setUniqueFileIDs} // Pass the setter function
-                    />
-                  </Panel>
-                </PanelGroup>
-              </div>
-            </>
-          )}
+                        <X size={20} />
+                      </Button>
+                      <DocumentPanel
+                        selectedDocument={selectedDocumentFileID}
+                        selectedDocumentPage={selectedDocumentPage}
+                      />
+                    </Panel>
+                    <PanelResizeHandle>
+                      <div
+                        className={`flex flex-col rounded-lg w-full sm:h-full sm:w-2 items-center my-2 justify-center bg-gray-200 hover:bg-gray-300 dark:bg-[#191919] dark:hover:bg-[#1d1d1d] transition-colors cursor-row-resize sm:cursor-col-resize`}
+                        style={{ height: "calc(100% - 1rem)" }}
+                      >
+                        <GripVertical className="w-4 h-4 text-gray-400 rotate-90 sm:rotate-0" />
+                      </div>
+                    </PanelResizeHandle>
+                  </>
+                )}
+                <Panel
+                  defaultSize={65}
+                  maxSize={80}
+                  minSize={30}
+                  id="chat"
+                  order={2}
+                >
+                  <ChatPanel
+                    agent={agent}
+                    thread={thread}
+                    setSelectedDocument={setSelectedDocumentFileID}
+                    setSelectedDocumentPage={setSelectedDocumentPage}
+                    setUniqueFileIDs={setUniqueFileIDs} // Pass the setter function
+                  />
+                </Panel>
+              </PanelGroup>
+            </div>
+          </>
         </ModalContent>
       </Modal>
       <Modal isOpen={isRatingModalOpen} onClose={() => onClose()} size="md">

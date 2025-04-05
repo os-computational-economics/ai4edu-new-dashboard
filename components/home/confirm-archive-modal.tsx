@@ -60,7 +60,7 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={() => handleCloseModal()}>
+      <Modal isOpen={isOpen} onClose={() => handleCloseModal()} isDismissable={false}>
         <ModalContent>
           <ModalHeader>Archive Workspace</ModalHeader>
           <ModalBody>
