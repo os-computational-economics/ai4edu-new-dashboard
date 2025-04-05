@@ -66,7 +66,8 @@ export default function App() {
       .catch((error) => {
         console.log(error.response.data.detail);
         addToast({
-          title: error.response.data.detail,
+          title:
+            "Error fetching thread details, It's possible that you are trying to access a thread that doesn't have any messages.",
           color: "danger",
         });
         // console.error('Error fetching thread details:', error);
