@@ -90,14 +90,20 @@ const formatedCourses = () => {
   const workspace_details = obtainWorkspaceDetails() || {};
   const roles = decodeToken()?.workspace_role || {};
 
-  // merge workspace_details and workspace_roles together by workspace_id to centralize data
-  const mergedWorkspaces = workspace_details.map((workspace) => {
-    const mergedWorkspaces = { ...workspace };
-    const role = roles[workspace.workspace_id];
-    if (role) {
-      mergedWorkspaces.workspace_role = role;
-    }
-    return mergedWorkspaces;
+  // use roles as the base and merge with workspace_details
+  const mergedWorkspaces = Object.entries(roles).map(([workspaceId, role]) => {
+    // find matching workspace details
+    const workspaceDetail =
+      workspace_details.find(
+        (workspace) => workspace.workspace_id === workspaceId
+      ) || {};
+
+    return {
+      workspace_id: workspaceId,
+      workspace_role: role,
+      workspace_name: workspaceDetail.workspace_name || "",
+      workspace_comment: workspaceDetail.workspace_comment || "",
+    };
   });
 
   // format courses for course cards
