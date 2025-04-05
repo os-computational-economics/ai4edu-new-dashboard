@@ -14,6 +14,7 @@ import {
   SelectItem,
   Input,
   addToast,
+  NumberInput,
 } from "@heroui/react"
 import { getUserList, User } from '@/api/auth/auth'
 import { getWorkspaceList, setUserRoleUserID, Workspace } from '@/api/workspace/workspace'
@@ -32,7 +33,7 @@ const Tables = () => {
   const [roleValue, setroleValue] = useState<string[]>([])
   const [userValue, setUserValue] = useState('')
   const [searchValue, setSearchValue] = useState('')
-  const [userID, setUserID] = useState('')
+  const [userID, setUserID] = useState(-1)
   const [studentID, setStudentID] = useState('')
 
   const totalPage = Math.ceil(total / pageSize)
@@ -156,10 +157,10 @@ const Tables = () => {
             <SelectItem key={workspace.workspace_id}>{workspace.workspace_name}</SelectItem>
           ))}
         </Select>
-        <Input
+        <NumberInput
           size="sm"
           isDisabled={!values.length || isLoading}
-          type="email"
+          hideStepper
           label="User ID"
           className="max-w-xs"
           onValueChange={setUserID}
@@ -181,7 +182,7 @@ const Tables = () => {
         <Button
           color="primary"
           isDisabled={!values.length || !userID || !roleValue.length || isLoading}
-          onClick={() => setUsersRole()}
+          onPress={() => setUsersRole()}
           isLoading={isLoading}
           endContent={<MdCached />}
         >
