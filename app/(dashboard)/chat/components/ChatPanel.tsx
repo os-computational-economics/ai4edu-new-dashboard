@@ -456,7 +456,9 @@ const ChatPanel = ({
   };
 
   const sendMessage = async () => {
-    if (isResponseStreaming) return;
+    if (isResponseStreaming || !hasWriteAccessToThread || message.trim() === "") {
+      return;
+    }
     setIsResponseStreaming(true);
     await checkToken();
 
