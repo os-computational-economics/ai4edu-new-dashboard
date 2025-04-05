@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Card, CardHeader, CardFooter, Chip } from "@heroui/react"
+import { getWorkspaceNameFromID } from '@/utils/CookiesUtil'
 
 const ThreadCard = ({ thread, onSelect }) => (
   <Card isPressable onClick={() => onSelect(thread.thread_id)}>
@@ -12,7 +13,7 @@ const ThreadCard = ({ thread, onSelect }) => (
     </CardHeader>
     <CardFooter>
       <div className="flex justify-between w-full">
-      <Chip size='sm' className='rounded-lg'>{thread.workspace_id}</Chip>
+      <Chip size='sm' className='rounded-lg'>{getWorkspaceNameFromID(thread.workspace_id)}</Chip>
         <p className="text-small font-semibold text-default-600">
           {new Date(`${thread.created_at}Z`).toLocaleString()}
         </p>

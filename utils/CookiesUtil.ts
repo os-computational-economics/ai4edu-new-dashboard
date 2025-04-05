@@ -36,6 +36,24 @@ const forceRefreshWorkspaceAndToken = () => {
     });
 };
 
+const getWorkspaceNameFromID = (workspace_id: string) => {
+  const workspace_details = obtainWorkspaceDetails();
+  if (workspace_details) {
+    const workspace = workspace_details.find(
+      (workspace) => workspace.workspace_id === workspace_id
+    );
+    if (workspace) {
+      return workspace.workspace_name;
+    } else {
+      console.error("Workspace not found");
+      return "";
+    }
+  } else {
+    console.error("Workspace details not found");
+    return "";
+  }
+};
+
 const obtainWorkspaceDetails = () => {
   const user_workspace_details = Cookies.get("user_workspace_details");
   if (user_workspace_details) {
@@ -148,4 +166,5 @@ export {
   getCurrentUserID,
   checkToken,
   forceRefreshWorkspaceAndToken,
+  getWorkspaceNameFromID,
 };

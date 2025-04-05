@@ -17,6 +17,7 @@ import { THREAD_RATING_TRIGGER_PROBABILITY } from "@/utils/constants";
 import { Direction } from "react-resizable-panels/dist/declarations/src/types";
 import { GetAgentByIDResponse } from "@/api/agent/agent";
 import ChatFileList from "./components/ChatFileList";
+import { getWorkspaceNameFromID } from "@/utils/CookiesUtil";
 
 type Document = {
   id: number;
@@ -127,7 +128,7 @@ const ChatPage = ({
                 )}
               <div className="flex flex-row items-center gap-2 my-1 min-w-0 flex-1 mr-2">
                 <Chip className="flex-none rounded-xl">
-                  {agent?.workspace_id}
+                  {getWorkspaceNameFromID(agent?.workspace_id)}
                 </Chip>
                 <p className="text-lg font-bold truncate">
                   {agent?.agent_name}
