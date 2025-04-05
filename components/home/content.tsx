@@ -49,7 +49,7 @@ const CourseCard = ({ course }) => {
           <div className="flex flex-col min-w-0 items-start">
             <p className="text-medium font-bold truncate">{course.name}</p>
             <small className="text-default-500 truncate uppercase">
-              {course.comment}
+              {course.comment || " "}
             </small>
           </div>
           {course.role === "teacher" ? (
