@@ -15,16 +15,26 @@ import {
   Switch,
   Textarea,
   addToast,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Chip,
+  Tooltip,
 } from "@heroui/react";
 import useMount from "@/components/hooks/useMount";
 import {
   createWorkspace,
+  editWorkspace,
   getWorkspaceList,
   setWorkspaceStatus,
   Workspace as WorkspaceType,
 } from "@/api/workspace/workspace";
 
 import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
+import { Edit } from "lucide-react";
 
 const Workspace = () => {
   const [workspacePrompt, setWorkspacePrompt] = useState("");
@@ -36,6 +46,15 @@ const Workspace = () => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [isLoading, setisLoading] = useState(false);
+
+  // Edit workspace modal state
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedWorkspace, setSelectedWorkspace] =
+    useState<WorkspaceType | null>(null);
+  const [editWorkspaceName, setEditWorkspaceName] = useState("");
+  const [editWorkspacePrompt, setEditWorkspacePrompt] = useState("");
+  const [editWorkspaceComment, setEditWorkspaceComment] = useState("");
+  const [isEditLoading, setIsEditLoading] = useState(false);
 
   const totalPage = Math.ceil(total / pageSize);
 
@@ -119,9 +138,57 @@ const Workspace = () => {
         });
         console.log("Workspace status updated successfully!");
         fetchWorkspaceList(currentPage, pageSize);
+        setSelectedWorkspace((prev) =>
+          prev ? { ...prev, status: toggledStatus } : null
+        );
+        onClose(); // Close the modal after successful status change
       })
       .catch((error) => {
         console.error("Error updating workspace status:", error);
+        addToast({
+          title: "Failed to update workspace status",
+          color: "danger",
+        });
+      });
+  };
+
+  const openEditModal = (workspace: WorkspaceType) => {
+    setSelectedWorkspace(workspace);
+    setEditWorkspaceName(workspace.workspace_name);
+    setEditWorkspacePrompt(workspace.workspace_prompt);
+    setEditWorkspaceComment(workspace.workspace_comment);
+    onOpen();
+  };
+
+  const handleEditWorkspace = () => {
+    if (!selectedWorkspace) return;
+
+    setIsEditLoading(true);
+    const data = {
+      workspace_id: selectedWorkspace.workspace_id,
+      workspace_name: editWorkspaceName,
+      workspace_prompt: editWorkspacePrompt,
+      workspace_comment: editWorkspaceComment,
+    };
+
+    editWorkspace(data)
+      .then((res) => {
+        addToast({
+          title: "Workspace updated successfully",
+          color: "success",
+        });
+        console.log("Workspace updated successfully!");
+        fetchWorkspaceList(currentPage, pageSize);
+        onClose();
+        setIsEditLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error updating workspace:", error);
+        addToast({
+          title: "Failed to update workspace",
+          color: "danger",
+        });
+        setIsEditLoading(false);
       });
   };
 
@@ -198,9 +265,10 @@ const Workspace = () => {
             <TableColumn key="workspace_join_code">
               Workspace Join Code
             </TableColumn>
+            <TableColumn key="workspace_status">Status</TableColumn>
             <TableColumn key="workspace_prompt">Workspace Prompt</TableColumn>
             <TableColumn key="workspace_comment">Workspace Comment</TableColumn>
-            <TableColumn key="workspace_status">Workspace Status</TableColumn>
+            <TableColumn key="edit_workspace">Edit Workspace</TableColumn>
           </TableHeader>
           <TableBody
             items={workspaceList}
@@ -215,23 +283,129 @@ const Workspace = () => {
             {workspaceList.map((workspace) => (
               <TableRow key={workspace.workspace_id}>
                 <TableCell>{workspace.school_id}</TableCell>
-                <TableCell>{workspace.workspace_id}</TableCell>
+                <TableCell>
+                  <Tooltip content={workspace.workspace_id}>
+                    <span>{workspace.workspace_id.substring(0, 8)}...</span>
+                  </Tooltip>
+                </TableCell>
                 <TableCell>{workspace.workspace_name}</TableCell>
                 <TableCell>{workspace.workspace_join_code}</TableCell>
-                <TableCell>{workspace.workspace_prompt}</TableCell>
-                <TableCell>{workspace.workspace_comment}</TableCell>
                 <TableCell>
-                  <Switch
-                    isSelected={workspace.status === 1}
-                    onChange={(e) => handleWorkspaceStatusChange(workspace)}
-                  />
-                  {workspace.status === 1 ? "Active" : "Inactive"}
+                  <Chip color={workspace.status === 1 ? "success" : "default"} size="sm">
+                    {workspace.status === 1 ? "Active" : "Inactive"}
+                  </Chip>
+                </TableCell>
+                <TableCell>
+                  <Tooltip
+                    content={
+                      <div className="px-1 py-2">
+                        <div className="text-small font-bold">Workspace Prompt</div>
+                        <div className="text-tiny max-w-[50vw]">{workspace.workspace_prompt}</div>
+                      </div>
+                    }
+                  >
+                    <span>{workspace.workspace_prompt?.length > 100 
+                      ? workspace.workspace_prompt.substring(0, 100) + "..." 
+                      : workspace.workspace_prompt}</span>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  <Tooltip
+                    content={
+                      <div className="px-1 py-2">
+                        <div className="text-small font-bold">Workspace Comment</div>
+                        <div className="text-tiny max-w-[50vw]">{workspace.workspace_comment}</div>
+                      </div>
+                    }
+                  >
+                    <span>{workspace.workspace_comment?.length > 100 
+                      ? workspace.workspace_comment.substring(0, 100) + "..." 
+                      : workspace.workspace_comment}</span>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    color="primary"
+                    size="sm"
+                    onClick={() => openEditModal(workspace)}
+                  >
+                    <Edit size={16} />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+
+      {/* Edit Workspace Modal */}
+      <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            {`Edit Workspace ${
+              selectedWorkspace ? selectedWorkspace.workspace_name : ""
+            }`}
+          </ModalHeader>
+          <ModalBody>
+            {selectedWorkspace && (
+              <>
+                <div className="mb-6 border-b pb-4">
+                  <h3 className="text-lg font-semibold mb-3">
+                    Workspace Status
+                  </h3>
+                  <div className="flex items-center">
+                    <Switch
+                      isSelected={selectedWorkspace.status === 1}
+                      onChange={() =>
+                        handleWorkspaceStatusChange(selectedWorkspace)
+                      }
+                    />
+                    <span className="ml-2">
+                      {selectedWorkspace.status === 1 ? "Active" : "Inactive"}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">
+                    Edit Workspace Details
+                  </h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    <Input
+                      label="Workspace Name"
+                      value={editWorkspaceName}
+                      disabled
+                      onChange={(e) => setEditWorkspaceName(e.target.value)}
+                    />
+                    <Textarea
+                      label="Workspace Prompt"
+                      value={editWorkspacePrompt}
+                      onChange={(e) => setEditWorkspacePrompt(e.target.value)}
+                    />
+                    <Textarea
+                      label="Workspace Comment"
+                      value={editWorkspaceComment}
+                      onChange={(e) => setEditWorkspaceComment(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onPress={handleEditWorkspace}
+              isLoading={isEditLoading}
+            >
+              Save Changes
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

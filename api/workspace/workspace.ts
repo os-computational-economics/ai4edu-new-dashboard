@@ -57,6 +57,13 @@ export interface CreateWorkspaceRequest {
   workspace_comment: string | null;
 }
 
+export interface EditWorkspaceRequest {
+  workspace_id: string;
+  workspace_name?: string;
+  workspace_prompt?: string;
+  workspace_comment?: string;
+}
+
 enum WorkspaceStatus {
   ACTIVE = 1,
   INACTIVE = 0,
@@ -80,6 +87,7 @@ const api = {
   setUserRoleUserID: role + `/${path}` + "/set_user_role_with_user_id",
   setWorkspaceStatus: role + `/${path}` + "/set_workspace_status",
   getUserWorkspaceDetails: role + `/${path}` + "/get_user_workspace_details",
+  editWorkspace: role + `/${path}` + "/edit_workspace",
 };
 
 // add users via CSV
@@ -150,5 +158,14 @@ export function getUserWorkspaceDetails(): Promise<WorkspaceListResponse> {
   return request({
     url: api.getUserWorkspaceDetails,
     method: "get",
+  });
+}
+
+// edit_workspace
+export function editWorkspace(data: EditWorkspaceRequest): Promise<any> {
+  return request({
+    url: api.editWorkspace,
+    method: "post",
+    data,
   });
 }
