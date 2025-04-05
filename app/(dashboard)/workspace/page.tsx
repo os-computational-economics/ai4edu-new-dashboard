@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Button,
   Input,
@@ -34,7 +34,7 @@ import {
 } from "@/api/workspace/workspace";
 
 import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
-import { Edit } from "lucide-react";
+import { Edit, Copy } from "lucide-react";
 
 const Workspace = () => {
   const [workspacePrompt, setWorkspacePrompt] = useState("");
@@ -289,9 +289,32 @@ const Workspace = () => {
                   </Tooltip>
                 </TableCell>
                 <TableCell>{workspace.workspace_name}</TableCell>
-                <TableCell>{workspace.workspace_join_code}</TableCell>
                 <TableCell>
-                  <Chip color={workspace.status === 1 ? "success" : "default"} size="sm">
+                  <Chip
+                    className="cursor-pointer select-all hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1"
+                    color="primary"
+                    variant="flat"
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        workspace.workspace_join_code
+                      );
+                      addToast({
+                        title: "Workspace code copied to clipboard",
+                        color: "success",
+                      });
+                    }}
+                  >
+                    <div className="flex items-center gap-1 font-mono">
+                      {workspace.workspace_join_code}
+                      <Copy size={14} />
+                    </div>
+                  </Chip>
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    color={workspace.status === 1 ? "success" : "default"}
+                    size="sm"
+                  >
                     {workspace.status === 1 ? "Active" : "Inactive"}
                   </Chip>
                 </TableCell>
@@ -299,28 +322,40 @@ const Workspace = () => {
                   <Tooltip
                     content={
                       <div className="px-1 py-2">
-                        <div className="text-small font-bold">Workspace Prompt</div>
-                        <div className="text-tiny max-w-[50vw]">{workspace.workspace_prompt}</div>
+                        <div className="text-small font-bold">
+                          Workspace Prompt
+                        </div>
+                        <div className="text-tiny max-w-[50vw]">
+                          {workspace.workspace_prompt}
+                        </div>
                       </div>
                     }
                   >
-                    <span>{workspace.workspace_prompt?.length > 100 
-                      ? workspace.workspace_prompt.substring(0, 100) + "..." 
-                      : workspace.workspace_prompt}</span>
+                    <span>
+                      {workspace.workspace_prompt?.length > 100
+                        ? workspace.workspace_prompt.substring(0, 100) + "..."
+                        : workspace.workspace_prompt}
+                    </span>
                   </Tooltip>
                 </TableCell>
                 <TableCell>
                   <Tooltip
                     content={
                       <div className="px-1 py-2">
-                        <div className="text-small font-bold">Workspace Comment</div>
-                        <div className="text-tiny max-w-[50vw]">{workspace.workspace_comment}</div>
+                        <div className="text-small font-bold">
+                          Workspace Comment
+                        </div>
+                        <div className="text-tiny max-w-[50vw]">
+                          {workspace.workspace_comment}
+                        </div>
                       </div>
                     }
                   >
-                    <span>{workspace.workspace_comment?.length > 100 
-                      ? workspace.workspace_comment.substring(0, 100) + "..." 
-                      : workspace.workspace_comment}</span>
+                    <span>
+                      {workspace.workspace_comment?.length > 100
+                        ? workspace.workspace_comment.substring(0, 100) + "..."
+                        : workspace.workspace_comment}
+                    </span>
                   </Tooltip>
                 </TableCell>
                 <TableCell>
