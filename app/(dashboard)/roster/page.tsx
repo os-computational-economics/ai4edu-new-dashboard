@@ -11,9 +11,18 @@ import {
   Spinner,
   Pagination,
   addToast,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@heroui/react";
 import { getUserList, User } from "@/api/auth/auth";
-import { addUsersViaCsv } from "@/api/workspace/workspace";
+import {
+  addUsersViaCsv,
+  getPendingUsers,
+  PendingUser,
+} from "@/api/workspace/workspace";
 import { WorkspaceContext } from "@/components/layout/layout";
 import Upload from "@/components/upload/upload";
 
@@ -25,6 +34,10 @@ const Tables = () => {
   const [isLoading, setisLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [workspaceId, setWorkspaceId] = useState(null);
+  const [pendingUsers, setPendingUsers] = useState<PendingUser[]>([]);
+  const [pendingTotal, setPendingTotal] = useState(0);
+  const [isPendingModalVisible, setIsPendingModalVisible] = useState(false);
+  const [isPendingLoading, setIsPendingLoading] = useState(false);
 
   const totalPage = Math.ceil(total / pageSize);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -67,6 +80,34 @@ const Tables = () => {
       .catch((error) => {
         setisLoading(false);
         console.error("Error fetching users:", error);
+      });
+  };
+
+  const fetchPendingUsers = () => {
+    const ws_id = getWorkspaceId();
+    if (!ws_id) {
+      addToast({
+        title: "Workspace not found",
+        color: "danger",
+      });
+      return;
+    }
+
+    setIsPendingLoading(true);
+    getPendingUsers(ws_id)
+      .then((res) => {
+        setIsPendingLoading(false);
+        setPendingUsers(res.items);
+        setPendingTotal(res.total);
+        setIsPendingModalVisible(true);
+      })
+      .catch((error) => {
+        setIsPendingLoading(false);
+        addToast({
+          title: "Error fetching pending users",
+          color: "danger",
+        });
+        console.error("Error fetching pending users:", error);
       });
   };
 
@@ -149,6 +190,9 @@ const Tables = () => {
           <Button color="primary" onClick={() => openModal()}>
             Add Student
           </Button>
+          <Button color="default" onClick={fetchPendingUsers}>
+            Check Pending Students
+          </Button>
         </div>
       </div>
 
@@ -161,6 +205,57 @@ const Tables = () => {
         acceptFileTypes={".csv"}
         maxFileSizeMB={1}
       />
+
+      <Modal
+        isOpen={isPendingModalVisible}
+        onClose={() => setIsPendingModalVisible(false)}
+        size="lg"
+      >
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-xl font-bold">Pending Students</h2>
+          </ModalHeader>
+          <ModalBody>
+            {isPendingLoading ? (
+              <div className="flex justify-center py-8">
+                <Spinner label="Loading..." />
+              </div>
+            ) : pendingUsers.length > 0 ? (
+              <Table
+                aria-label="Pending Users List"
+                removeWrapper
+                isHeaderSticky
+                className="max-h-96 overflow-y-auto"
+              >
+                <TableHeader>
+                  <TableColumn key="student_id">Student ID</TableColumn>
+                  <TableColumn key="status">Status</TableColumn>
+                </TableHeader>
+                <TableBody items={pendingUsers}>
+                  {(item) => (
+                    <TableRow key={item.student_id}>
+                      <TableCell>{item.student_id}</TableCell>
+                      <TableCell>{item.status}</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            ) : (
+              <p className="text-center py-6">No pending students found.</p>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <div className="text-small text-gray-500">
+              Total {pendingTotal} pending student
+              {pendingTotal === 1 ? "" : "s"}
+            </div>
+            <Button onClick={() => setIsPendingModalVisible(false)}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Table
         topContentPlacement="outside"
         aria-label="Users List"

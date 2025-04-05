@@ -1,20 +1,12 @@
 import request from "@/utils/request";
 
-export interface User {
-  user_id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  student_id: string; // TODO: It looks like this is only used in tables now? Could probably be removed in the future
-  role: Array<{
-    student: boolean;
-    teacher: boolean;
-    admin: boolean;
-  }>;
+export interface PendingUser {
+  student_id: string;
+  status: string;
 }
 
-export interface UserList {
-  user_list: Array<User>;
+export interface PendingUsersList {
+  items: Array<PendingUser>;
   total: number;
 }
 
@@ -88,6 +80,7 @@ const api = {
   setWorkspaceStatus: role + `/${path}` + "/set_workspace_status",
   getUserWorkspaceDetails: role + `/${path}` + "/get_user_workspace_details",
   editWorkspace: role + `/${path}` + "/edit_workspace",
+  getPendingUsers: role + `/${path}` + "/get_pending_users",
 };
 
 // add users via CSV
@@ -167,5 +160,15 @@ export function editWorkspace(data: EditWorkspaceRequest): Promise<any> {
     url: api.editWorkspace,
     method: "post",
     data,
+  });
+}
+
+// get_pending_users
+export function getPendingUsers(
+  workspaceId: string
+): Promise<PendingUsersList> {
+  return request({
+    url: `${api.getPendingUsers}/${workspaceId}`,
+    method: "get",
   });
 }
