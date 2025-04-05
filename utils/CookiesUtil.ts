@@ -21,6 +21,7 @@ const forceRefreshWorkspaceAndToken = () => {
   // delete the two related tokens: access_token and user_workspace_details
   Cookies.remove("access_token");
   Cookies.remove("user_workspace_details");
+  localStorage.removeItem("workspace");
   ping()
     .then(obtainWorkspaceDetails)
     .then(
@@ -103,6 +104,7 @@ const formatedCourses = () => {
       workspace_role: role as string,
       workspace_name: workspaceDetail.workspace_name || "",
       workspace_comment: workspaceDetail.workspace_comment || "",
+      workspace_join_code: workspaceDetail.workspace_join_code || "",
     };
   });
 
@@ -112,6 +114,7 @@ const formatedCourses = () => {
     role: workspace.workspace_role,
     name: workspace.workspace_name,
     comment: workspace.workspace_comment,
+    join_code: workspace.workspace_join_code,
   }));
 
   return formattedWorkspaces;

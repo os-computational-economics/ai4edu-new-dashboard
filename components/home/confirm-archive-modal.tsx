@@ -10,8 +10,7 @@ import {
 } from "@heroui/react";
 import { useState } from "react";
 import { setWorkspaceStatus } from "@/api/workspace/workspace";
-import { ping } from "@/api/auth/auth";
-import { AUTH_PATH } from "@/utils/constants";
+import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
 
 const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
   const [workspaceName, setWorkspaceName] = useState("");
@@ -38,13 +37,7 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
           });
           handleCloseModal();
           setTimeout(() => {
-            ping()
-              .then((res) => {
-                window.location.reload();
-              })
-              .catch((err) => {
-                window.location.href = AUTH_PATH;
-              });
+            forceRefreshWorkspaceAndToken();
           }, 100);
           console.log("response", res);
         })
@@ -60,14 +53,23 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={() => handleCloseModal()} isDismissable={false}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => handleCloseModal()}
+        isDismissable={false}
+      >
         <ModalContent>
           <ModalHeader>Archive Workspace</ModalHeader>
           <ModalBody>
-            <div className="flex items-center gap-2 p-3 rounded-lg">
+            <div className="flex flex-col items-center gap-2 p-3 rounded-lg">
               <span className="text-black-100 font-bold">
                 To confirm the action, enter the name of the workspace you would
-                like to archive.
+                like to archive:
+              </span>
+              <span className="text-red-700 font-bold">{course.name}</span>
+              <span className="text-black-100">
+                Note that the archive action might take up to 30 minutes to take
+                effect for all users.
               </span>
             </div>
 
