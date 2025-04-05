@@ -24,6 +24,7 @@ const Tables = () => {
   const [pageSize, setPageSize] = useState(10);
   const [isLoading, setisLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [workspaceId, setWorkspaceId] = useState(null);
 
   const totalPage = Math.ceil(total / pageSize);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -31,8 +32,20 @@ const Tables = () => {
   const { currentWorkspace, setCurrentWorkspace } =
     useContext(WorkspaceContext);
 
-  const workspaceId =
-    currentWorkspace?.id || JSON.parse(localStorage.getItem("workspace")!)?.id;
+  const getWorkspaceId = () => {
+    // Check if workspaceId is set
+    if (workspaceId) {
+      return workspaceId;
+    } else {
+      const ws_id =
+        currentWorkspace?.id ||
+        JSON.parse(localStorage.getItem("workspace")!)?.id;
+      if (ws_id) {
+        setWorkspaceId(ws_id);
+        return ws_id;
+      }
+    }
+  };
 
   useEffect(() => {
     fetchUserList(currentPage, pageSize);
@@ -42,7 +55,7 @@ const Tables = () => {
     const params = {
       page,
       page_size: pageSize,
-      workspace_id: workspaceId,
+      workspace_id: getWorkspaceId(),
     };
 
     getUserList(params)
@@ -83,7 +96,7 @@ const Tables = () => {
 
     const formData = new FormData();
 
-    const urlWorkspace = `admin/workspace/add_users_via_csv?workspace_id=${workspaceId}`;
+    const urlWorkspace = `admin/workspace/add_users_via_csv?workspace_id=${getWorkspaceId()}`;
 
     formData.append("file", file);
 
@@ -194,7 +207,7 @@ const Tables = () => {
                 {user.first_name} {user.last_name}
               </TableCell>
               <TableCell>{user.email}</TableCell>
-              <TableCell>{user.workspace_role[workspaceId]}</TableCell>
+              <TableCell>{user.workspace_role[getWorkspaceId()]}</TableCell>
             </TableRow>
           ))}
         </TableBody>
