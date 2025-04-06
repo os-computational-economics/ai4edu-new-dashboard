@@ -3,7 +3,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import logout from "./logout";
 import { ping } from "@/api/auth/auth";
 import { getUserWorkspaceDetails } from "@/api/workspace/workspace";
-import { LOGIN_PERSISTENCE_IN_DAYS } from "./constants";
 
 const decodeToken = () => {
   const access_token = Cookies.get("access_token");
