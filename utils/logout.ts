@@ -8,7 +8,6 @@ const logout = () => {
   Cookies.remove("email");
   Cookies.remove("name_initials");
   Cookies.remove("user_id");
-  Cookies.remove("user_workspace_details");
   localStorage.clear();
   setTimeout(() => {
     window.location.href = AUTH_PATH;

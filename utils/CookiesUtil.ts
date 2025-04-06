@@ -20,7 +20,7 @@ const decodeToken = () => {
 const forceRefreshWorkspaceAndToken = () => {
   // delete the two related tokens: access_token and user_workspace_details
   Cookies.remove("access_token");
-  Cookies.remove("user_workspace_details");
+  localStorage.removeItem("user_workspace_details");
   localStorage.removeItem("workspace");
   ping()
     .then(obtainWorkspaceDetails)
@@ -56,16 +56,14 @@ const getWorkspaceNameFromID = (workspace_id: string) => {
 };
 
 const obtainWorkspaceDetails = () => {
-  const user_workspace_details = Cookies.get("user_workspace_details");
+  const user_workspace_details = localStorage.getItem("user_workspace_details");
   if (user_workspace_details) {
     return JSON.parse(user_workspace_details);
   } else {
-    // get user workspace details from backend and set it to cookie
+    // get user workspace details from backend and set it to localStorage
     getUserWorkspaceDetails()
       .then((res) => {
-        Cookies.set("user_workspace_details", JSON.stringify(res.items), {
-          expires: LOGIN_PERSISTENCE_IN_DAYS,
-        });
+        localStorage.setItem("user_workspace_details", JSON.stringify(res.items));
         return res.items;
       })
       .catch((error) => {
@@ -105,12 +103,10 @@ const formatedCourses = async () => {
         missingWorkspaceIds.includes(ws.workspace_id)
       );
 
-      // Update cookies with new workspace details
+      // Update localStorage with new workspace details
       if (newWorkspaceDetails.length > 0) {
         const updatedDetails = [...workspace_details, ...newWorkspaceDetails];
-        Cookies.set("user_workspace_details", JSON.stringify(updatedDetails), {
-          expires: LOGIN_PERSISTENCE_IN_DAYS,
-        });
+        localStorage.setItem("user_workspace_details", JSON.stringify(updatedDetails));
         // Update workspace_details to include the new details
         workspace_details.push(...newWorkspaceDetails);
       }

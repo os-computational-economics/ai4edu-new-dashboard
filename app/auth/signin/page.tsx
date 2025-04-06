@@ -31,12 +31,12 @@ const SigninPage: React.FC = () => {
         Cookies.set("access_token", access, {
           expires: 29 / (24 * 60),
         });
+        // clear local storage workspace
+        localStorage.removeItem("workspace");
         getUserWorkspaceDetails()
           .then((res) => {
             console.log(res);
-            Cookies.set("user_workspace_details", JSON.stringify(res.items), {
-              expires: LOGIN_PERSISTENCE_IN_DAYS,
-            });
+            localStorage.setItem("user_workspace_details", JSON.stringify(res.items));
             urlParams.delete("refresh");
             urlParams.delete("access");
 
