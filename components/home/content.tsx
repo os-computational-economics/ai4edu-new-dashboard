@@ -76,14 +76,20 @@ const CourseCard = ({ course, onDetailsClick }) => {
 
 export const Content = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   useEffect(() => {
     checkExpired();
-    const courseList = formatedCourses();
-    setCourses(courseList);
+    const fetchCourses = async () => {
+      setIsLoading(true);
+      const courseList = await formatedCourses();
+      setCourses(courseList);
+      setIsLoading(false);
+    };
+    fetchCourses();
   }, []);
 
   const closeJoinModal = () => {
@@ -125,7 +131,11 @@ export const Content = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 justify-center w-full">
-              {courses.length > 0 ? (
+              {isLoading ? (
+                <div className="col-span-full flex justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                </div>
+              ) : courses.length > 0 ? (
                 courses.map((course) => (
                   <CourseCard
                     key={course.id}

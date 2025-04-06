@@ -86,10 +86,38 @@ const getCurrentUserID = () => {
   return decodeToken()?.user_id;
 };
 
-const formatedCourses = () => {
+const formatedCourses = async () => {
   // fetch workspace details and roles
   const workspace_details = obtainWorkspaceDetails() || {};
   const roles = decodeToken()?.workspace_role || {};
+
+  // Find all workspace IDs that exist in roles but not in details
+  const missingWorkspaceIds = Object.keys(roles).filter(
+    (workspaceId) =>
+      !workspace_details.some((ws) => ws.workspace_id === workspaceId)
+  );
+
+  // If there are missing workspaces, fetch them all at once
+  if (missingWorkspaceIds.length > 0) {
+    try {
+      const response = await getUserWorkspaceDetails();
+      const newWorkspaceDetails = response.items.filter((ws) =>
+        missingWorkspaceIds.includes(ws.workspace_id)
+      );
+
+      // Update cookies with new workspace details
+      if (newWorkspaceDetails.length > 0) {
+        const updatedDetails = [...workspace_details, ...newWorkspaceDetails];
+        Cookies.set("user_workspace_details", JSON.stringify(updatedDetails), {
+          expires: LOGIN_PERSISTENCE_IN_DAYS,
+        });
+        // Update workspace_details to include the new details
+        workspace_details.push(...newWorkspaceDetails);
+      }
+    } catch (error) {
+      console.error("Error fetching workspace details:", error);
+    }
+  }
 
   // use roles as the base and merge with workspace_details
   const mergedWorkspaces = Object.entries(roles).map(([workspaceId, role]) => {
