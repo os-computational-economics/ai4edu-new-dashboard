@@ -266,6 +266,7 @@ const Workspace = () => {
             <TableColumn key="workspace_join_code">
               Workspace Join Code
             </TableColumn>
+            <TableColumn key="created_by">Created By</TableColumn>
             <TableColumn key="workspace_status">Status</TableColumn>
             <TableColumn key="workspace_prompt">Workspace Prompt</TableColumn>
             <TableColumn key="workspace_comment">Workspace Comment</TableColumn>
@@ -311,6 +312,7 @@ const Workspace = () => {
                     </div>
                   </Chip>
                 </TableCell>
+                <TableCell>{workspace.created_by || '-'}</TableCell>
                 <TableCell>
                   <Chip
                     color={workspace.status === 1 ? "success" : "default"}

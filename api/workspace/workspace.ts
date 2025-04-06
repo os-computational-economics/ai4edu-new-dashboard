@@ -29,6 +29,7 @@ export interface Workspace {
   school_id: number;
   workspace_prompt: string;
   workspace_comment: string;
+  created_by?: string;
 }
 
 export interface WorkspaceListResponse {
