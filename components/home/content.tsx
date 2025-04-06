@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { Card, CardHeader, CardBody, Image, Button } from "@heroui/react";
+import { Card, CardHeader, CardBody, Image, Button, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { formatedCourses, checkExpired } from "@/utils/CookiesUtil";
 import { WorkspaceContext } from "@/components/layout/layout";
@@ -133,7 +133,7 @@ export const Content = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 justify-center w-full">
               {isLoading ? (
                 <div className="col-span-full flex justify-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                  <Spinner />
                 </div>
               ) : courses.length > 0 ? (
                 courses.map((course) => (
