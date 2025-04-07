@@ -23,6 +23,8 @@ import {
   useDisclosure,
   Chip,
   Tooltip,
+  Card,
+  CardBody,
 } from "@heroui/react";
 import useMount from "@/components/hooks/useMount";
 import {
@@ -34,7 +36,7 @@ import {
 } from "@/api/workspace/workspace";
 
 import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
-import { Edit, Copy } from "lucide-react";
+import { Edit, Copy, RefreshCw } from "lucide-react";
 
 const Workspace = () => {
   const [workspacePrompt, setWorkspacePrompt] = useState("");
@@ -194,47 +196,64 @@ const Workspace = () => {
 
   return (
     <div className="m-6">
-      <div>
-        <h2 className="text-xl font-bold mb-4">Create Workspace</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            isClearable
-            isRequired
-            label="Workspace Name"
-            value={workspaceName}
-            onChange={(e) => setWorkspaceName(e.target.value)}
-          />
-          <Input
-            isClearable
-            isRequired
-            label="School ID"
-            type="number"
-            value={String(schoolID)}
-            onChange={(e) => setSchoolID(Number(e.target.value))}
-          />
-          <Textarea
-            label="Workspace Prompt"
-            value={workspacePrompt}
-            onChange={(e) => setWorkspacePrompt(e.target.value)}
-          />
-          <Textarea
-            label="Workspace Comment"
-            value={workspaceComment}
-            onChange={(e) => setWorkspaceComment(e.target.value)}
-          />
-        </div>
-        <Spacer y={1} />
-        <div className="flex justify-end mt-2">
-          <Button
-            isLoading={isLoading}
-            isDisabled={!workspaceName || !schoolID}
-            onClick={createNewWorkspace}
-            color="primary"
-          >
-            Create Workspace
-          </Button>
-        </div>
-      </div>
+      <Card className="mb-4" shadow="sm">
+        <CardBody>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold">Create Workspace</h2>
+              <Button
+                variant="bordered"
+                size="sm"
+                color="default"
+                onClick={() => fetchWorkspaceList(currentPage, pageSize)}
+                isLoading={isLoading}
+                endContent={<RefreshCw size={16} />}
+              >
+                Reload List
+              </Button>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                isClearable
+                isRequired
+                label="Workspace Name"
+                value={workspaceName}
+                onChange={(e) => setWorkspaceName(e.target.value)}
+              />
+              <Input
+                isClearable
+                isRequired
+                label="School ID"
+                type="number"
+                value={String(schoolID)}
+                onChange={(e) => setSchoolID(Number(e.target.value))}
+              />
+              <Textarea
+                label="Workspace Prompt"
+                value={workspacePrompt}
+                onChange={(e) => setWorkspacePrompt(e.target.value)}
+              />
+              <Textarea
+                label="Workspace Comment"
+                value={workspaceComment}
+                onChange={(e) => setWorkspaceComment(e.target.value)}
+              />
+            </div>
+            <Spacer y={1} />
+            <div className="flex justify-end mt-2">
+              <Button
+                isLoading={isLoading}
+                isDisabled={!workspaceName || !schoolID}
+                onClick={createNewWorkspace}
+                color="primary"
+              >
+                Create Workspace
+              </Button>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+
       <div className="mt-4">
         <h2 className="text-xl font-bold mb-4">Current Workspaces</h2>
         <Table

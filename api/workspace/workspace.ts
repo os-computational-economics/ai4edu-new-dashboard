@@ -82,6 +82,7 @@ const api = {
   getUserWorkspaceDetails: role + `/${path}` + "/get_user_workspace_details",
   editWorkspace: role + `/${path}` + "/edit_workspace",
   getPendingUsers: role + `/${path}` + "/get_pending_users",
+  setWorkspaceAdminRole: role + `/${path}` + "/set_workspace_admin_role",
 };
 
 // add users via CSV
@@ -171,5 +172,17 @@ export function getPendingUsers(
   return request({
     url: `${api.getPendingUsers}/${workspaceId}`,
     method: "get",
+  });
+}
+
+export function setWorkspaceAdminRole(data: { user_id: number; workspace_admin: boolean }): Promise<{
+  success: boolean;
+  status: number;
+  message: string;
+}> {
+  return request({
+    url: api.setWorkspaceAdminRole,
+    method: "post",
+    data: data,
   });
 }
