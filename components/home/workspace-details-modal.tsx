@@ -9,6 +9,7 @@ import {
 } from "@heroui/react";
 import { useState } from "react";
 import ConfirmArchiveModal from "./confirm-archive-modal";
+import JoinCodeChip from "../workspace/join-code-chip";
 
 const WorkspaceDetailsModal = ({ isOpen, onClose, course }) => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -46,7 +47,7 @@ const WorkspaceDetailsModal = ({ isOpen, onClose, course }) => {
                 {course.join_code && (
                   <div className="col-span-2">
                     <p className="text-sm text-default-500">Join Code</p>
-                    <p className="font-medium">{course.join_code}</p>
+                    <JoinCodeChip joinCode={course.join_code} />
                   </div>
                 )}
               </div>

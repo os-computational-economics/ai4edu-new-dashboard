@@ -36,7 +36,8 @@ import {
 } from "@/api/workspace/workspace";
 
 import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
-import { Edit, Copy, RefreshCw } from "lucide-react";
+import { Edit, RefreshCw } from "lucide-react";
+import JoinCodeChip from "@/components/workspace/join-code-chip";
 
 const Workspace = () => {
   const [workspacePrompt, setWorkspacePrompt] = useState("");
@@ -311,25 +312,7 @@ const Workspace = () => {
                 </TableCell>
                 <TableCell>{workspace.workspace_name}</TableCell>
                 <TableCell>
-                  <Chip
-                    className="cursor-pointer select-all hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1"
-                    color="primary"
-                    variant="flat"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        workspace.workspace_join_code
-                      );
-                      addToast({
-                        title: "Workspace code copied to clipboard",
-                        color: "success",
-                      });
-                    }}
-                  >
-                    <div className="flex items-center gap-1 font-mono">
-                      {workspace.workspace_join_code}
-                      <Copy size={14} />
-                    </div>
-                  </Chip>
+                  <JoinCodeChip joinCode={workspace.workspace_join_code} />
                 </TableCell>
                 <TableCell>{workspace.created_by || '-'}</TableCell>
                 <TableCell>
