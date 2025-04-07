@@ -57,7 +57,7 @@ const WorkspaceAccessControl = () => {
   const fetchWorkspaceList = (page: number, pageSize: number) => {
     const params = {
       page,
-      page_size: pageSize,
+      page_size: 500, // TODO: remove this limit, we need a better workspace selector with search, we also need a better way to select users
     };
     getWorkspaceList(params)
       .then((res) => {
@@ -266,4 +266,4 @@ const WorkspaceAccessControl = () => {
   );
 };
 
-export default WorkspaceAccessControl; 
+export default WorkspaceAccessControl;
