@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Sidebar } from './sidebar.styles'
-import { Avatar, Tooltip, Image } from '@nextui-org/react'
+import { Avatar, Tooltip, Image } from "@heroui/react"
 import CourseDropdown from './course-dropdown'
 import { HomeIcon } from '../icons/sidebar/home-icon'
 import { SidebarItem } from './sidebar-item'
@@ -9,7 +9,7 @@ import { useSidebarContext } from '../layout/layout-context'
 import { usePathname } from 'next/navigation'
 import { CustomersIcon } from '../icons/sidebar/customers-icon'
 import { CollapseItems } from './collapse-items'
-import { isAdmin, formatedCourses } from '@/utils/CookiesUtil'
+import { isSystemAdmin, isWorkspaceAdmin } from '@/utils/CookiesUtil'
 import { useRouter } from 'next/navigation'
 import { Users, BotMessageSquare, History, Settings, KeySquare, LayoutDashboard } from 'lucide-react'
 
@@ -111,29 +111,29 @@ export const SidebarWrapper = () => {
   const renderAdminItems = (): React.ReactNode[] => {
     const adminItems: React.ReactNode[] = []
 
-    adminItems.push(
-      <SidebarItem
-        key="workspace"
-        isActive={pathname === '/workspace'}
-        title="Workspace Management"
-        icon={<Settings size={32} />}
-        href="workspace"
-      />,
-      <SidebarItem
-        key="access-control"
-        isActive={pathname === '/access-control'}
-        title="Access Control"
-        icon={<KeySquare />}
-        href="access-control"
-      />
-      // <SidebarItem
-      //   key="chat-history-admin"
-      //   isActive={pathname === '/chat-history'}
-      //   title="Chat History Admin"
-      //   icon={<ChatsIcon />}
-      //   href="chat-history"
-      // />
-    )
+    if (isWorkspaceAdmin()) {
+      adminItems.push(
+        <SidebarItem
+          key="workspace"
+          isActive={pathname === '/workspace'}
+          title="Workspace Management"
+          icon={<Settings size={32} />}
+          href="workspace"
+        />
+      )
+    }
+
+    if (isSystemAdmin()) {
+      adminItems.push(
+        <SidebarItem
+          key="access-control"
+          isActive={pathname === '/access-control'}
+          title="Access Control"
+          icon={<KeySquare />}
+          href="access-control"
+        />
+      )
+    }
 
     return adminItems
   }
@@ -155,7 +155,11 @@ export const SidebarWrapper = () => {
             {selectedCourse && (
               <SidebarMenu title={selectedCourse.name}>{renderSidebarItems(selectedCourse.role)}</SidebarMenu>
             )}
-            {isAdmin() && <SidebarMenu title="Admin">{renderAdminItems()}</SidebarMenu>}
+            {(isSystemAdmin() || isWorkspaceAdmin()) && (
+              <SidebarMenu title={isSystemAdmin() ? "System Admin" : "Workspace Admin"}>
+                {renderAdminItems()}
+              </SidebarMenu>
+            )}
           </div>
         </div>
       </div>

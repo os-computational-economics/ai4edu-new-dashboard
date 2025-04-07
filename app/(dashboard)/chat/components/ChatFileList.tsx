@@ -11,7 +11,7 @@ import {
   CardHeader,
   ScrollShadow,
   Switch,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { File } from "lucide-react";
 import { GetAgentByIDResponse } from "@/api/agent/agent";
 import { HAVE_SEEN_FILE_TOOLTIP_LOCAL_STORAGE_KEY } from "@/utils/constants";
@@ -76,7 +76,10 @@ const ChatFileList = ({
             offset={15}
             {...(!hasSeenTooltip && { isOpen: showTooltip })}
           >
-            <File size={20} />
+            <span className="text-sm">
+              {" "}
+              <File size={20} />
+            </span>
           </Tooltip>
         </Button>
       </PopoverTrigger>

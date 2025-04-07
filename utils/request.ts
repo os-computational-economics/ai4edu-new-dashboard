@@ -1,9 +1,8 @@
 // request.ts
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import https from "https";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import logout from "./logout";
 
 export const localBackend =
   process.env.NEXT_PUBLIC_LOCAL_BACKEND?.toUpperCase() === "TRUE";
@@ -13,7 +12,9 @@ const apiVersion = process.env.NEXT_PUBLIC_API_VERSION;
 const role = process.env.NEXT_PUBLIC_ROLE;
 let baseURL = process.env.NEXT_PUBLIC_ONLINE_BASE_URL;
 let environment = process.env.NEXT_PUBLIC_DEV_ENVIRONMENT;
-let httpsAgent = new https.Agent({ rejectUnauthorized: process.env.NODE_ENV !== "development" });
+let httpsAgent = new https.Agent({
+  rejectUnauthorized: process.env.NODE_ENV !== "development",
+});
 
 if (process.env.NODE_ENV === "development") {
   /*
@@ -53,7 +54,7 @@ console.log("****", apiUrl);
 const instance = axios.create({
   baseURL: apiUrl,
   timeout: 100000, // 100s
-  httpsAgent: httpsAgent
+  httpsAgent: httpsAgent,
 });
 
 // Request interceptor
@@ -74,27 +75,25 @@ instance.interceptors.request.use(
     ) {
       // if access token is not present but refresh token is present, do a token refresh
       try {
-        const response = await axios.get(`${apiUrl}/admin/generate_access_token`, {
-          headers: {
-            Authorization: `Bearer refresh=${refresh_token}`,
-          },
-        });
+        const response = await axios.get(
+          `${apiUrl}/admin/generate_access_token`,
+          {
+            headers: {
+              Authorization: `Bearer refresh=${refresh_token}`,
+            },
+          }
+        );
         console.log("response", response);
         const new_access_token = response.data.data.access_token;
-        const firstLevelDomain =
-          "." + window.location.hostname.split(".").slice(-2).join(".");
         Cookies.set("access_token", new_access_token, {
           expires: 29 / (24 * 60),
-          domain: firstLevelDomain,
         });
         if (config.headers) {
           config.headers.Authorization = `Bearer access=${new_access_token}`;
         }
         return config as any;
       } catch (error) {
-        Cookies.remove("access_token");
-        Cookies.remove("refresh_token");
-        window.location.href = "/auth/signin";
+        logout();
       }
     }
     return config as any;
@@ -128,12 +127,7 @@ instance.interceptors.response.use(
       });*/
       if (error.response.status === 401) {
         // authorization error, logout
-        Cookies.remove("access_token");
-        Cookies.remove("refresh_token");
-        localStorage.clear();
-        setTimeout(() => {
-          window.location.href = "/auth/signin";
-        }, 3000);
+        logout();
       } else if (error.response.status === 500) {
         // server error
         /* not an informative error message, should replace

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Checkbox, Switch, Button, ScrollShadow, Card, Textarea } from '@nextui-org/react'
+import { Checkbox, Switch, Button, ScrollShadow, Card, Textarea } from "@heroui/react"
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 interface MessageProps {

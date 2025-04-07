@@ -2,7 +2,7 @@
 'use client'
 import React, { useEffect, useState, useRef } from 'react'
 
-import { Card, Textarea, ScrollShadow, Button } from '@nextui-org/react'
+import { Card, Textarea, ScrollShadow, Button } from "@heroui/react"
 import { MdAttachFile } from 'react-icons/md'
 import { IoSend } from 'react-icons/io5'
 

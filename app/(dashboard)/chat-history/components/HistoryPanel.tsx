@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { CSVLink } from "react-csv";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";

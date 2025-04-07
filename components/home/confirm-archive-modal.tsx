@@ -6,12 +6,11 @@ import {
   ModalContent,
   Button,
   Input,
-} from "@nextui-org/react";
+  addToast,
+} from "@heroui/react";
 import { useState } from "react";
 import { setWorkspaceStatus } from "@/api/workspace/workspace";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ping } from "@/api/auth/auth";
+import { forceRefreshWorkspaceAndToken } from "@/utils/CookiesUtil";
 
 const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
   const [workspaceName, setWorkspaceName] = useState("");
@@ -32,16 +31,13 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
       };
       setWorkspaceStatus(data)
         .then((res) => {
-          toast.success("Workspace archived successfully");
+          addToast({
+            title: "Workspace archived successfully",
+            color: "success",
+          });
           handleCloseModal();
           setTimeout(() => {
-            ping()
-              .then((res) => {
-                window.location.reload();
-              })
-              .catch((err) => {
-                window.location.href = "/auth/signin";
-              });
+            forceRefreshWorkspaceAndToken();
           }, 100);
           console.log("response", res);
         })
@@ -57,15 +53,23 @@ const ConfirmArchiveModal = ({ isOpen, onClose, course }) => {
 
   return (
     <div>
-      <ToastContainer />
-      <Modal isOpen={isOpen} onClose={() => handleCloseModal()}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => handleCloseModal()}
+        isDismissable={false}
+      >
         <ModalContent>
           <ModalHeader>Archive Workspace</ModalHeader>
           <ModalBody>
-            <div className="flex items-center gap-2 p-3 rounded-lg">
+            <div className="flex flex-col items-center gap-2 p-3 rounded-lg">
               <span className="text-black-100 font-bold">
                 To confirm the action, enter the name of the workspace you would
-                like to archive.
+                like to archive:
+              </span>
+              <span className="text-red-700 font-bold">{course.name}</span>
+              <span className="text-black-100">
+                Note that the archive action might take up to 30 minutes to take
+                effect for all users.
               </span>
             </div>
 

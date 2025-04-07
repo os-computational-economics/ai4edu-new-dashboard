@@ -2,15 +2,14 @@
 import React, { useState, useContext } from "react";
 import CardList from "./components/CardList";
 import HistoryPanel from "./components/HistoryPanel";
-import { Pagination } from "@nextui-org/react";
-import { ToastContainer, toast } from "react-toastify";
+import { addToast, Pagination } from "@heroui/react";
 import { WorkspaceContext } from "@/components/layout/layout";
 import {
   getWorkspaceRole,
   checkExpired,
   getCurrentUserID,
 } from "@/utils/CookiesUtil";
-import { Card, ScrollShadow } from "@nextui-org/react";
+import { Card, ScrollShadow } from "@heroui/react";
 import {
   getThreadsList,
   getThreadbyID,
@@ -66,13 +65,10 @@ export default function App() {
       })
       .catch((error) => {
         console.log(error.response.data.detail);
-        toast.error(error.response.data.detail, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          progress: undefined,
+        addToast({
+          title:
+            "Error fetching thread details, It's possible that you are trying to access a thread that doesn't have any messages.",
+          color: "danger",
         });
         // console.error('Error fetching thread details:', error);
       });
@@ -99,7 +95,6 @@ export default function App() {
         <h1 className="text-xl font-bold my-1">Chat History</h1>
       </div>
       <div className="flex h-[calc(100vh-85px)] w-98%">
-        <ToastContainer />
         <div className="flex w-2/5 flex-col">
           <div className="flex-grow overflow-auto">
             <ScrollShadow size={20} className="w-full h-full">
@@ -113,6 +108,7 @@ export default function App() {
                   total={totalPages}
                   initialPage={currentPage}
                   onChange={handlePageChange}
+                  isCompact
                 />
                 <div className="mt-2 text-small text-default-600">{`Total ${total} thread${
                   total === 1 ? `` : `s`
