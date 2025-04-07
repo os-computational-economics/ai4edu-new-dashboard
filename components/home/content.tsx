@@ -1,6 +1,13 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { Card, CardHeader, CardBody, Image, Button, Spinner } from "@heroui/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Image,
+  Button,
+  Spinner,
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { formatedCourses, checkExpired } from "@/utils/CookiesUtil";
 import { WorkspaceContext } from "@/components/layout/layout";
@@ -132,8 +139,12 @@ export const Content = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 justify-center w-full">
               {isLoading ? (
-                <div className="col-span-full flex justify-center">
+                <div className="col-span-full flex flex-col items-center gap-2">
                   <Spinner />
+                  <p className="text-sm text-default-500">
+                    If loading takes more than a few seconds, please refresh the
+                    page.
+                  </p>
                 </div>
               ) : courses.length > 0 ? (
                 courses.map((course) => (
