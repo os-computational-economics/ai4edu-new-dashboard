@@ -111,29 +111,29 @@ export const SidebarWrapper = () => {
   const renderAdminItems = (): React.ReactNode[] => {
     const adminItems: React.ReactNode[] = []
 
-    adminItems.push(
-      <SidebarItem
-        key="workspace"
-        isActive={pathname === '/workspace'}
-        title="Workspace Management"
-        icon={<Settings size={32} />}
-        href="workspace"
-      />,
-      <SidebarItem
-        key="access-control"
-        isActive={pathname === '/access-control'}
-        title="Access Control"
-        icon={<KeySquare />}
-        href="access-control"
-      />
-      // <SidebarItem
-      //   key="chat-history-admin"
-      //   isActive={pathname === '/chat-history'}
-      //   title="Chat History Admin"
-      //   icon={<ChatsIcon />}
-      //   href="chat-history"
-      // />
-    )
+    if (isWorkspaceAdmin()) {
+      adminItems.push(
+        <SidebarItem
+          key="workspace"
+          isActive={pathname === '/workspace'}
+          title="Workspace Management"
+          icon={<Settings size={32} />}
+          href="workspace"
+        />
+      )
+    }
+
+    if (isSystemAdmin()) {
+      adminItems.push(
+        <SidebarItem
+          key="access-control"
+          isActive={pathname === '/access-control'}
+          title="Access Control"
+          icon={<KeySquare />}
+          href="access-control"
+        />
+      )
+    }
 
     return adminItems
   }
@@ -155,10 +155,11 @@ export const SidebarWrapper = () => {
             {selectedCourse && (
               <SidebarMenu title={selectedCourse.name}>{renderSidebarItems(selectedCourse.role)}</SidebarMenu>
             )}
-            {isSystemAdmin() ? <SidebarMenu title="System Admin">{renderAdminItems()}</SidebarMenu>
-              : isWorkspaceAdmin() ? <SidebarMenu title="Workspace Admin">{renderAdminItems()}</SidebarMenu>
-              : null}
-            {}
+            {(isSystemAdmin() || isWorkspaceAdmin()) && (
+              <SidebarMenu title={isSystemAdmin() ? "System Admin" : "Workspace Admin"}>
+                {renderAdminItems()}
+              </SidebarMenu>
+            )}
           </div>
         </div>
       </div>
