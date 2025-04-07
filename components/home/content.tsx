@@ -58,8 +58,7 @@ const CourseCard = ({ course, onDetailsClick }) => {
           </small>
         </div>
         <Button
-          onClick={(e) => {
-            e.stopPropagation();
+          onPress={() => {
             onDetailsClick(course);
           }}
           size="sm"
