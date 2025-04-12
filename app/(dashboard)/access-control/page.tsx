@@ -25,7 +25,7 @@ const Tables = () => {
   const [users, setUsers] = useState<User[]>([])
   const [total, setTotal] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(50)
   const [isLoading, setisLoading] = useState(false)
   const [workspaceList, setWorkspaceList] = useState<Workspace[]>([])
   const [workspaceID, setWorkspaceID] = useState('all')
