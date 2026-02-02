@@ -1,6 +1,6 @@
 import React from "react";
-import { Chip } from "@nextui-org/react";
-import { Card } from "@nextui-org/react";
+import { Chip } from "@heroui/react";
+import { Card } from "@heroui/react";
 
 interface Props {
   title: string;

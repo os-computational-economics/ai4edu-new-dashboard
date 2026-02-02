@@ -4,9 +4,11 @@ import { useEffect } from "react";
 
 import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
-import { Button, Card, Image } from "@nextui-org/react";
+import { Button, Card, Image, addToast } from "@heroui/react";
 import { DarkModeSwitch } from "@/components/navbar/darkmodeswitch";
 import { localBackend } from "@/utils/request";
+import { getUserWorkspaceDetails } from "@/api/workspace/workspace";
+import { LOGIN_PERSISTENCE_IN_DAYS } from "@/utils/constants";
 
 const SigninPage: React.FC = () => {
   useEffect(() => {
@@ -14,25 +16,35 @@ const SigninPage: React.FC = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const refresh = urlParams.get("refresh");
       const access = urlParams.get("access");
-      const firstLevelDomain =
-        "." + window.location.hostname.split(".").slice(-2).join(".");
 
       if (refresh && access) {
+        addToast({
+          title: "Login successful",
+          description: "Getting your information prepared...",
+          color: "success",
+        });
         // refresh token valid for 15 days, under the domain first level domain
         Cookies.set("refresh_token", refresh, {
-          expires: 15,
-          domain: firstLevelDomain,
+          expires: LOGIN_PERSISTENCE_IN_DAYS,
         });
         // access token valid for 30 minutes, but we set it to 29 minutes to be safe
         Cookies.set("access_token", access, {
           expires: 29 / (24 * 60),
-          domain: firstLevelDomain,
         });
+        // clear local storage workspace
+        localStorage.removeItem("workspace");
+        getUserWorkspaceDetails()
+          .then((res) => {
+            console.log(res);
+            localStorage.setItem("user_workspace_details", JSON.stringify(res.items));
+            urlParams.delete("refresh");
+            urlParams.delete("access");
 
-        urlParams.delete("refresh");
-        urlParams.delete("access");
-
-        redirect("/");
+            redirect("/");
+          })
+          .catch((error) => {
+            console.error("Error fetching workspace list", error);
+          });
       }
 
       const refreshToken = Cookies.get("refresh_token");

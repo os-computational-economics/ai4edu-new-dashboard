@@ -1,12 +1,19 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Image,
+  Button,
+  Spinner,
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { formatedCourses, checkExpired } from "@/utils/CookiesUtil";
 import { WorkspaceContext } from "@/components/layout/layout";
 import AgentJoinModal from "@/components/home/agent-join-modal";
-import ArchiveModal from "./archive-modal";
-import { Archive } from "lucide-react";
+import WorkspaceDetailsModal from "./workspace-details-modal";
+import { DotsIcon } from "@/components/icons/roster/dots-icon";
 
 interface Course {
   id: string;
@@ -14,10 +21,9 @@ interface Course {
   name: string;
 }
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, onDetailsClick }) => {
   const { currentWorkspace, setCurrentWorkspace } =
     useContext(WorkspaceContext);
-  const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const router = useRouter();
 
   const handleCourseClick = () => {
@@ -39,65 +45,57 @@ const CourseCard = ({ course }) => {
   };
 
   return (
-    <>
-      <Card
-        className="py-3 w-full max-w-80"
-        isPressable
-        onPress={handleCourseClick}
-      >
-        <CardHeader className="pb-2 pt-0 px-4 flex items-start justify-between">
-          <div className="flex flex-col">
-            <p className="text-medium font-bold truncate w-full">
-              {course.name}
-            </p>
-            <small className="text-default-500 truncate w-full uppercase">
-              {course.id}
-            </small>
-          </div>
-          {course.role == "teacher" ? (
-            <Button
-              onClick={() => {
-                setArchiveModalOpen(true);
-              }}
-              size="sm"
-              isIconOnly
-              className="self-center"
-            >
-              <Archive color="Crimson" />
-            </Button>
-          ) : (
-            <></>
-          )}
-        </CardHeader>
-        <CardBody className="overflow-visible py-0 px-3">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="/cwru_logo_blue.png"
-            width={300}
-            height={200}
-          />
-        </CardBody>
-        <ArchiveModal
-          isOpen={archiveModalOpen}
-          onClose={() => {
-            setArchiveModalOpen(false);
+    <Card
+      className="py-3 w-full max-w-80"
+      isPressable
+      onClick={handleCourseClick}
+    >
+      <CardHeader className="pb-2 pt-0 px-4 flex items-center justify-between">
+        <div className="flex flex-col min-w-0 items-start">
+          <p className="text-medium font-bold text-left">{course.name}</p>
+          <small className="text-default-500 text-left">
+            {course.comment || ""}
+          </small>
+        </div>
+        <Button
+          onPress={() => {
+            onDetailsClick(course);
           }}
-          course={course}
+          size="sm"
+          isIconOnly
+          className="ml-auto"
+        >
+          <DotsIcon />
+        </Button>
+      </CardHeader>
+      <CardBody className="overflow-visible py-0 px-3">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/cwru_logo_blue.png"
+          width={300}
         />
-      </Card>
-    </>
+      </CardBody>
+    </Card>
   );
 };
 
 export const Content = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   useEffect(() => {
     checkExpired();
-    const courseList = formatedCourses();
-    setCourses(courseList);
+    const fetchCourses = async () => {
+      setIsLoading(true);
+      const courseList = await formatedCourses();
+      setCourses(courseList);
+      setIsLoading(false);
+    };
+    fetchCourses();
   }, []);
 
   const closeJoinModal = () => {
@@ -105,12 +103,25 @@ export const Content = () => {
     setIsJoinModalOpen(false);
   };
 
+  const handleDetailsClick = (course) => {
+    setSelectedCourse(course);
+    setIsDetailsModalOpen(true);
+  };
+
+  const closeDetailsModal = () => {
+    setIsDetailsModalOpen(false);
+  };
+
   return (
     <div className="h-full lg:px-6 pb-6 v">
-      <AgentJoinModal
-        isOpen={isJoinModalOpen}
-        onClose={closeJoinModal}
-      ></AgentJoinModal>
+      <AgentJoinModal isOpen={isJoinModalOpen} onClose={closeJoinModal} />
+      {selectedCourse && (
+        <WorkspaceDetailsModal
+          isOpen={isDetailsModalOpen}
+          onClose={closeDetailsModal}
+          course={selectedCourse}
+        />
+      )}
       <div className="flex justify-center gap-4 xl:gap-6 pt-1 px-4 lg:px-0 flex-wrap xl:flex-nowrap sm:pt-5 max-w-[90rem] mx-auto w-full">
         <div className="mt-1 gap-6 flex flex-col w-full">
           <div className="flex flex-col gap-2">
@@ -119,16 +130,28 @@ export const Content = () => {
               <div className="flex gap-2 items-center">
                 <Button
                   color="primary"
-                  onPress={() => setIsJoinModalOpen(true)}
+                  onClick={() => setIsJoinModalOpen(true)}
                 >
                   Join a Workspace
                 </Button>
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 justify-center w-full">
-              {courses.length > 0 ? (
+              {isLoading ? (
+                <div className="col-span-full flex flex-col items-center gap-2">
+                  <Spinner />
+                  <p className="text-sm text-default-500">
+                    If loading takes more than a few seconds, please refresh the
+                    page.
+                  </p>
+                </div>
+              ) : courses.length > 0 ? (
                 courses.map((course) => (
-                  <CourseCard key={course.id} course={course} />
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    onDetailsClick={handleDetailsClick}
+                  />
                 ))
               ) : (
                 <p>

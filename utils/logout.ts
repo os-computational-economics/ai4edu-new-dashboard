@@ -1,24 +1,17 @@
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import { AUTH_PATH } from "./constants";
 
 const logout = () => {
-/* toast.error("Your session has expired.", {
-    position: "top-right",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    progress: undefined,
-  });
-  we don't need to show users this
-  */
-  Cookies.remove("access_token")
-  Cookies.remove("refresh_token")
-  localStorage.clear()
+  Cookies.remove("refresh_token");
+  Cookies.remove("access_token");
+  Cookies.remove("full_name");
+  Cookies.remove("email");
+  Cookies.remove("name_initials");
+  Cookies.remove("user_id");
+  localStorage.clear();
   setTimeout(() => {
-    window.location.href = "/auth/signin"
-  }, 3000)
-}
+    window.location.href = AUTH_PATH;
+  }, 500);
+};
 
-export default logout
+export default logout;

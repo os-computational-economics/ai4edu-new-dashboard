@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { Tooltip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from '@nextui-org/react'
+import { Tooltip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from "@heroui/react"
 
 const Upload = ({ isOpen, onClose, modalTitle, customMessage, onFileUpload, acceptFileTypes, maxFileSizeMB }) => {
   const [fileName, setFileName] = useState('')

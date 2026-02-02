@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Checkbox, Switch, Button, ScrollShadow } from '@nextui-org/react'
+import { Checkbox, Switch, Button, ScrollShadow } from "@heroui/react"
 
 type Document = {
   id: number

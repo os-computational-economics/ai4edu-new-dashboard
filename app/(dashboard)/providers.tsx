@@ -1,7 +1,8 @@
 "use client";
 import * as React from "react";
-import { NextUIProvider } from "@nextui-org/system";
+import { HeroUIProvider } from "@heroui/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ToastProvider } from "@heroui/toast";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { Layout } from "../../components/layout/layout";
 import { useEffect } from "react";
@@ -10,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { track } from "@vercel/analytics";
 import useMount from "@/components/hooks/useMount";
 import { getCurrentUserID } from "@/utils/CookiesUtil";
+import { AUTH_PATH } from "@/utils/constants";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -53,18 +55,19 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   useEffect(() => {
     const refreshToken = Cookies.get("refresh_token");
     if (!refreshToken) {
-      router.push("/auth/signin");
+      router.push(AUTH_PATH);
     }
   }, []);
   return (
-    <NextUIProvider>
+    <HeroUIProvider>
       <NextThemesProvider
         defaultTheme="system"
         attribute="class"
         {...themeProps}
       >
+        <ToastProvider />
         <Layout>{children}</Layout>
       </NextThemesProvider>
-    </NextUIProvider>
+    </HeroUIProvider>
   );
 }

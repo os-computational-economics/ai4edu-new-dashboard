@@ -1,25 +1,24 @@
 "use client";
-import React, { useState, useEffect, useContext, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { getAgentByID, GetAgentByIDResponse } from "@/api/agent/agent";
 import useMount from "@/components/hooks/useMount";
 import ChatPage from "../../../chat/ChatPage";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { addToast } from "@heroui/react";
 
-const Page = ({
-  params,
-  searchParams,
-}: {
-  params: { agent: string; thread: string };
-  searchParams: { from?: string };
-}) => {
+const Page = () => {
   const [agent, setAgent] = useState<GetAgentByIDResponse | null>(null);
 
   const [status, setStatus] = useState(1); // 1 - new Agent, 2 - Edit Agent
 
   const router = useRouter();
+
+  const params = useParams<{ agent: string; thread: string }>();
+
+  const searchParams = useSearchParams();
+
+  const from = searchParams.get("from");
 
   useMount(() => {
     fetchAgent();
@@ -33,9 +32,9 @@ const Page = ({
 
   const CopyToClipboard = (agent) => {
     navigator.clipboard.writeText(generateShareUrl(agent));
-    toast.success("Copied to clipboard!", {
-      hideProgressBar: true,
-      autoClose: 2000,
+    addToast({
+      title: "Copied to clipboard!",
+      color: "success",
     });
   };
 
@@ -53,7 +52,7 @@ const Page = ({
   };
   const closeChatModal = () => {
     // go back to previous page
-    if (searchParams.from === "chat-history") {
+    if (from === "chat-history") {
       router.push("/chat-history");
     } else {
       router.push("/agents");
@@ -63,7 +62,6 @@ const Page = ({
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="mx-6 ">
-        <ToastContainer />
         {agent && (
           <ChatPage
             isOpen={true}

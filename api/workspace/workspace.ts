@@ -1,20 +1,12 @@
 import request from "@/utils/request";
 
-export interface User {
-  user_id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  student_id: string; // TODO: It looks like this is only used in tables now? Could probably be removed in the future
-  role: Array<{
-    student: boolean;
-    teacher: boolean;
-    admin: boolean;
-  }>;
+export interface PendingUser {
+  student_id: string;
+  status: string;
 }
 
-export interface UserList {
-  user_list: Array<User>;
+export interface PendingUsersList {
+  items: Array<PendingUser>;
   total: number;
 }
 
@@ -32,27 +24,37 @@ export interface WorkspaceListRequest {
 export interface Workspace {
   workspace_id: string;
   workspace_name: string;
+  workspace_join_code;
   status: number;
   school_id: number;
+  workspace_prompt: string;
+  workspace_comment: string;
+  created_by?: string;
 }
 
 export interface WorkspaceListResponse {
   items: Array<Workspace>;
-  page: number;
-  page_size: number;
   total: number;
+  page?: number;
+  page_size?: number;
 }
 
 export interface StudentJoinWorkspaceRequest {
-  workspace_id: string;
-  password: string;
+  workspace_join_code: string;
 }
 
 export interface CreateWorkspaceRequest {
-  workspace_id: string;
   workspace_name: string;
-  workspace_password: string;
   school_id: number;
+  workspace_prompt: string | null;
+  workspace_comment: string | null;
+}
+
+export interface EditWorkspaceRequest {
+  workspace_id: string;
+  workspace_name?: string;
+  workspace_prompt?: string;
+  workspace_comment?: string;
 }
 
 enum WorkspaceStatus {
@@ -77,6 +79,10 @@ const api = {
   createWorkspace: role + `/${path}` + "/create_workspace",
   setUserRoleUserID: role + `/${path}` + "/set_user_role_with_user_id",
   setWorkspaceStatus: role + `/${path}` + "/set_workspace_status",
+  getUserWorkspaceDetails: role + `/${path}` + "/get_user_workspace_details",
+  editWorkspace: role + `/${path}` + "/edit_workspace",
+  getPendingUsers: role + `/${path}` + "/get_pending_users",
+  setWorkspaceAdminRole: role + `/${path}` + "/set_workspace_admin_role",
 };
 
 // add users via CSV
@@ -92,7 +98,9 @@ export function addUsersViaCsv(data, url): Promise<any> {
 }
 
 // get workspace list
-export function getWorkspaceList(params: WorkspaceListRequest): Promise<WorkspaceListResponse> {
+export function getWorkspaceList(
+  params: WorkspaceListRequest
+): Promise<WorkspaceListResponse> {
   return request({
     url: api.getWorkspaceList,
     method: "get",
@@ -101,7 +109,9 @@ export function getWorkspaceList(params: WorkspaceListRequest): Promise<Workspac
 }
 
 // student_join_workspace
-export function studentJoinWorkspace(data: StudentJoinWorkspaceRequest): Promise<any> {
+export function studentJoinWorkspace(
+  data: StudentJoinWorkspaceRequest
+): Promise<any> {
   return request({
     url: api.studentJoinWorkspace,
     method: "post",
@@ -135,5 +145,44 @@ export function setWorkspaceStatus(data: UpdateWorkspaceRequest): Promise<any> {
     url: api.setWorkspaceStatus,
     method: "post",
     data,
+  });
+}
+
+// get_user_workspace_details
+export function getUserWorkspaceDetails(): Promise<WorkspaceListResponse> {
+  return request({
+    url: api.getUserWorkspaceDetails,
+    method: "get",
+  });
+}
+
+// edit_workspace
+export function editWorkspace(data: EditWorkspaceRequest): Promise<any> {
+  return request({
+    url: api.editWorkspace,
+    method: "post",
+    data,
+  });
+}
+
+// get_pending_users
+export function getPendingUsers(
+  workspaceId: string
+): Promise<PendingUsersList> {
+  return request({
+    url: `${api.getPendingUsers}/${workspaceId}`,
+    method: "get",
+  });
+}
+
+export function setWorkspaceAdminRole(data: { user_id: number; workspace_admin: boolean }): Promise<{
+  success: boolean;
+  status: number;
+  message: string;
+}> {
+  return request({
+    url: api.setWorkspaceAdminRole,
+    method: "post",
+    data: data,
   });
 }

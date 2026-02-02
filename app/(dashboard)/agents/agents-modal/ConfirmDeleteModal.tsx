@@ -1,4 +1,4 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter, ModalContent, Button } from '@nextui-org/react'
+import { Modal, ModalHeader, ModalBody, ModalFooter, ModalContent, Button } from "@heroui/react"
 import { useContext } from 'react'
 import { deleteAgent } from '@/api/agent/agent'
 import { WorkspaceContext } from '@/components/layout/layout'
